@@ -158,7 +158,7 @@ static bool nvme_subsys_setup_fdp(NvmeSubsystem *subsys, Error **errp)
     }
 
     endgrp->fdp.nrg = subsys->params.fdp.nrg;
-    printf("Reclaim Group # %lu\n",endgrp->fdp.nrg );
+    printf("Reclaim Group # %u\n",endgrp->fdp.nrg );
     if (!subsys->params.fdp.nruh ||
         subsys->params.fdp.nruh > NVME_FDP_MAXPIDS) {
         error_setg(errp, "fdp.nruh must be non-zero and less than %u",
@@ -167,7 +167,7 @@ static bool nvme_subsys_setup_fdp(NvmeSubsystem *subsys, Error **errp)
     }
 
     endgrp->fdp.nruh = subsys->params.fdp.nruh;
-    printf("Reclaim unit handle # %lu\n",endgrp->fdp.nruh );
+    printf("Reclaim unit handle # %u\n",endgrp->fdp.nruh );
     if (!nvme_calc_rgif(endgrp->fdp.nruh, endgrp->fdp.nrg, &endgrp->fdp.rgif)) {
         error_setg(errp,
                    "cannot derive a valid rgif (nruh %"PRIu16" nrg %"PRIu32")",
