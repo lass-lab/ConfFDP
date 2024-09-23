@@ -1,50 +1,3 @@
-# static Property nvme_subsystem_props[] = {
-#     DEFINE_PROP_STRING("nqn", NvmeSubsystem, params.nqn),
-#     DEFINE_PROP_BOOL("fdp", NvmeSubsystem, params.fdp.enabled, false),
-#     DEFINE_PROP_SIZE("fdp.runs", NvmeSubsystem, params.fdp.runs,
-#                      NVME_DEFAULT_RU_SIZE),
-#     DEFINE_PROP_UINT32("fdp.nrg", NvmeSubsystem, params.fdp.nrg, 1),
-#     DEFINE_PROP_UINT16("fdp.nruh", NvmeSubsystem, params.fdp.nruh, 0),
-#     DEFINE_PROP_END_OF_LIST(),
-# };
-
-# enum {
-#     FEMU_OCSSD_MODE = 0,
-#     FEMU_BBSSD_MODE = 1,
-#     FEMU_NOSSD_MODE = 2,
-#     FEMU_ZNSSD_MODE = 3,
-#     FEMU_SMARTSSD_MODE,
-#     FEMU_KVSSD_MODE,
-# };
-
-
-
-
-: '
-
--device "nvme-subsys,id=subsys0,fdp=true,fdp.nruh=8,fdp.nrg=32,fdp.runs=40960"
-
-
-Reclaim Unit(RU) ----> Erase Block
-Reclaim Group ---> Die
-Reclaim Unit Handle ----> ZEU ? 
-
-Placement Handle
-Placement Identifier
-
-'
-
-
-
-: '
-FDP Configurations Log Page
-FDP Configuration Descriptor
-Reclaim Unit Handle Descriptor
-Reclaim Unit Handle Usage Log Page
-Reclaim Unit Handle Usage Descriptor
-'
-
-
 # Huaicheng Li <hcli@cmu.edu>
 # Run FEMU as Zoned-Namespace (ZNS) SSDs
 #
@@ -92,9 +45,11 @@ sudo $QEMU \
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-hd,drive=hd0 \
     -drive file=$OSIMGF,if=none,aio=native,cache=none,format=qcow2,id=hd0 \
-    -device femu,devsz_mb=${G80},femu_mode=1 \
+    -device femu,devsz_mb=${G20},femu_mode=1 \
     -device nvme-subsys=on,id=subsys0,fdp=true,fdp.nruh=8,fdp.nrg=32,fdp.runs=40960 \
     -device nvme,id=ctrl0,serial=deadbeef,bus=pcie_root_port0,subsys=subsys0 \
+    -drive id=nvm-1,file=./nvm-1.img,format=raw,if=none,discard=unmap,media=disk,read-only=no \
+    -device nvme-ns,id=nvm-1,drive=nvme-1,bus=ctrl0,nsid=1,logical_block_size=4096,physical_block_size=4096
     -net user,hostfwd=tcp::8080-:22 \
     -net nic,model=virtio \
     -nographic \
