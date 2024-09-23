@@ -81,7 +81,7 @@ if [[ ! -e "$OSIMGF" ]]; then
 	echo ""
 	exit
 fi
-QEMU=/home/sungjin/FEMU/build-femu/x86_64-softmmu/qemu-system-x86_64
+QEMU=/home/sungjin/ConfFDP/build-femu/x86_64-softmmu/qemu-system-x86_64
 
 sudo $QEMU \
     -name "FEMU-FDP-SSD-VM" \
