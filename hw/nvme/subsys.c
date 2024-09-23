@@ -11,6 +11,7 @@
 #include "qapi/error.h"
 
 #include "nvme.h"
+#include <stdio.h>
 
 #define NVME_DEFAULT_RU_SIZE (96 * MiB)
 
@@ -143,21 +144,21 @@ static bool nvme_calc_rgif(uint16_t nruh, uint16_t nrg, uint8_t *rgif)
 static bool nvme_subsys_setup_fdp(NvmeSubsystem *subsys, Error **errp)
 {
     NvmeEnduranceGroup *endgrp = &subsys->endgrp;
-
+    printf("nvme_subsys_setup_fdp\n");
     if (!subsys->params.fdp.runs) {
         error_setg(errp, "fdp.runs must be non-zero");
         return false;
     }
 
     endgrp->fdp.runs = subsys->params.fdp.runs;
-
+    printf("RU size %lu\n",endgrp->fdp.runs );
     if (!subsys->params.fdp.nrg) {
         error_setg(errp, "fdp.nrg must be non-zero");
         return false;
     }
 
     endgrp->fdp.nrg = subsys->params.fdp.nrg;
-
+    printf("Reclaim Group # %lu\n",endgrp->fdp.nrg );
     if (!subsys->params.fdp.nruh ||
         subsys->params.fdp.nruh > NVME_FDP_MAXPIDS) {
         error_setg(errp, "fdp.nruh must be non-zero and less than %u",
@@ -166,7 +167,7 @@ static bool nvme_subsys_setup_fdp(NvmeSubsystem *subsys, Error **errp)
     }
 
     endgrp->fdp.nruh = subsys->params.fdp.nruh;
-
+    printf("Reclaim unit handle # %lu\n",endgrp->fdp.nruh );
     if (!nvme_calc_rgif(endgrp->fdp.nruh, endgrp->fdp.nrg, &endgrp->fdp.rgif)) {
         error_setg(errp,
                    "cannot derive a valid rgif (nruh %"PRIu16" nrg %"PRIu32")",
@@ -199,6 +200,7 @@ static bool nvme_subsys_setup(NvmeSubsystem *subsys, Error **errp)
              "nqn.2019-08.org.qemu:%s", nqn);
 
     if (subsys->params.fdp.enabled && !nvme_subsys_setup_fdp(subsys, errp)) {
+        
         return false;
     }
 
