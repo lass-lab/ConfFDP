@@ -92,7 +92,8 @@ sudo $QEMU \
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-hd,drive=hd0 \
     -drive file=$OSIMGF,if=none,aio=native,cache=none,format=qcow2,id=hd0 \
-    -device femu,devsz_mb=${G80},femu_mode=1,nvme-subsys=on,id=subsys0,fdp=true,fdp.nruh=8,fdp.nrg=32,fdp.runs=40960 \
+    -device femu,devsz_mb=${G80},femu_mode=1 \
+    -device nvme-subsys=on,id=subsys0,fdp=true,fdp.nruh=8,fdp.nrg=32,fdp.runs=40960 \
     -net user,hostfwd=tcp::8080-:22 \
     -net nic,model=virtio \
     -nographic \
