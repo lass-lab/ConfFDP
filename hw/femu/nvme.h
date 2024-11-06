@@ -299,7 +299,7 @@ typedef struct NvmeCmd {
     uint64_t    mptr;
     NvmeCmdDptr dptr;
     uint32_t    cdw10;
-    uint32_t    cdw11;
+    uint32_t    cdw11; // dspec
     uint32_t    cdw12;
     uint32_t    cdw13;
     uint32_t    cdw14;
@@ -1313,6 +1313,7 @@ typedef struct FemuCtrl {
     uint64_t        eis_addr_hva;
 
     uint8_t         femu_mode;
+    uint8_t         stream_number;
     uint8_t         lver; /* Coperd: OCSSD version, 0x1 -> OC1.2, 0x2 -> OC2.0 */
     uint32_t        memsz;
     OcCtrlParams    oc_params;
@@ -1381,8 +1382,9 @@ enum {
     FEMU_BBSSD_MODE = 1,
     FEMU_NOSSD_MODE = 2,
     FEMU_ZNSSD_MODE = 3,
-    FEMU_SMARTSSD_MODE,
-    FEMU_KVSSD_MODE,
+    FEMU_SMARTSSD_MODE=4,
+    FEMU_KVSSD_MODE=5,
+    FEMU_FDP_MODE=6,
 };
 
 enum {
@@ -1415,6 +1417,10 @@ static inline bool ZNSSD(FemuCtrl *n)
     return (n->femu_mode == FEMU_ZNSSD_MODE);
 }
 
+static inline bool FDPSSD(FemuCtrl *n)
+{
+    return (n->femu_mode == FEMU_FDP_MODE);
+}
 /* Basic NVMe Queue Pair operation APIs from nvme-util.c */
 int nvme_check_sqid(FemuCtrl *n, uint16_t sqid);
 int nvme_check_cqid(FemuCtrl *n, uint16_t cqid);
@@ -1526,5 +1532,6 @@ static inline uint16_t nvme_check_mdts(FemuCtrl *n, size_t len)
 #define femu_log(fmt, ...) \
     do { printf("[FEMU] Log: " fmt, ## __VA_ARGS__); } while (0)
 
+#define print_sungjin(member) printf("print_sungjin(%s) : {%ld}\n", #member, (long)(member))
 
 #endif /* __FEMU_NVME_H */

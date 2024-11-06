@@ -163,7 +163,6 @@ typedef struct line {
     QTAILQ_ENTRY(line) entry; /* in either {free,victim,full} list */
     /* position in the priority queue for victim lines */
     size_t                  pos;
-    int stream_id;
 } line;
 
 /* wp: record next write addr */
@@ -201,18 +200,35 @@ struct ssd {
     struct ssd_channel *ch;
     struct ppa *maptbl; /* page level mapping table */
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
-    uint8_t stream_number;
-    struct write_pointer* wp;
+    struct write_pointer wp;
     struct line_mgmt lm;
 
     /* lockless ring for communication with NVMe IO thread */
     struct rte_ring **to_ftl;
     struct rte_ring **to_poller;
     bool *dataplane_started_ptr;
-    QemuThread ftl_thread;
+    QemuThread msftl_thread;
 };
 
 void ssd_init(FemuCtrl *n);
+
+static inline NvmeLBAF *ms_ns_lbaf(NvmeNamespace *ns)
+{
+    NvmeIdNs *id_ns = &ns->id_ns;
+    return &id_ns->lbaf[NVME_ID_NS_FLBAS_INDEX(id_ns->flbas)];
+}
+
+static inline uint8_t ms_ns_lbads(NvmeNamespace *ns)
+{
+    /* NvmeLBAF */
+    return ms_ns_lbaf(ns)->lbads;
+}
+
+static inline size_t ms_l2b(NvmeNamespace *ns, uint64_t lba)
+{
+    return lba << ms_ns_lbads(ns);
+}
+
 
 #ifdef FEMU_DEBUG_FTL
 #define ftl_debug(fmt, ...) \

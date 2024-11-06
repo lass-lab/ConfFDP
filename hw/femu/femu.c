@@ -523,7 +523,10 @@ static int nvme_register_extensions(FemuCtrl *n)
         nvme_register_bbssd(n);
     } else if (ZNSSD(n)) {
         nvme_register_znssd(n);
-    } else {
+    }else if(MSSSD(n)){
+        nvme_register_msssd(n);
+    }else if(FDPSSD(n)){
+        nvme_register_fdpssd(n);
         /* TODO: For future extensions */
     }
 
@@ -545,6 +548,7 @@ static void femu_realize(PCIDevice *pci_dev, Error **errp)
 
     init_dram_backend(&n->mbe, bs_size);
     n->mbe->femu_mode = n->femu_mode;
+    print_sungjin(n->stream_number);
 
     n->completed = 0;
     n->start_time = time(NULL);
@@ -653,6 +657,7 @@ static Property femu_props[] = {
     DEFINE_PROP_UINT16("vid", FemuCtrl, vid, 0x1d1d),
     DEFINE_PROP_UINT16("did", FemuCtrl, did, 0x1f1f),
     DEFINE_PROP_UINT8("femu_mode", FemuCtrl, femu_mode, FEMU_NOSSD_MODE),
+    DEFINE_PROP_UINT8("stream_number", FemuCtrl, stream_number, 1),
     DEFINE_PROP_UINT8("flash_type", FemuCtrl, flash_type, MLC),
     DEFINE_PROP_UINT8("lver", FemuCtrl, lver, 0x2),
     DEFINE_PROP_UINT16("lsec_size", FemuCtrl, oc_params.sec_size, 4096),
