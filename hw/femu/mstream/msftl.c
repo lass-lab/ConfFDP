@@ -817,7 +817,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     }
     uint64_t data_offset= ms_l2b(req->ns,lba);
     // backend_rw(n->mbe, &req->qsg, &data_offset, req->is_write);
-    backend_rw(req->ctrl->mbe,&req->qsg,&data_offset,false);
+    backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,false);
     return maxlat;
 }
 
@@ -923,7 +923,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
         curlat = ssd_advance_status(ssd, &ppa, &swr);
         maxlat = (curlat > maxlat) ? curlat : maxlat;
     }
-    backend_rw(req->ctrl->mbe,&req->qsg,,true);
+    backend_rw(req->ns->ctrl->mbe,&req->qsg,,true);
     return maxlat;
 }
 
