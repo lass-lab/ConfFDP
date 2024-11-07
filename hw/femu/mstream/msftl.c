@@ -877,7 +877,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
 
-    uint64_t stream_id = req->cmd->cdw11;
+    uint64_t stream_id = req->cmd.cdw11;
     if(stream_id>=ssd->stream_number){
         femu_log("sungjin : stream id %ld -> 0",stream_id);
         stream_id=0;
