@@ -825,7 +825,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     int i,j;
     struct ssdparams *spp = &ssd->sp;
-    NvmeNamespace *ns = req->ns;
+    // NvmeNamespace *ns = req->ns;
     NvmeDsmCmd *dsm = (NvmeDsmCmd *) &req->cmd;
     uint32_t attr = le32_to_cpu(dsm->attributes);
     uint32_t nr = (le32_to_cpu(dsm->nr) & 0xff) + 1;
@@ -844,7 +844,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         // nvme_h2c()
         
         // read in range
-        dma_read_prp(req->ns->ctrl,(uint8_t*)range,dsm->prp1,dsm->prp2);
+        dma_read_prp(req->ns->ctrl,(uint8_t*)range,sizeof(*range),dsm->prp1,dsm->prp2);
 
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
@@ -923,7 +923,8 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
         curlat = ssd_advance_status(ssd, &ppa, &swr);
         maxlat = (curlat > maxlat) ? curlat : maxlat;
     }
-    backend_rw(req->ns->ctrl->mbe,&req->qsg,,true);
+    uint64_t data_offset= ms_l2b(req->ns,lba);
+    backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,true);
     return maxlat;
 }
 
