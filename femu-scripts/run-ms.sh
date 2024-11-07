@@ -3,7 +3,7 @@
 # Run FEMU as a black-box SSD (FTL managed by the device)
 
 # image directory
-IMGDIR=/home/sungjin//images
+IMGDIR=/home/sungjin/images
 # Virtual machine disk image
 OSIMGF=$IMGDIR/fdp.qcow2
 
