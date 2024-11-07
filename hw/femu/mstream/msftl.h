@@ -211,7 +211,7 @@ struct ssd {
     QemuThread msftl_thread;
 };
 
-void ssd_init(FemuCtrl *n);
+void msssd_init(FemuCtrl *n);
 
 static inline NvmeLBAF *ms_ns_lbaf(NvmeNamespace *ns)
 {
