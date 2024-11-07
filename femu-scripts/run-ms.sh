@@ -59,7 +59,7 @@ if [[ ! -e "$OSIMGF" ]]; then
 	echo ""
 	exit
 fi
-QEMU=$HOME/ConfFDP/build-femu/x86_64-softmmu/qemu-system-x86_64
+QEMU=$HOME/ConfFDP/build-femu/qemu-system-x86_64
 sudo $QEMU \
     -name "FEMU-MSSSD-VM" \
     -enable-kvm \
