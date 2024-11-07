@@ -844,7 +844,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         // nvme_h2c()
         
         // read in range
-        dma_read_prp(req->ns->ctrl,range,dsm->prp1,dsm->prp2);
+        dma_read_prp(req->ns->ctrl,(uint8_t*)range,dsm->prp1,dsm->prp2);
 
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
@@ -860,9 +860,9 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             }
 
         }
-
+     g_free(range);
     }
-    g_free(range);
+   
     return 0;
 }
 
