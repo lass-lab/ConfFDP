@@ -120,7 +120,7 @@ static void msssd_init_write_pointer(struct ssd *ssd,int stream_id)
 
 
 
-    struct write_pointer *wpp = &(ssd->wp[i]);
+    struct write_pointer *wpp = &(ssd->wp[stream_id]);
 
 
     struct line_mgmt *lm = &ssd->lm;
@@ -817,7 +817,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     }
     uint64_t data_offset= ms_l2b(req->ns,lba);
     // backend_rw(n->mbe, &req->qsg, &data_offset, req->is_write);
-    backend_rw(req->ctrl->mbe,&req->qsg,,false);
+    backend_rw(req->ctrl->mbe,&req->qsg,&data_offset,false);
     return maxlat;
 }
 
@@ -838,13 +838,13 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     print_sungjin(msssd_trim);
     print_sungjin(nr);
     if (attr & NVME_DSMGMT_AD) {
-        NvmeDSMAIOCB iocb;
+        // NvmeDSMAIOCB iocb;
         // iocb.req=
         NvmeDsmRange *range = g_malloc0(sizeof(struct NvmeDsmRange)*nr);
         // nvme_h2c()
         
         // read in range
-        dma_read_prp(req->ctrl,range,dsm->prp1,dsm->prp2);
+        dma_read_prp(req->ns->ctrl,range,dsm->prp1,dsm->prp2);
 
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
@@ -879,7 +879,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
 
     uint64_t stream_id = req->cmd->cdw11;
     if(stream_id>=ssd->stream_number){
-        femu_log("sungjin : stream id %d -> 0",stream_id);
+        femu_log("sungjin : stream id %ld -> 0",stream_id);
         stream_id=0;
     }
     int r;
