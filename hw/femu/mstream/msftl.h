@@ -200,7 +200,7 @@ struct ssd {
     struct ssd_channel *ch;
     struct ppa *maptbl; /* page level mapping table */
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
-    struct write_pointer wp;
+    struct write_pointer* wp;
     struct line_mgmt lm;
 
     /* lockless ring for communication with NVMe IO thread */

@@ -195,7 +195,8 @@ void *nvme_poller(void *arg)
     FemuCtrl *n = ((NvmePollerThreadArgument *)arg)->n;
     int index = ((NvmePollerThreadArgument *)arg)->index;
     int i;
-
+    // print_sungjin(nvme_poller);
+    printf("nvme_poller start@@@@@@@@@@@@\n");
     switch (n->multipoller_enabled) {
     case 1:
         while (1) {
@@ -230,7 +231,7 @@ void *nvme_poller(void *arg)
         }
         break;
     }
-
+    printf("nvme_poller end@@@@@@@@@@@@\n");
     return NULL;
 }
 

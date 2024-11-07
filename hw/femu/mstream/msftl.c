@@ -401,7 +401,7 @@ void ssd_init(FemuCtrl *n)
     }
     
 
-    qemu_thread_create(&ssd->msftl_thread, "FEMU-FTL-Thread", msftl_thread, n,
+    qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", msftl_thread, n,
                        QEMU_THREAD_JOINABLE);
 }
 
@@ -935,7 +935,8 @@ static void *msftl_thread(void *arg)
     uint64_t lat = 0;
     int rc;
     int i;
-    print_sungjin(msftl_thread);
+    // print_sungjin(msftl_thread);
+    printf("msftl_thread start@@@@@@@@@\n");
     while (!*(ssd->dataplane_started_ptr)) {
         usleep(100000);
     }
@@ -984,6 +985,7 @@ static void *msftl_thread(void *arg)
             }
         }
     }
+    printf("msftl_thread end@@@@@@@@@\n");
 
     return NULL;
 }
