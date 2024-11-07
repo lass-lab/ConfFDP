@@ -3,7 +3,8 @@
 # Run FEMU as a black-box SSD (FTL managed by the device)
 
 # image directory
-IMGDIR=/home/sungjin/images
+HOME=/home/sungjin
+IMGDIR=$HOME/images
 # Virtual machine disk image
 OSIMGF=$IMGDIR/fdp.qcow2
 
@@ -58,9 +59,9 @@ if [[ ! -e "$OSIMGF" ]]; then
 	echo ""
 	exit
 fi
-
-sudo ./qemu-system-x86_64 \
-    -name "FEMU-BBSSD-VM" \
+QEMU=$HOME/ConfFDP/build-femu/x86_64-softmmu/qemu-system-x86_64
+sudo $QEMU \
+    -name "FEMU-MSSSD-VM" \
     -enable-kvm \
     -cpu host \
     -smp 4 \
