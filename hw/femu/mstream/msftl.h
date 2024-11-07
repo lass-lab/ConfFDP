@@ -163,6 +163,7 @@ typedef struct line {
     QTAILQ_ENTRY(line) entry; /* in either {free,victim,full} list */
     /* position in the priority queue for victim lines */
     size_t                  pos;
+    int stream_id;
 } line;
 
 /* wp: record next write addr */
@@ -202,7 +203,7 @@ struct ssd {
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
     struct write_pointer* wp;
     struct line_mgmt lm;
-
+    uint8_t stream_number;
     /* lockless ring for communication with NVMe IO thread */
     struct rte_ring **to_ftl;
     struct rte_ring **to_poller;

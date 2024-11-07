@@ -163,7 +163,6 @@ typedef struct line {
     QTAILQ_ENTRY(line) entry; /* in either {free,victim,full} list */
     /* position in the priority queue for victim lines */
     size_t                  pos;
-    int stream_id;
 } line;
 
 /* wp: record next write addr */
@@ -201,7 +200,6 @@ struct ssd {
     struct ssd_channel *ch;
     struct ppa *maptbl; /* page level mapping table */
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
-    uint8_t stream_number;
     struct write_pointer wp;
     struct line_mgmt lm;
 

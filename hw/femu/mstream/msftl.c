@@ -381,7 +381,7 @@ void ssd_init(FemuCtrl *n)
     ssd->ch = g_malloc0(sizeof(struct ssd_channel) * spp->nchs);
     ssd->stream_number = n->stream_number;
     ssd->wp=g_malloc(sizeof(struct write_pointer)*n->stream_number);
-    for (int i = 0; i < spp->nchs; i++) {
+    for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp);
     }
 
