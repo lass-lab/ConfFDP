@@ -526,7 +526,7 @@ static int nvme_register_extensions(FemuCtrl *n)
     }else if(MSSSD(n)){
         nvme_register_msssd(n);
     }else if(FDPSSD(n)){
-        nvme_register_fdpssd(n);
+        // nvme_register_fdpssd(n);
         /* TODO: For future extensions */
     }
 

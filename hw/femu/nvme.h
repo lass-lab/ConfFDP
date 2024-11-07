@@ -1486,6 +1486,8 @@ int nvme_register_nossd(FemuCtrl *n);
 int nvme_register_bbssd(FemuCtrl *n);
 int nvme_register_znssd(FemuCtrl *n);
 
+int nvme_register_msssd(FemuCtrl *n);
+
 static inline uint64_t ns_blks(NvmeNamespace *ns, uint8_t lba_idx)
 {
     FemuCtrl *n = ns->ctrl;
