@@ -316,6 +316,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     nand_block_size_mb= (spp->secsz*spp->secs_per_pg*spp->pgs_per_blk)>>20;
     print_sungjin(user_space_ratio);
     print_sungjin(user_device_size_mb);
+    print_sungjin(total_device_size_mb);
     print_sungjin(nand_block_size_mb);
     
     // spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
