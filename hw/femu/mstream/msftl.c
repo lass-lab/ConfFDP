@@ -241,19 +241,97 @@ static void check_params(struct ssdparams *spp)
     //ftl_assert(is_power_of_2(spp->nchs));
 }
 
+// static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
+// {
+    
+
+//     print_sungjin(n->memsz);
+
+//     spp->secsz = n->bb_params.secsz; // 512
+//     spp->secs_per_pg = n->bb_params.secs_per_pg; // 8
+//     spp->pgs_per_blk = n->bb_params.pgs_per_blk; //256
+//     spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
+//     spp->pls_per_lun = n->bb_params.pls_per_lun; // 1
+//     spp->luns_per_ch = n->bb_params.luns_per_ch; // 8
+//     spp->nchs = n->bb_params.nchs; // 8
+
+//     spp->pg_rd_lat = n->bb_params.pg_rd_lat;
+//     spp->pg_wr_lat = n->bb_params.pg_wr_lat;
+//     spp->blk_er_lat = n->bb_params.blk_er_lat;
+//     spp->ch_xfer_lat = n->bb_params.ch_xfer_lat;
+
+//     /* calculated values */
+//     spp->secs_per_blk = spp->secs_per_pg * spp->pgs_per_blk;
+//     spp->secs_per_pl = spp->secs_per_blk * spp->blks_per_pl;
+//     spp->secs_per_lun = spp->secs_per_pl * spp->pls_per_lun;
+//     spp->secs_per_ch = spp->secs_per_lun * spp->luns_per_ch;
+//     spp->tt_secs = spp->secs_per_ch * spp->nchs;
+
+//     spp->pgs_per_pl = spp->pgs_per_blk * spp->blks_per_pl;
+//     spp->pgs_per_lun = spp->pgs_per_pl * spp->pls_per_lun;
+//     spp->pgs_per_ch = spp->pgs_per_lun * spp->luns_per_ch;
+//     spp->tt_pgs = spp->pgs_per_ch * spp->nchs;
+
+//     spp->blks_per_lun = spp->blks_per_pl * spp->pls_per_lun; // 256 *1
+//     spp->blks_per_ch = spp->blks_per_lun * spp->luns_per_ch; // 256 * 8
+//     spp->tt_blks = spp->blks_per_ch * spp->nchs; // 256 * 8 * 8
+
+//     spp->pls_per_ch =  spp->pls_per_lun * spp->luns_per_ch; // 1 * 8
+//     spp->tt_pls = spp->pls_per_ch * spp->nchs; // 8*8
+
+//     spp->tt_luns = spp->luns_per_ch * spp->nchs;//8*8
+
+//     /* line is special, put it at the end */
+//     spp->blks_per_line = spp->tt_luns; /* TODO: to fix under multiplanes */
+//     spp->pgs_per_line = spp->blks_per_line * spp->pgs_per_blk;
+//     spp->secs_per_line = spp->pgs_per_line * spp->secs_per_pg;
+//     spp->tt_lines = spp->blks_per_lun; /* TODO: to fix under multiplanes */ // 256
+
+//     spp->gc_thres_pcent = n->bb_params.gc_thres_pcent/100.0;
+//     spp->gc_thres_lines = (int)((1 - spp->gc_thres_pcent) * spp->tt_lines);
+//     spp->gc_thres_pcent_high = n->bb_params.gc_thres_pcent_high/100.0;
+//     spp->gc_thres_lines_high = (int)((1 - spp->gc_thres_pcent_high) * spp->tt_lines);
+//     spp->enable_gc_delay = true;
+
+
+//     check_params(spp);
+// }
+
 static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 {
     
 
-    print_sungjin(n->memsz);
+    // print_sungjin(n->memsz);
     
+    uint64_t nand_block_size_mb;
+    uint64_t lun_size_mb;
+    uint64_t user_space_ratio=100*(spp->gc_thres_pcent); // 25
+    uint64_t user_device_size_mb = n->memsz;
+    uint64_t total_device_size_mb= (user_device_size_mb*100)/user_space_ratio;
+
     spp->secsz = n->bb_params.secsz; // 512
     spp->secs_per_pg = n->bb_params.secs_per_pg; // 8
     spp->pgs_per_blk = n->bb_params.pgs_per_blk; //256
-    spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
+
+    nand_block_size_mb= (spp->secsz*spp->secs_per_pg*spp->pgs_per_blk)>>20;
+    print_sungjin(user_space_ratio);
+    print_sungjin(user_device_size_mb);
+    print_sungjin(nand_block_size_mb);
+    
+    // spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
+
+
     spp->pls_per_lun = n->bb_params.pls_per_lun; // 1
     spp->luns_per_ch = n->bb_params.luns_per_ch; // 8
     spp->nchs = n->bb_params.nchs; // 8
+
+    lun_size_mb=total_device_size_mb/(spp->nchs*spp->luns_per_ch);
+    
+    spp->blks_per_pl = lun_size_mb/nand_block_size_mb; /* 256 16GB */
+
+    print_sungjin(lun_size_mb);
+    print_sungjin(spp->blks_per_pl);
+
 
     spp->pg_rd_lat = n->bb_params.pg_rd_lat;
     spp->pg_wr_lat = n->bb_params.pg_wr_lat;

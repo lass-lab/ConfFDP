@@ -12,7 +12,9 @@ OSIMGF=$IMGDIR/fdp.qcow2
 secsz=512 # sector size in bytes
 secs_per_pg=8 # number of sectors in a flash page
 pgs_per_blk=256 # number of pages per flash block
-blks_per_pl=256 # number of blocks per plane /////////////////////////////////
+
+blks_per_pl=256 # number of blocks per plane not used /////////////////////////////////
+
 pls_per_lun=1 # keep it at one, no multiplanes support
 luns_per_ch=8 # number of chips per channel
 nchs=8 # number of channels
