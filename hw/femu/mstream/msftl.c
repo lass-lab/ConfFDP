@@ -306,7 +306,10 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     
     uint64_t nand_block_size_mb;
     uint64_t lun_size_mb;
+    spp->gc_thres_pcent = n->bb_params.gc_thres_pcent/100.0;
+    spp->gc_thres_pcent_high = n->bb_params.gc_thres_pcent_high/100.0;
     uint64_t user_space_ratio=100*(spp->gc_thres_pcent); // 25
+    printf("gc_thres_pcent %lf\n",spp->gc_thres_pcent);
     print_sungjin(user_space_ratio);
 
     uint64_t user_device_size_mb = n->memsz;
@@ -370,9 +373,9 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     spp->secs_per_line = spp->pgs_per_line * spp->secs_per_pg;
     spp->tt_lines = spp->blks_per_lun; /* TODO: to fix under multiplanes */ // 256
 
-    spp->gc_thres_pcent = n->bb_params.gc_thres_pcent/100.0;
+    
     spp->gc_thres_lines = (int)((1 - spp->gc_thres_pcent) * spp->tt_lines);
-    spp->gc_thres_pcent_high = n->bb_params.gc_thres_pcent_high/100.0;
+    
     spp->gc_thres_lines_high = (int)((1 - spp->gc_thres_pcent_high) * spp->tt_lines);
     spp->enable_gc_delay = true;
 
