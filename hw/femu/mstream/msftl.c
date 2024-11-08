@@ -977,6 +977,7 @@ uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
     //     mark_page_invalid(ssd, &ppa);
     //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
     // }
+    print_sungjin(msssd_trim2);
     return 0;
 }
 
