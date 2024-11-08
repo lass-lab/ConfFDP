@@ -323,7 +323,7 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         }
         if(MSSSD(n)){
             // msssd_trim2(n,slba,nlb);
-            cmd->discard_range_pointer=range;
+            cmd->discard_range_pointer=(uint64_t)range;
         }else{
             g_free(range);
         }
