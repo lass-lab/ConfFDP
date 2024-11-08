@@ -9,9 +9,9 @@ IMGDIR=$HOME/images
 OSIMGF=$IMGDIR/fdp.qcow2
 
 # Configurable SSD Controller layout parameters (must be power of 2)
-secsz=512 # sector size in bytes
-secs_per_pg=8 # number of sectors in a flash page
-pgs_per_blk=256 # number of pages per flash block
+secsz=4096 # sector size in bytes
+# secs_per_pg=1 # number of sectors in a flash page
+
 
 blks_per_pl=256 # number of blocks per plane not used /////////////////////////////////
 
@@ -31,6 +31,22 @@ gc_thres_pcent=75
 gc_thres_pcent_high=95
 
 #-----------------------------------------------------------------------
+NAND_PAGE_SIZE_KB=16
+NAND_BLOCK_SIZE_MB=4
+
+
+# if [ $NAND_BLOCK_SIZE -eq 64 ]; then
+#     pgs_per_blk=4096 # number of pages per flash block
+# elif [ $NAND_BLOCK_SIZE -eq 32 ]; then
+#     pgs_per_blk=4096 # number of pages per flash block
+# else  # 4MB
+#     pgs_per_blk=256 # number of pages per flash block
+# fi
+
+# NAND_4MB_BLOCK=256
+
+
+
 
 #Compose the entire FEMU BBSSD command line options
 FEMU_OPTIONS="-device femu"
@@ -38,9 +54,9 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",devsz_mb=${ssd_size}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",namespaces=1"
 FEMU_OPTIONS=${FEMU_OPTIONS}",femu_mode=7"
 FEMU_OPTIONS=${FEMU_OPTIONS}",secsz=${secsz}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",secs_per_pg=${secs_per_pg}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",pgs_per_blk=${pgs_per_blk}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",blks_per_pl=${blks_per_pl}"
+FEMU_OPTIONS=${FEMU_OPTIONS}",nand_page_size_kb=${NAND_PAGE_SIZE_KB}"
+FEMU_OPTIONS=${FEMU_OPTIONS}",nand_block_size_mb=${NAND_BLOCK_SIZE_MB}"
+# FEMU_OPTIONS=${FEMU_OPTIONS}",blks_per_pl=${blks_per_pl}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",pls_per_lun=${pls_per_lun}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",luns_per_ch=${luns_per_ch}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",nchs=${nchs}"

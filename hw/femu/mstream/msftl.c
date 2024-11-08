@@ -304,7 +304,9 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 
     // print_sungjin(n->memsz);
     
-    uint64_t nand_block_size_mb;
+    uint64_t nand_block_size=(spp->nand_block_size_mb<<20);
+    uint64_t nand_page_size=(spp->nand_page_size_kb<<10);
+
     uint64_t lun_size_mb;
     spp->gc_thres_pcent = n->bb_params.gc_thres_pcent/100.0;
     spp->gc_thres_pcent_high = n->bb_params.gc_thres_pcent_high/100.0;
@@ -316,15 +318,17 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     print_sungjin(user_device_size_mb);
     uint64_t total_device_size_mb= (user_device_size_mb*100)/user_space_ratio;
     print_sungjin(total_device_size_mb);
-    spp->secsz = n->bb_params.secsz; // 512
-    spp->secs_per_pg = n->bb_params.secs_per_pg; // 8
-    spp->pgs_per_blk = n->bb_params.pgs_per_blk; //256
+    // spp->secsz = n->bb_params.secsz; // 4096
+    spp->secsz = 4096; // 4096
+    spp->secs_per_pg = nand_page_size/spp->secsz; // 8
+    spp->pgs_per_blk = nand_block_size/nand_page_size;
 
-    nand_block_size_mb= (spp->secsz*spp->secs_per_pg*spp->pgs_per_blk)>>20;
+    // nand_block_size_mb= (spp->secsz*spp->secs_per_pg*spp->pgs_per_blk)>>20;
     
     
-    
-    print_sungjin(nand_block_size_mb);
+    print_sungjin(nand_page_size);
+    print_sungjin(nand_block_size);
+    print_sungjin(spp->pgs_per_blk);
     
     // spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
 
@@ -335,7 +339,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 
     lun_size_mb=total_device_size_mb/(spp->nchs*spp->luns_per_ch);
     
-    spp->blks_per_pl = lun_size_mb/nand_block_size_mb; /* 256 16GB */
+    spp->blks_per_pl = lun_size_mb/(spp->nand_block_size_mb); /* 256 16GB */
 
     print_sungjin(lun_size_mb);
     print_sungjin(spp->blks_per_pl);
@@ -967,19 +971,19 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 }
 
 
-uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
-    // int j
-    // for(j=0;j<nlb ;j++){
-    //     ppa=get_maptbl_ent(ssd,(slba+j));
-    //     if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
-    //         continue;
-    //     }
-    //     mark_page_invalid(ssd, &ppa);
-    //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
-    // }
-    print_sungjin(msssd_trim2);
-    return 0;
-}
+// uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
+//     // int j
+//     // for(j=0;j<nlb ;j++){
+//     //     ppa=get_maptbl_ent(ssd,(slba+j));
+//     //     if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
+//     //         continue;
+//     //     }
+//     //     mark_page_invalid(ssd, &ppa);
+//     //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
+//     // }
+//     print_sungjin(msssd_trim2);
+//     return 0;
+// }
 
 static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     int i,j;
@@ -999,17 +1003,17 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     if (attr & NVME_DSMGMT_AD) {
         // NvmeDSMAIOCB iocb;
         // iocb.req=
-        NvmeDsmRange *range = g_malloc0(sizeof(struct NvmeDsmRange)*nr);
+        // NvmeDsmRange *range = g_malloc0(sizeof(struct NvmeDsmRange)*nr);
         // nvme_h2c()
-        
+        NvmeDsmRange *range=req->cmd->discard_range_pointer;
         // read in range
-        dma_read_prp(req->ns->ctrl,(uint8_t*)range,sizeof(struct NvmeDsmRange)*nr,dsm->prp1,dsm->prp2);
+        // dma_read_prp(req->ns->ctrl,(uint8_t*)range,sizeof(struct NvmeDsmRange)*nr,dsm->prp1,dsm->prp2);
 
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
             slpn=dmr->slba/spp->secs_per_pg;
             nlp=dmr->nlb/spp->secs_per_pg;
-            msssd_trim2(req->ns->ctrl,slpn,nlp);
+            // msssd_trim2(req->ns->ctrl,slpn,nlp);
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
@@ -1020,7 +1024,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             }
 
         }
-     g_free(range);
+        g_free(range);
     }
    
     return 0;

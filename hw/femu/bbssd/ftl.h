@@ -116,6 +116,9 @@ struct ssdparams {
     int luns_per_ch;  /* # of LUNs per channel */
     int nchs;         /* # of channels in the SSD */
 
+    int nand_page_size_mb;
+    int nand_block_size_mb;
+
     int pg_rd_lat;    /* NAND page read latency in nanoseconds */
     int pg_wr_lat;    /* NAND page program latency in nanoseconds */
     int blk_er_lat;   /* NAND block erase latency in nanoseconds */
@@ -154,6 +157,8 @@ struct ssdparams {
     int tt_pls;       /* total # of planes in the SSD */
 
     int tt_luns;      /* total # of LUNs in the SSD */
+
+
 };
 
 typedef struct line {

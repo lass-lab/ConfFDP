@@ -336,13 +336,14 @@ static void nvme_ns_init_identify(FemuCtrl *n, NvmeIdNs *id_ns)
     id_ns->dpc           = n->dpc;
     id_ns->dps           = n->dps;
     id_ns->dlfeat        = 0x9;
-    id_ns->lbaf[0].lbads = 9;
+    id_ns->lbaf[0].lbads = 12; // sungjin lba size is 4096
     id_ns->lbaf[0].ms    = 0;
 
-    npdg = 1;
+    // npdg = 1;
+    npdg=(n->bb_params->nand_page_size)/(n->bb_params->secsz);
     id_ns->npda = id_ns->npdg = npdg - 1;
 
-    for (i = 0; i < n->nlbaf; i++) {
+    for (i = 1; i < n->nlbaf; i++) {
         id_ns->lbaf[i].lbads = BDRV_SECTOR_BITS + i;
         id_ns->lbaf[i].ms    = cpu_to_le16(n->meta);
     }
@@ -677,6 +678,10 @@ static Property femu_props[] = {
     DEFINE_PROP_INT32("secs_per_pg", FemuCtrl, bb_params.secs_per_pg, 8),
     DEFINE_PROP_INT32("pgs_per_blk", FemuCtrl, bb_params.pgs_per_blk, 256),
     DEFINE_PROP_INT32("blks_per_pl", FemuCtrl, bb_params.blks_per_pl, 256),
+
+    DEFINE_PROP_INT32("nand_page_size_kb", FemuCtrl, bb_params.nand_page_size_kb, 256),
+    DEFINE_PROP_INT32("nand_block_size_mb", FemuCtrl, bb_params.nand_block_size_mb, 256),
+
     DEFINE_PROP_INT32("pls_per_lun", FemuCtrl, bb_params.pls_per_lun, 1),
     DEFINE_PROP_INT32("luns_per_ch", FemuCtrl, bb_params.luns_per_ch, 8),
     DEFINE_PROP_INT32("nchs", FemuCtrl, bb_params.nchs, 8),

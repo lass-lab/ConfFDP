@@ -231,7 +231,7 @@ static inline size_t ms_l2b(NvmeNamespace *ns, uint64_t lba)
     return lba << ms_ns_lbads(ns);
 }
 
-uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
+// uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
 
 #ifdef FEMU_DEBUG_FTL
 #define ftl_debug(fmt, ...) \

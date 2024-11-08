@@ -302,8 +302,14 @@ typedef struct NvmeCmd {
     uint32_t    cdw11; // dspec
     uint32_t    cdw12;
     uint32_t    cdw13;
-    uint32_t    cdw14;
-    uint32_t    cdw15;
+    union{
+        uint64_t* discard_range_pointer;
+        struct{
+            uint32_t    cdw14;
+            uint32_t    cdw15;
+        };
+    };
+
 } NvmeCmd;
 
 #define NVME_CMD_FLAGS_FUSE(flags) (flags & 0x3)
@@ -1163,6 +1169,8 @@ typedef struct BbCtrlParams {
 
     int gc_thres_pcent;
     int gc_thres_pcent_high;
+    int nand_page_size_kb;
+    int nand_block_size_mb;
 } BbCtrlParams;
 
 typedef struct ZNSCtrlParams {
