@@ -1005,7 +1005,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         // iocb.req=
         // NvmeDsmRange *range = g_malloc0(sizeof(struct NvmeDsmRange)*nr);
         // nvme_h2c()
-        NvmeDsmRange *range= (NvmeDsmRange *)req->cmd->discard_range_pointer;
+        NvmeDsmRange *range= (NvmeDsmRange *)req->cmd.discard_range_pointer;
         // read in range
         // dma_read_prp(req->ns->ctrl,(uint8_t*)range,sizeof(struct NvmeDsmRange)*nr,dsm->prp1,dsm->prp2);
 
