@@ -340,7 +340,7 @@ static void nvme_ns_init_identify(FemuCtrl *n, NvmeIdNs *id_ns)
     id_ns->lbaf[0].ms    = 0;
 
     // npdg = 1;
-    npdg=(n->bb_params.nand_page_size)/(n->bb_params.secsz);
+    npdg=(n->bb_params.nand_page_size_kb<<10)/(n->bb_params.secsz);
     id_ns->npda = id_ns->npdg = npdg - 1;
 
     for (i = 1; i < n->nlbaf; i++) {
