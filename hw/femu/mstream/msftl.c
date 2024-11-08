@@ -968,7 +968,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 
 
 uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
-
+    return 0;
 }
 
 uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
