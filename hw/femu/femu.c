@@ -679,8 +679,8 @@ static Property femu_props[] = {
     DEFINE_PROP_INT32("pgs_per_blk", FemuCtrl, bb_params.pgs_per_blk, 256),
     DEFINE_PROP_INT32("blks_per_pl", FemuCtrl, bb_params.blks_per_pl, 256),
 
-    DEFINE_PROP_INT32("nand_page_size_kb", FemuCtrl, bb_params.nand_page_size_kb, 256),
-    DEFINE_PROP_INT32("nand_block_size_mb", FemuCtrl, bb_params.nand_block_size_mb, 256),
+    DEFINE_PROP_INT32("nand_page_size_kb", FemuCtrl, bb_params.nand_page_size_kb, 16),
+    DEFINE_PROP_INT32("nand_block_size_mb", FemuCtrl, bb_params.nand_block_size_mb, 4),
 
     DEFINE_PROP_INT32("pls_per_lun", FemuCtrl, bb_params.pls_per_lun, 1),
     DEFINE_PROP_INT32("luns_per_ch", FemuCtrl, bb_params.luns_per_ch, 8),

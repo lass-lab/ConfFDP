@@ -304,8 +304,8 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 
     // print_sungjin(n->memsz);
     
-    uint64_t nand_block_size=(spp->nand_block_size_mb<<20);
-    uint64_t nand_page_size=(spp->nand_page_size_kb<<10);
+    uint64_t nand_block_size=(n->bb_params.nand_block_size_mb<<20);
+    uint64_t nand_page_size=(n->bb_params.nand_page_size_kb<<10);
 
     uint64_t lun_size_mb;
     spp->gc_thres_pcent = n->bb_params.gc_thres_pcent/100.0;
@@ -339,7 +339,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 
     lun_size_mb=total_device_size_mb/(spp->nchs*spp->luns_per_ch);
     
-    spp->blks_per_pl = lun_size_mb/(spp->nand_block_size_mb); /* 256 16GB */
+    spp->blks_per_pl = lun_size_mb/(n->bb_params.nand_block_size_mb); /* 256 16GB */
 
     print_sungjin(lun_size_mb);
     print_sungjin(spp->blks_per_pl);
@@ -1005,7 +1005,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         // iocb.req=
         // NvmeDsmRange *range = g_malloc0(sizeof(struct NvmeDsmRange)*nr);
         // nvme_h2c()
-        NvmeDsmRange *range=req->cmd->discard_range_pointer;
+        NvmeDsmRange *range= (NvmeDsmRange *)req->cmd->discard_range_pointer;
         // read in range
         // dma_read_prp(req->ns->ctrl,(uint8_t*)range,sizeof(struct NvmeDsmRange)*nr,dsm->prp1,dsm->prp2);
 
