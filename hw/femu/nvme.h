@@ -1427,7 +1427,7 @@ static inline bool MSSSD(FemuCtrl *n)
     return (n->femu_mode == FEMU_MSSSD_MODE);
 }
 
-// uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
+uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
 
 /* Basic NVMe Queue Pair operation APIs from nvme-util.c */
 int nvme_check_sqid(FemuCtrl *n, uint16_t sqid);
