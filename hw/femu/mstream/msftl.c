@@ -981,7 +981,7 @@ uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
     return 0;
 }
 
-uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
+static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     int i,j;
     struct ssdparams *spp = &ssd->sp;
     // NvmeNamespace *ns = req->ns;
