@@ -46,7 +46,7 @@ static void nvme_process_sq_io(void *opaque, int index_poller)
     NvmeCmd cmd;
     NvmeRequest *req;
     int processed = 0;
-
+    print_sungjin(nvme_process_sq_io);
     nvme_update_sq_tail(sq);
     while (!(nvme_sq_empty(sq))) {
         if (sq->phys_contig) {
@@ -75,7 +75,7 @@ static void nvme_process_sq_io(void *opaque, int index_poller)
         status = nvme_io_cmd(n, &cmd, req);
         if (1 && status == NVME_SUCCESS) {
             req->status = status;
-
+            printf("sungjin : nvme_process_sq_io : femu_ring_enqueue\n");
             int rc = femu_ring_enqueue(n->to_ftl[index_poller], (void *)&req, 1);
             if (rc != 1) {
                 femu_err("enqueue failed, ret=%d\n", rc);
@@ -458,6 +458,7 @@ static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
         return NVME_INVALID_OPCODE | NVME_DNR;
     default:
         if (n->ext_ops.io_cmd) {
+            printf("sungjin nvme_io_cmd @@@@@@\n");
             return n->ext_ops.io_cmd(n, ns, cmd, req);
         }
 
