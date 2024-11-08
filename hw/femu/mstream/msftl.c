@@ -960,14 +960,18 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
         sublat = ssd_advance_status(ssd, &ppa, &srd);
         maxlat = (sublat > maxlat) ? sublat : maxlat;
     }
-    uint64_t data_offset= ms_l2b(req->ns,lba);
+    // uint64_t data_offset= ms_l2b(req->ns,lba);
     // backend_rw(n->mbe, &req->qsg, &data_offset, req->is_write);
-    backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,false);
+    // backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,false);
     return maxlat;
 }
 
 
-static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
+uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
+
+}
+
+uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     int i,j;
     struct ssdparams *spp = &ssd->sp;
     // NvmeNamespace *ns = req->ns;
@@ -1068,8 +1072,8 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
         curlat = ssd_advance_status(ssd, &ppa, &swr);
         maxlat = (curlat > maxlat) ? curlat : maxlat;
     }
-    uint64_t data_offset= ms_l2b(req->ns,lba);
-    backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,true);
+    // uint64_t data_offset= ms_l2b(req->ns,lba);
+    // backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,true);
     return maxlat;
 }
 
@@ -1109,9 +1113,9 @@ static void *msftl_thread(void *arg)
             case NVME_CMD_READ:
                 lat = ssd_read(ssd, req);
                 break;
-            case NVME_CMD_DSM:
-                lat = msssd_trim(ssd,req);
-                break;
+            // case NVME_CMD_DSM:
+                // lat = msssd_trim(ssd,req);
+                // break;
             default:
                 //ftl_err("FTL received unkown request type, ERROR\n");
                 ;

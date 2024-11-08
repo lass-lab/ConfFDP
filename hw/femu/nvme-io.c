@@ -315,6 +315,9 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
             }
 
             bitmap_clear(ns->util, slba, nlb);
+            if(MSSSD(n)){
+                msssd_trim2(n,slba,nlb);
+            }
         }
         g_free(range);
     }
@@ -458,7 +461,7 @@ static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
         return NVME_INVALID_OPCODE | NVME_DNR;
     default:
         if (n->ext_ops.io_cmd) {
-            printf("sungjin nvme_io_cmd @@@@@@\n");
+            // printf("sungjin nvme_io_cmd @@@@@@\n");
             return n->ext_ops.io_cmd(n, ns, cmd, req);
         }
 
