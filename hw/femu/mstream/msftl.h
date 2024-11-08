@@ -213,8 +213,6 @@ struct ssd {
 
 void msssd_init(FemuCtrl *n);
 
-uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
-
 
 static inline NvmeLBAF *ms_ns_lbaf(NvmeNamespace *ns)
 {

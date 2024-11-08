@@ -1,6 +1,10 @@
 #include "./nvme.h"
-#include "mstream/msftl.h"
+// #include "mstream/msftl.h"
 static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req);
+
+uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
+
+
 
 static void nvme_update_sq_eventidx(const NvmeSQueue *sq)
 {
