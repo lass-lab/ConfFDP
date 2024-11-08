@@ -138,6 +138,7 @@ static void msssd_init_write_pointer(struct ssd *ssd,int stream_id)
     wpp->pg = 0;
     wpp->blk = 0;
     wpp->pl = 0;
+    print_sungjin(msssd_init_write_pointer);
 }
 
 static inline void check_addr(int a, int max)
@@ -306,17 +307,20 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     uint64_t nand_block_size_mb;
     uint64_t lun_size_mb;
     uint64_t user_space_ratio=100*(spp->gc_thres_pcent); // 25
-    uint64_t user_device_size_mb = n->memsz;
-    uint64_t total_device_size_mb= (user_device_size_mb*100)/user_space_ratio;
+    print_sungjin(user_space_ratio);
 
+    uint64_t user_device_size_mb = n->memsz;
+    print_sungjin(user_device_size_mb);
+    uint64_t total_device_size_mb= (user_device_size_mb*100)/user_space_ratio;
+    print_sungjin(total_device_size_mb);
     spp->secsz = n->bb_params.secsz; // 512
     spp->secs_per_pg = n->bb_params.secs_per_pg; // 8
     spp->pgs_per_blk = n->bb_params.pgs_per_blk; //256
 
     nand_block_size_mb= (spp->secsz*spp->secs_per_pg*spp->pgs_per_blk)>>20;
-    print_sungjin(user_space_ratio);
-    print_sungjin(user_device_size_mb);
-    print_sungjin(total_device_size_mb);
+    
+    
+    
     print_sungjin(nand_block_size_mb);
     
     // spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
@@ -457,7 +461,7 @@ void msssd_init(FemuCtrl *n)
     int i;
 
     ftl_assert(ssd);
-
+   
     ssd_init_params(spp, n);
 
     /* initialize ssd internal layout architecture */
@@ -486,6 +490,7 @@ void msssd_init(FemuCtrl *n)
 
     qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", msftl_thread, n,
                        QEMU_THREAD_JOINABLE);
+     print_sungjin(msssd_init);
 }
 
 static inline bool valid_ppa(struct ssd *ssd, struct ppa *ppa)
