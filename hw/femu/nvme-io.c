@@ -317,9 +317,9 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
             }
 
             bitmap_clear(ns->util, slba, nlb);
-            if(MSSSD(n)){
-                msssd_trim2(n,slba,nlb);
-            }
+            // if(MSSSD(n)){
+            //     msssd_trim2(n,slba,nlb);
+            // }
         }
         g_free(range);
     }

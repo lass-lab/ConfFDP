@@ -968,7 +968,16 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 
 
 uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb){
-    return 0;
+    // int j
+    // for(j=0;j<nlb ;j++){
+    //     ppa=get_maptbl_ent(ssd,(slba+j));
+    //     if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
+    //         continue;
+    //     }
+    //     mark_page_invalid(ssd, &ppa);
+    //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
+    // }
+    // return 0;
 }
 
 uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
@@ -1033,6 +1042,11 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     int r;
     print_sungjin(msssd_write);
+    print_sungjin(lba);
+    print_sungjin(start_lpn);
+    print_sungjin(len);
+    print_sungjin(end_lpn);
+
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
