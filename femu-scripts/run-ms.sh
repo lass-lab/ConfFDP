@@ -73,7 +73,7 @@ sudo $QEMU \
     -device scsi-hd,drive=hd0 \
     -drive file=$OSIMGF,if=none,aio=native,cache=none,format=qcow2,id=hd0 \
     ${FEMU_OPTIONS} \
-    -net user,hostfwd=tcp::8080-:22 \
+    -net user,hostfwd=tcp::8095-:22 \
     -net nic,model=virtio \
     -nographic \
     -qmp unix:./qmp-sock,server,nowait 2>&1 | tee log

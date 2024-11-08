@@ -46,7 +46,7 @@ static void nvme_process_sq_io(void *opaque, int index_poller)
     NvmeCmd cmd;
     NvmeRequest *req;
     int processed = 0;
-    print_sungjin(nvme_process_sq_io);
+    // print_sungjin(nvme_process_sq_io);
     nvme_update_sq_tail(sq);
     while (!(nvme_sq_empty(sq))) {
         if (sq->phys_contig) {
