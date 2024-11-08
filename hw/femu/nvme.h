@@ -303,7 +303,7 @@ typedef struct NvmeCmd {
     uint32_t    cdw12;
     uint32_t    cdw13;
     union{
-        uint64_t* discard_range_pointer;
+        uint64_t discard_range_pointer;
         struct{
             uint32_t    cdw14;
             uint32_t    cdw15;
