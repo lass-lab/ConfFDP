@@ -1129,9 +1129,9 @@ static void *msftl_thread(void *arg)
             case NVME_CMD_READ:
                 lat = ssd_read(ssd, req);
                 break;
-            // case NVME_CMD_DSM:
-                // lat = msssd_trim(ssd,req);
-                // break;
+            case NVME_CMD_DSM:
+                lat = msssd_trim(ssd,req);
+                break;
             default:
                 //ftl_err("FTL received unkown request type, ERROR\n");
                 ;
