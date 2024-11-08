@@ -1009,6 +1009,7 @@ uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             NvmeDsmRange* dmr = &range[i];
             slpn=dmr->slba/spp->secs_per_pg;
             nlp=dmr->nlb/spp->secs_per_pg;
+            msssd_trim2(slpn,nlp);
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
