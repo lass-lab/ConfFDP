@@ -691,25 +691,25 @@ static void mark_page_valid(struct ssd *ssd, struct ppa *ppa)
     line->vpc++;
 }
 
-static void mark_block_free(struct ssd *ssd, struct ppa *ppa)
-{
-    struct ssdparams *spp = &ssd->sp;
-    struct nand_block *blk = get_blk(ssd, ppa);
-    struct nand_page *pg = NULL;
+// static void mark_block_free(struct ssd *ssd, struct ppa *ppa)
+// {
+//     struct ssdparams *spp = &ssd->sp;
+//     struct nand_block *blk = get_blk(ssd, ppa);
+//     struct nand_page *pg = NULL;
 
-    for (int i = 0; i < spp->pgs_per_blk; i++) {
-        /* reset page status */
-        pg = &blk->pg[i];
-        ftl_assert(pg->nsecs == spp->secs_per_pg);
-        pg->status = PG_FREE;
-    }
+//     for (int i = 0; i < spp->pgs_per_blk; i++) {
+//         /* reset page status */
+//         pg = &blk->pg[i];
+//         ftl_assert(pg->nsecs == spp->secs_per_pg);
+//         pg->status = PG_FREE;
+//     }
 
-    /* reset block status */
-    ftl_assert(blk->npgs == spp->pgs_per_blk);
-    blk->ipc = 0;
-    blk->vpc = 0;
-    blk->erase_cnt++;
-}
+//     /* reset block status */
+//     ftl_assert(blk->npgs == spp->pgs_per_blk);
+//     blk->ipc = 0;
+//     blk->vpc = 0;
+//     blk->erase_cnt++;
+// }
 
 static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 {
@@ -786,27 +786,27 @@ static struct line *select_victim_line(struct ssd *ssd, bool force)
 }
 
 /* here ppa identifies the block we want to clean */
-static void clean_one_block(struct ssd *ssd, struct ppa *ppa,int stream_id)
-{
-    struct ssdparams *spp = &ssd->sp;
-    struct nand_page *pg_iter = NULL;
-    int cnt = 0;
+// static void clean_one_block(struct ssd *ssd, struct ppa *ppa,int stream_id)
+// {
+//     struct ssdparams *spp = &ssd->sp;
+//     struct nand_page *pg_iter = NULL;
+//     int cnt = 0;
 
-    for (int pg = 0; pg < spp->pgs_per_blk; pg++) {
-        ppa->g.pg = pg;
-        pg_iter = get_pg(ssd, ppa);
-        /* there shouldn't be any free page in victim blocks */
-        ftl_assert(pg_iter->status != PG_FREE);
-        if (pg_iter->status == PG_VALID) {
-            gc_read_page(ssd, ppa);
-            /* delay the maptbl update until "write" happens */
-            gc_write_page(ssd, ppa,stream_id);
-            cnt++;
-        }
-    }
+//     for (int pg = 0; pg < spp->pgs_per_blk; pg++) {
+//         ppa->g.pg = pg;
+//         pg_iter = get_pg(ssd, ppa);
+//         /* there shouldn't be any free page in victim blocks */
+//         ftl_assert(pg_iter->status != PG_FREE);
+//         if (pg_iter->status == PG_VALID) {
+//             gc_read_page(ssd, ppa);
+//             /* delay the maptbl update until "write" happens */
+//             gc_write_page(ssd, ppa,stream_id);
+//             cnt++;
+//         }
+//     }
 
-    ftl_assert(get_blk(ssd, ppa)->vpc == cnt);
-}
+//     ftl_assert(get_blk(ssd, ppa)->vpc == cnt);
+// }
 
 static void mark_line_free(struct ssd *ssd, struct ppa *ppa)
 {
@@ -824,7 +824,7 @@ static int do_gc(struct ssd *ssd, bool force)
 {
     struct line *victim_line = NULL;
     struct ssdparams *spp = &ssd->sp;
-    struct nand_lun *lunp;
+    // struct nand_lun *lunp;
     struct ppa ppa;
     int ch, lun,cnt;
     int stream_id;
@@ -876,9 +876,9 @@ static int do_gc(struct ssd *ssd, bool force)
                 pg_iter = get_pg(ssd,&ppa);
                 ftl_assert(pg_iter->status != PG_FREE);
                 if (pg_iter->status == PG_VALID) {
-                    gc_read_page(ssd, ppa);
+                    gc_read_page(ssd, &ppa);
                     /* delay the maptbl update until "write" happens */
-                    gc_write_page(ssd, ppa,stream_id);
+                    gc_write_page(ssd, &ppa,stream_id);
                     cnt++;
                 }
                 pg_iter->status=PG_FREE;
