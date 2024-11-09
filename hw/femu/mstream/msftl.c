@@ -138,7 +138,7 @@ static void msssd_init_write_pointer(struct ssd *ssd,int stream_id)
     wpp->pg = 0;
     wpp->blk = 0;
     wpp->pl = 0;
-    print_sungjin(msssd_init_write_pointer);
+    // print_sungjin(msssd_init_write_pointer);
 }
 
 static inline void check_addr(int a, int max)
@@ -246,7 +246,7 @@ static void check_params(struct ssdparams *spp)
 // {
     
 
-//     print_sungjin(n->memsz);
+    print_sungjin(n->memsz);
 
 //     spp->secsz = n->bb_params.secsz; // 512
 //     spp->secs_per_pg = n->bb_params.secs_per_pg; // 8
@@ -302,7 +302,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 {
     
 
-    // print_sungjin(n->memsz);
+    print_sungjin(n->memsz);
     
     uint64_t nand_block_size=(n->bb_params.nand_block_size_mb<<20);
     uint64_t nand_page_size=(n->bb_params.nand_page_size_kb<<10);
@@ -312,12 +312,12 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     spp->gc_thres_pcent_high = n->bb_params.gc_thres_pcent_high/100.0;
     uint64_t user_space_ratio=100*(spp->gc_thres_pcent); // 25
     printf("gc_thres_pcent %lf\n",spp->gc_thres_pcent);
-    print_sungjin(user_space_ratio);
+    // print_sungjin(user_space_ratio);
 
     uint64_t user_device_size_mb = n->memsz;
-    print_sungjin(user_device_size_mb);
+    // print_sungjin(user_device_size_mb);
     uint64_t total_device_size_mb= (user_device_size_mb*100)/user_space_ratio;
-    print_sungjin(total_device_size_mb);
+    // print_sungjin(total_device_size_mb);
     // spp->secsz = n->bb_params.secsz; // 4096
     spp->secsz = 4096; // 4096
     spp->secs_per_pg = nand_page_size/spp->secsz; // 8
@@ -326,9 +326,9 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     // nand_block_size_mb= (spp->secsz*spp->secs_per_pg*spp->pgs_per_blk)>>20;
     
     
-    print_sungjin(nand_page_size);
-    print_sungjin(nand_block_size);
-    print_sungjin(spp->pgs_per_blk);
+    // print_sungjin(nand_page_size);
+    // print_sungjin(nand_block_size);
+    // print_sungjin(spp->pgs_per_blk);
     
     // spp->blks_per_pl = n->bb_params.blks_per_pl; /* 256 16GB */
 
@@ -341,8 +341,8 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     
     spp->blks_per_pl = lun_size_mb/(n->bb_params.nand_block_size_mb); /* 256 16GB */
 
-    print_sungjin(lun_size_mb);
-    print_sungjin(spp->blks_per_pl);
+    // print_sungjin(lun_size_mb);
+    // print_sungjin(spp->blks_per_pl);
 
 
     spp->pg_rd_lat = n->bb_params.pg_rd_lat;
@@ -497,7 +497,7 @@ void msssd_init(FemuCtrl *n)
 
     qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", msftl_thread, n,
                        QEMU_THREAD_JOINABLE);
-     print_sungjin(msssd_init);
+    //  print_sungjin(msssd_init);
 }
 
 static inline bool valid_ppa(struct ssd *ssd, struct ppa *ppa)
@@ -946,7 +946,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
-    print_sungjin(ssd_read);
+    // print_sungjin(ssd_read);
     /* normal IO read path */
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
         ppa = get_maptbl_ent(ssd, lpn);
@@ -981,7 +981,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 //     //     mark_page_invalid(ssd, &ppa);
 //     //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
 //     // }
-//     print_sungjin(msssd_trim2);
+    print_sungjin(msssd_trim2);
 //     return 0;
 // }
 
@@ -998,8 +998,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     struct ppa ppa;
     // uint64_t plp1 = req->cmd->plp1;
 
-    print_sungjin(msssd_trim);
-    print_sungjin(nr);
+    // print_sungjin(msssd_trim);
+    // print_sungjin(nr);
     if (attr & NVME_DSMGMT_AD) {
         // NvmeDSMAIOCB iocb;
         // iocb.req=
@@ -1047,11 +1047,11 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
         stream_id=0;
     }
     int r;
-    print_sungjin(msssd_write);
-    print_sungjin(lba);
-    print_sungjin(start_lpn);
-    print_sungjin(len);
-    print_sungjin(end_lpn);
+    // print_sungjin(msssd_write);
+    // print_sungjin(lba);
+    // print_sungjin(start_lpn);
+    // print_sungjin(len);
+    // print_sungjin(end_lpn);
 
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
@@ -1105,7 +1105,7 @@ static void *msftl_thread(void *arg)
     uint64_t lat = 0;
     int rc;
     int i;
-    // print_sungjin(msftl_thread);
+    print_sungjin(msftl_thread);
     printf("msftl_thread start@@@@@@@@@\n");
     while (!*(ssd->dataplane_started_ptr)) {
         usleep(100000);

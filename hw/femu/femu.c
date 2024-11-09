@@ -546,10 +546,10 @@ static void femu_realize(PCIDevice *pci_dev, Error **errp)
     }
 
     bs_size = ((int64_t)n->memsz) * 1024 * 1024;
-
+// 
     init_dram_backend(&n->mbe, bs_size);
     n->mbe->femu_mode = n->femu_mode;
-    print_sungjin(n->stream_number);
+    // print_sungjin(n->stream_number);
 
     n->completed = 0;
     n->start_time = time(NULL);

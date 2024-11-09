@@ -6,7 +6,7 @@ static void ms_init_ctrl_str(FemuCtrl *n)
     static int fsid_vbb = 0;
     const char *vbbssd_mn = "FEMU BlackBox-SSD Controller";
     const char *vbbssd_sn = "vSSD";
-    print_sungjin(ms_init_ctrl_str);
+    // print_sungjin(ms_init_ctrl_str);
     nvme_set_ctrl_name(n, vbbssd_mn, vbbssd_sn, &fsid_vbb);
 }
 
@@ -14,7 +14,7 @@ static void ms_init_ctrl_str(FemuCtrl *n)
 static void ms_init(FemuCtrl *n, Error **errp)
 {
     struct ssd *ssd = n->ssd = g_malloc0(sizeof(struct ssd));
-    print_sungjin(ms_init);
+    // print_sungjin(ms_init);
     ms_init_ctrl_str(n);
 
     ssd->dataplane_started_ptr = &n->dataplane_started;
@@ -79,7 +79,7 @@ static uint16_t ms_nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
 static uint16_t ms_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                           NvmeRequest *req)
 {
-    print_sungjin(ms_io_cmd);
+    // print_sungjin(ms_io_cmd);
     switch (cmd->opcode) {
     case NVME_CMD_READ:
     case NVME_CMD_WRITE:
