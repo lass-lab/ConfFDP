@@ -246,7 +246,7 @@ static void check_params(struct ssdparams *spp)
 // {
     
 
-    print_sungjin(n->memsz);
+    // print_sungjin(n->memsz);
 
 //     spp->secsz = n->bb_params.secsz; // 512
 //     spp->secs_per_pg = n->bb_params.secs_per_pg; // 8
@@ -981,7 +981,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 //     //     mark_page_invalid(ssd, &ppa);
 //     //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
 //     // }
-    print_sungjin(msssd_trim2);
+    // print_sungjin(msssd_trim2);
 //     return 0;
 // }
 
