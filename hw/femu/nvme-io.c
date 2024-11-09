@@ -323,7 +323,7 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         }
         if(MSSSD(n)){
             // msssd_trim2(n,slba,nlb);
-            printf("sungjin : give pointer %p\n",range);
+            // printf("sungjin : give pointer %p\n",range);
             req->cmd.discard_range_pointer=(uint64_t)range;
             cmd->discard_range_pointer=(uint64_t)range;
         }else{

@@ -998,7 +998,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     struct ppa ppa;
     // uint64_t plp1 = req->cmd->plp1;
 
-    print_sungjin(msssd_trim);
+    // print_sungjin(msssd_trim);
     // print_sungjin(nr);
     if (attr & NVME_DSMGMT_AD) {
         // NvmeDSMAIOCB iocb;
@@ -1047,11 +1047,11 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
         stream_id=0;
     }
     int r;
-    print_sungjin(msssd_write);
-    print_sungjin(lba);
-    print_sungjin(start_lpn);
-    print_sungjin(len);
-    print_sungjin(end_lpn);
+    // print_sungjin(msssd_write);
+    // print_sungjin(lba);
+    // print_sungjin(start_lpn);
+    // print_sungjin(len);
+    // print_sungjin(end_lpn);
 
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
@@ -1059,14 +1059,14 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
 
     while (should_gc_high(ssd)) {
         /* perform GC here until !should_gc(ssd) */
-        printf("doing gc?\n");
+        // printf("doing gc?\n");
         r = do_gc(ssd, true);
         if (r == -1)
             break;
     }
 
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
-        printf("sungjin loop : lpn %lu\n",lpn);
+        // printf("sungjin loop : lpn %lu\n",lpn);
         ppa = get_maptbl_ent(ssd, lpn);
         if (mapped_ppa(&ppa)) {
             /* update old page information first */
@@ -1096,7 +1096,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     // uint64_t data_offset= ms_l2b(req->ns,lba);
     // backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,true);
-    printf("sungjin mssd write return\n");
+    // printf("sungjin mssd write return\n");
     return maxlat;
 }
 
