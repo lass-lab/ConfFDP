@@ -84,9 +84,9 @@ static uint16_t ms_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
     case NVME_CMD_READ:
     case NVME_CMD_WRITE:
         return ms_nvme_rw(n, ns, cmd, req);
-    // case NVME_CMD_DSM:
+    case NVME_CMD_DSM:
     //     // sungjin
-    //     return ms_nvme_trim();
+        return NVME_SUCCESS;
     default:
         return NVME_INVALID_OPCODE | NVME_DNR;
     }
