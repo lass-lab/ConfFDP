@@ -1552,5 +1552,4 @@ static inline uint16_t nvme_check_mdts(FemuCtrl *n, size_t len)
 
 #define print_sungjin(member) printf("print_sungjin(%s) : {%ld}\n", #member, (long)(member))
 
-// #define print_sungjin(member) MN_MAX_LEN
 #endif /* __FEMU_NVME_H */
