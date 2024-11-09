@@ -77,7 +77,7 @@ static void nvme_process_sq_io(void *opaque, int index_poller)
         status = nvme_io_cmd(n, &cmd, req);
         if (1 && status == NVME_SUCCESS) {
             req->status = status;
-            printf("sungjin : nvme_process_sq_io : femu_ring_enqueue\n");
+            // printf("sungjin : nvme_process_sq_io : femu_ring_enqueue\n");
             int rc = femu_ring_enqueue(n->to_ftl[index_poller], (void *)&req, 1);
             if (rc != 1) {
                 femu_err("enqueue failed, ret=%d\n", rc);

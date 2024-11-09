@@ -1124,7 +1124,7 @@ static void *msftl_thread(void *arg)
             if (rc != 1) {
                 printf("FEMU: FTL to_ftl dequeue failed\n");
             }
-            printf("sungjin : msftl_thread : femu_ring_dequeue\n");
+            // printf("sungjin : msftl_thread : femu_ring_dequeue\n");
             ftl_assert(req);
             switch (req->cmd.opcode) {
             case NVME_CMD_WRITE:
