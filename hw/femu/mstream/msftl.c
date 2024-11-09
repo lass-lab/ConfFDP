@@ -1008,7 +1008,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         NvmeDsmRange *range= (NvmeDsmRange *)req->cmd.discard_range_pointer;
         // read in range
         // dma_read_prp(req->ns->ctrl,(uint8_t*)range,sizeof(struct NvmeDsmRange)*nr,dsm->prp1,dsm->prp2);
-
+        print_sungjin(range);
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
             slpn=dmr->slba/spp->secs_per_pg;
