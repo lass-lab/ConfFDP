@@ -1066,7 +1066,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     }
 
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
-        printf("sungjin loop : lpn %u\n",lpn);
+        printf("sungjin loop : lpn %lu\n",lpn);
         ppa = get_maptbl_ent(ssd, lpn);
         if (mapped_ppa(&ppa)) {
             /* update old page information first */
