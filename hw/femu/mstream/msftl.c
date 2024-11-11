@@ -838,7 +838,7 @@ static int do_gc(struct ssd *ssd, bool force)
     struct ssdparams *spp = &ssd->sp;
     // struct nand_lun *lunp;
     struct ppa ppa;
-    int ch, lun,cnt;
+    int ch, lun,cnt=0;
     int stream_id;
     uint16_t pg;
     victim_line = select_victim_line(ssd, force);
