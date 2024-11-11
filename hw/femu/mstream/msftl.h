@@ -176,6 +176,11 @@ struct write_pointer {
     int pl;
 };
 
+struct sungjin_stat{
+    uint64_t copied;
+    uint64_t block_erased;
+};
+
 struct line_mgmt {
     struct line *lines;
     /* free line list, we only need to maintain a list of blk numbers */
@@ -209,6 +214,7 @@ struct ssd {
     struct rte_ring **to_poller;
     bool *dataplane_started_ptr;
     QemuThread msftl_thread;
+    struct sungjin_stat sungjin_stat;
 };
 
 void msssd_init(FemuCtrl *n);

@@ -897,6 +897,7 @@ static int do_gc(struct ssd *ssd, bool force)
             }
         }
     }
+    ssd->sungjin_stat.copied+=cnt;
 
 
 // erase
@@ -910,7 +911,7 @@ static int do_gc(struct ssd *ssd, bool force)
             blk->ipc = 0;
             blk->vpc = 0;
             blk->erase_cnt++;
-
+            ssd->sungjin_stat.block_erased++;
             if (spp->enable_gc_delay) {
                 struct nand_cmd gce;
                 gce.type = GC_IO;
@@ -943,9 +944,26 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     uint64_t lpn;
     uint64_t sublat, maxlat = 0;
     
+    uint64_t debug_id = req->cmd.cdw11;
+
+    if(debug_id==1998){
+        /*
+            copy amount
+            gc time
+            block erased
+        */
+        // print_stat()
+        print_sungjin(ssd->sungjin_stat.block_erased);
+         print_sungjin(ssd->sungjin_stat.copied);
+        return 0;
+    }
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
+
+
+
+
     // print_sungjin(ssd_read);
     /* normal IO read path */
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
@@ -1045,6 +1063,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     if(stream_id>=ssd->stream_number){
         femu_log("sungjin : stream id %ld -> 0",stream_id);
         stream_id=0;
+        // return 0;
     }
     int r;
     // print_sungjin(msssd_write);
@@ -1117,7 +1136,8 @@ static void *msftl_thread(void *arg)
     /* FIXME: not safe, to handle ->to_ftl and ->to_poller gracefully */
     ssd->to_ftl = n->to_ftl;
     ssd->to_poller = n->to_poller;
-
+    ssd->sungjin_stat.block_erased=0;
+    ssd->sungjin_stat.copied=0;
     while (1) {
         for (i = 1; i <= n->nr_pollers; i++) {
             if (!ssd->to_ftl[i] || !femu_ring_count(ssd->to_ftl[i]))
