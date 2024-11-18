@@ -81,7 +81,7 @@ static inline void victim_line_set_pos(void *a, size_t pos)
     ((struct line *)a)->pos = pos;
 }
 
-static void ssd_init_lines(struct ssd *ssd)
+static void ssd_init_lines(struct ssd *ssd,bool is_init)
 {
     struct ssdparams *spp = &ssd->sp;
     struct line_mgmt *lm = &ssd->lm;
@@ -89,7 +89,8 @@ static void ssd_init_lines(struct ssd *ssd)
 
     lm->tt_lines = spp->blks_per_pl;
     ftl_assert(lm->tt_lines == spp->tt_lines);
-    lm->lines = g_malloc0(sizeof(struct line) * lm->tt_lines);
+    if(is_init)
+        lm->lines = g_malloc0(sizeof(struct line) * lm->tt_lines);
 
     QTAILQ_INIT(&lm->free_line_list);
     lm->victim_line_pq = pqueue_init(spp->tt_lines, victim_line_cmp_pri,
@@ -104,7 +105,8 @@ static void ssd_init_lines(struct ssd *ssd)
         line->ipc = 0;
         line->vpc = 0;
         line->pos = 0;
-        line->stream_id=-1;
+        // if(is_init)
+            line->stream_id=-1;
         /* initialize all the lines as free lines */
         QTAILQ_INSERT_TAIL(&lm->free_line_list, line, entry);
         lm->free_line_cnt++;
@@ -390,19 +392,24 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 static void ssd_init_nand_page(struct nand_page *pg, struct ssdparams *spp)
 {
     pg->nsecs = spp->secs_per_pg;
-    pg->sec = g_malloc0(sizeof(nand_sec_status_t) * pg->nsecs);
+    if(is_init){
+        pg->sec = g_malloc0(sizeof(nand_sec_status_t) * pg->nsecs);
+    }
     for (int i = 0; i < pg->nsecs; i++) {
         pg->sec[i] = SEC_FREE;
     }
     pg->status = PG_FREE;
 }
 
-static void ssd_init_nand_blk(struct nand_block *blk, struct ssdparams *spp)
+static void ssd_init_nand_blk(struct nand_block *blk, struct ssdparams *spp,bool is_init)
 {
     blk->npgs = spp->pgs_per_blk;
-    blk->pg = g_malloc0(sizeof(struct nand_page) * blk->npgs);
+    if(is_init){
+        blk->pg = g_malloc0(sizeof(struct nand_page) * blk->npgs);
+    }
+    
     for (int i = 0; i < blk->npgs; i++) {
-        ssd_init_nand_page(&blk->pg[i], spp);
+        ssd_init_nand_page(&blk->pg[i], spp,is_init);
     }
     blk->ipc = 0;
     blk->vpc = 0;
@@ -410,52 +417,63 @@ static void ssd_init_nand_blk(struct nand_block *blk, struct ssdparams *spp)
     blk->wp = 0;
 }
 
-static void ssd_init_nand_plane(struct nand_plane *pl, struct ssdparams *spp)
+static void ssd_init_nand_plane(struct nand_plane *pl, struct ssdparams *spp,bool is_init)
 {
     pl->nblks = spp->blks_per_pl;
-    pl->blk = g_malloc0(sizeof(struct nand_block) * pl->nblks);
+    if(is_init){
+        pl->blk = g_malloc0(sizeof(struct nand_block) * pl->nblks);
+    }
+    
     for (int i = 0; i < pl->nblks; i++) {
         ssd_init_nand_blk(&pl->blk[i], spp);
     }
 }
 
-static void ssd_init_nand_lun(struct nand_lun *lun, struct ssdparams *spp)
+static void ssd_init_nand_lun(struct nand_lun *lun, struct ssdparams *spp,bool is_init)
 {
     lun->npls = spp->pls_per_lun;
-    lun->pl = g_malloc0(sizeof(struct nand_plane) * lun->npls);
+    if(is_init){
+        lun->pl = g_malloc0(sizeof(struct nand_plane) * lun->npls);
+    }
+    
     for (int i = 0; i < lun->npls; i++) {
-        ssd_init_nand_plane(&lun->pl[i], spp);
+        ssd_init_nand_plane(&lun->pl[i], spp,is_init);
     }
     lun->next_lun_avail_time = 0;
     lun->busy = false;
 }
 
-static void ssd_init_ch(struct ssd_channel *ch, struct ssdparams *spp)
+static void ssd_init_ch(struct ssd_channel *ch, struct ssdparams *spp,bool is_init)
 {
     ch->nluns = spp->luns_per_ch;
-    ch->lun = g_malloc0(sizeof(struct nand_lun) * ch->nluns);
+    if(is_init){
+        ch->lun = g_malloc0(sizeof(struct nand_lun) * ch->nluns);
+    }
+    
     for (int i = 0; i < ch->nluns; i++) {
-        ssd_init_nand_lun(&ch->lun[i], spp);
+        ssd_init_nand_lun(&ch->lun[i], spp,is_init);
     }
     ch->next_ch_avail_time = 0;
     ch->busy = 0;
 }
 
-static void ssd_init_maptbl(struct ssd *ssd)
+static void ssd_init_maptbl(struct ssd *ssd,bool is_init)
 {
     struct ssdparams *spp = &ssd->sp;
-
-    ssd->maptbl = g_malloc0(sizeof(struct ppa) * spp->tt_pgs);
+    if(is_init ){
+         ssd->maptbl = g_malloc0(sizeof(struct ppa) * spp->tt_pgs);
+    }
+   
     for (int i = 0; i < spp->tt_pgs; i++) {
         ssd->maptbl[i].ppa = UNMAPPED_PPA;
     }
 }
 
-static void ssd_init_rmap(struct ssd *ssd)
+static void ssd_init_rmap(struct ssd *ssd,bool is_init)
 {
     struct ssdparams *spp = &ssd->sp;
-
-    ssd->rmap = g_malloc0(sizeof(uint64_t) * spp->tt_pgs);
+    if(is_init)
+        ssd->rmap = g_malloc0(sizeof(uint64_t) * spp->tt_pgs);
     for (int i = 0; i < spp->tt_pgs; i++) {
         ssd->rmap[i] = INVALID_LPN;
     }
@@ -476,17 +494,17 @@ void msssd_init(FemuCtrl *n)
     ssd->stream_number = n->stream_number;
     ssd->wp=g_malloc(sizeof(struct write_pointer)*n->stream_number);
     for (i = 0; i < spp->nchs; i++) {
-        ssd_init_ch(&ssd->ch[i], spp);
+        ssd_init_ch(&ssd->ch[i], spp,true);
     }
 
     /* initialize maptbl */
-    ssd_init_maptbl(ssd);
+    ssd_init_maptbl(ssd,true);
 
     /* initialize rmap */
-    ssd_init_rmap(ssd);
+    ssd_init_rmap(ssd,true);
 
     /* initialize all the lines */
-    ssd_init_lines(ssd);
+    ssd_init_lines(ssd,true);
 
     /* initialize write pointer, this is how we allocate new pages for writes */
 
@@ -859,9 +877,9 @@ static int do_gc(struct ssd *ssd, bool force)
     ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
               victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
               ssd->lm.free_line_cnt);
-    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
-              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
-              ssd->lm.free_line_cnt);
+    // printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
+    //           victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
+    //           ssd->lm.free_line_cnt);
     /* copy back valid data */
     // for (ch = 0; ch < spp->nchs; ch++) {
     //     for (lun = 0; lun < spp->luns_per_ch; lun++) {
@@ -1046,38 +1064,72 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     return 0;
 }
 
-static uint64_t msssd_io_mgmt_sungjin(struct ssd* ssd, NvmeRequest* req){
-    uint64_t slpn=0;
+static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
+    // uint64_t slpn=0;
     struct ppa ppa;
-    printf("msssd_io_mgmt_sungjin\n");
+    int i;
+    struct ssdparams* spp= &ssd->sp;
+    printf("msssd_io_mgmt_send_sungjin\n");
         print_sungjin(ssd->sungjin_stat.block_erased);
          print_sungjin(ssd->sungjin_stat.copied);
-    for(slpn=0;;slpn++){
-        ppa=get_maptbl_ent(ssd,(slpn));
-        if ( !valid_ppa(ssd, &ppa)) {
-            // continue;
-            break;
-        }
-        if(!mapped_ppa(&ppa)){
-            continue;
-        }
-        
-        get_line(ssd, &ppa)->vpc=ssd->sp.pgs_per_line;
 
-        mark_page_invalid(ssd, &ppa);
-        set_rmap_ent(ssd, INVALID_LPN, &ppa);
-        
+    ssd->sungjin_stat.block_erased=0;
+    ssd->sungjin_stat.copied=0;
+    
+    for (i = 0; i < spp->nchs; i++) {
+        ssd_init_ch(&ssd->ch[i], spp,false);
     }
-    printf("invalidate all ok\n");
-    ssd->sp.enable_gc_delay=false;
 
-    while(true){
-        if(do_gc(ssd,true)==-1){
-            break;
-        }
-    }   
-printf("do gc ok\n");
-    ssd->sp.enable_gc_delay=true;
+    /* initialize maptbl */
+    ssd_init_maptbl(ssd,false);
+
+    /* initialize rmap */
+    ssd_init_rmap(ssd,false);
+
+    /* initialize all the lines */
+    ssd_init_lines(ssd,false);
+
+    /* initialize write pointer, this is how we allocate new pages for writes */
+
+    for(i=0;i<ssd->stream_number;i++){
+        msssd_init_write_pointer(ssd,i);
+    }
+    
+
+    // for(slpn=0;;slpn++){
+    //     ppa=get_maptbl_ent(ssd,(slpn));
+    //     if ( !valid_ppa(ssd, &ppa)) {
+    //         // continue;
+    //         break;
+    //     }
+    //     if(!mapped_ppa(&ppa)){
+    //         continue;
+    //     }
+        
+    //     // get_line(ssd, &ppa)->vpc=ssd->sp.pgs_per_line;
+
+    //     mark_page_invalid(ssd, &ppa);
+    //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
+        
+    // }
+    // printf("invalidate all ok\n");
+    // for (i = 0; i < spp->nchs; i++) {
+    //     ssd_init_ch(&ssd->ch[i], spp,false);
+    // }
+
+//     ssd->sp.enable_gc_delay=false;
+
+//     while(true){
+//         if(do_gc(ssd,true)==-1){
+//             break;
+//         }
+//     }   
+// printf("do gc ok\n");
+//     ssd->sp.enable_gc_delay=true;
+
+    // sungjin todo
+    // 
+    // mark line free, but do not touch stream id
 
     return 0;
 }
@@ -1094,7 +1146,7 @@ static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
         // return nvme_io_mgmt_send_ruh_update(n, req);
         return NVME_SUCCESS;
     case NVME_IOMS_MO_SUNGJIN:
-        return msssd_io_mgmt_sungjin(ssd,req);
+        return msssd_io_mgmt_send_sungjin(ssd,req);
     default:
         return NVME_INVALID_FIELD | NVME_DNR;
     };
