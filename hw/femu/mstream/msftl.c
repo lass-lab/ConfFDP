@@ -425,7 +425,7 @@ static void ssd_init_nand_plane(struct nand_plane *pl, struct ssdparams *spp,boo
     }
     
     for (int i = 0; i < pl->nblks; i++) {
-        ssd_init_nand_blk(&pl->blk[i], spp);
+        ssd_init_nand_blk(&pl->blk[i], spp,is_init);
     }
 }
 
