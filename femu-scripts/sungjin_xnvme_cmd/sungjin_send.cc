@@ -9,6 +9,8 @@
 
 #define print_sungjin(member) printf("%s %lu\n",(#member),(uint64_t)(member));
 /*
+g++ sungjin_send.cc -lxnvme -o sungjin_send
+
 device name --> dev_type
 nvme --> block
 ng --> char
