@@ -209,6 +209,7 @@ struct ssd {
     struct write_pointer* wp;
     struct line_mgmt lm;
     uint8_t stream_number;
+    void* femuctrl;
     /* lockless ring for communication with NVMe IO thread */
     struct rte_ring **to_ftl;
     struct rte_ring **to_poller;

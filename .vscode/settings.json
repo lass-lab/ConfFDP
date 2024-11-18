@@ -3,6 +3,7 @@
         "*.inc": "c",
         "msftl.h": "c",
         "*.code": "c",
-        "random": "c"
+        "random": "c",
+        "cstdint": "c"
     }
 }

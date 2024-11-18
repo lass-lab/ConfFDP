@@ -1,6 +1,14 @@
 // nvme_io_mgmt_recv_ruhs
 // nvme_update_ruh
+/*
 
+1. report
+2. update
+3. get log page - confs, ruhusage, fdp state, fdp events
+4. get feature fdp
+5. set feature fdp
+
+*/
 /*
 uint16_t pid = le16_to_cpu(rw->dspec);
     if (dtype != NVME_DIRECTIVE_DATA_PLACEMENT ||

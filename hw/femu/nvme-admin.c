@@ -678,6 +678,24 @@ static uint16_t nvme_get_feature(FemuCtrl *n, NvmeCmd *cmd, NvmeCqe *cqe)
     case NVME_SOFTWARE_PROGRESS_MARKER:
         cqe->n.result = cpu_to_le32(n->features.sw_prog_marker);
         break;
+    case FDP_MODE:
+        printf("sungjin nvme_get_feature FDP_MODE\n");
+
+        // femu_get_feature_fdp()
+        if(MSSSD(n)||FDPSSD(n)){
+            return NVME_SUCCESS;
+        }else{  
+            return NVME_INVALID_FIELD | NVME_DNR;
+        }
+        break;
+    case FDP_EVENTS;
+        printf("sungjin nvme_get_feature FDP_EVENTS\n");
+        if(MSSSD(n)||FDPSSD(n)){
+            return NVME_SUCCESS;
+        }else{  
+            return NVME_INVALID_FIELD | NVME_DNR;
+        }
+        break;
     default:
         return NVME_INVALID_FIELD | NVME_DNR;
     }
@@ -747,6 +765,24 @@ static uint16_t nvme_set_feature(FemuCtrl *n, NvmeCmd *cmd, NvmeCqe *cqe)
         break;
     case NVME_SOFTWARE_PROGRESS_MARKER:
         n->features.sw_prog_marker = dw11;
+        break;
+    case FDP_MODE:
+        printf("sungjin nvme_get_feature FDP_MODE\n");
+
+        // femu_get_feature_fdp()
+        if(MSSSD(n)||FDPSSD(n)){
+            return NVME_SUCCESS;
+        }else{  
+            return NVME_INVALID_FIELD | NVME_DNR;
+        }
+        break;
+    case FDP_EVENTS;
+        printf("sungjin nvme_get_feature FDP_EVENTS\n");
+        if(MSSSD(n)||FDPSSD(n)){
+            return NVME_SUCCESS;
+        }else{  
+            return NVME_INVALID_FIELD | NVME_DNR;
+        }
         break;
     default:
         return NVME_INVALID_FIELD | NVME_DNR;
@@ -1101,7 +1137,7 @@ void nvme_process_sq_admin(void *opaque)
     hwaddr addr;
     NvmeCmd cmd;
     NvmeCqe cqe;
-
+    printf("sungjin nvme_process_sq_admin\n");
     while (!(nvme_sq_empty(sq))) {
         if (sq->phys_contig) {
             addr = sq->dma_addr + sq->head * n->sqe_size;

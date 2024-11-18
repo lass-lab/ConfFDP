@@ -1004,6 +1004,36 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 // }
 
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
+    unsigned int nruhsd= ssd->stream_number;
+
+    NvmeRuhStatus *hdr;
+    NvmeRuhStatusDescr *ruhsd;
+    uint64_t prp1 = le64_to_cpu(cmd->dptr.prp1);
+    uint64_t prp2 = le64_to_cpu(cmd->dptr.prp2);
+
+    size_t trans_len=sizeof(NvmeRuhStatus)+nruhsd*sizeof(NvmeRuhStatusDescr);
+    void *buf = NULL;
+    buf = g_malloc(trans_len);
+
+    trans_len = MIN(trans_len, len);
+
+    hdr = (NvmeRuhStatus *)buf;
+    ruhsd = (NvmeRuhStatusDescr *)(buf + sizeof(NvmeRuhStatus));
+
+    hdr->nruhsd=cpu_to_le16(nruhsd);
+
+    // ruhid=ns-
+    int stream;
+    for(stream=0;stream<nruhsd;stream++,ruhsd++){
+        ruhsd->pid=stream;
+        ruhsd->ruhid=stream;
+        ruhsd->earutr = 0;
+        ruhsd->ruamw=0;
+    }
+
+    // nvme_c2h(n, buf, trans_len, req)
+    dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);
+    g_free(buf);
     return 0;
 }
 
@@ -1144,6 +1174,7 @@ static void *msftl_thread(void *arg)
 {
     FemuCtrl *n = (FemuCtrl *)arg;
     struct ssd *ssd = n->ssd;
+    ssd->femuctrl=(void*)n;
     NvmeRequest *req = NULL;
     uint64_t lat = 0;
     int rc;
@@ -1180,8 +1211,11 @@ static void *msftl_thread(void *arg)
             case NVME_CMD_DSM:
                 lat = msssd_trim(ssd,req);
                 break;
-            case NVME_CMD_IO_MGMT_SEND:
+            case NVME_CMD_IO_MGMT_RECV:
                 lat = msssd_io_mgmt_recv(ssd,req);
+                break;
+            case NVME_CMD_IO_MGMT_SEND:
+                lat =0;
                 break;
             default:
                 //ftl_err("FTL received unkown request type, ERROR\n");
