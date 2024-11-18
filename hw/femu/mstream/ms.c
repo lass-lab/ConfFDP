@@ -87,6 +87,14 @@ static uint16_t ms_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
     case NVME_CMD_DSM:
     //     // sungjin
         return NVME_SUCCESS;
+
+    case NVME_CMD_IO_MGMT_RECV:
+        // print_sungjin()
+            printf("ms_io_cmd NVME_CMD_IO_MGMT_RECV")
+        return NVME_SUCCESS;
+    case NVME_CMD_IO_MGMT_SEND:
+        printf("ms_io_cmd NVME_CMD_IO_MGMT_SEND")
+        return NVME_SUCCESS;
     default:
         return NVME_INVALID_OPCODE | NVME_DNR;
     }
