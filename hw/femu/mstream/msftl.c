@@ -1071,8 +1071,8 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     struct ssdparams* spp= &ssd->sp;
     struct line_mgmt *lm = &ssd->lm;
     printf("msssd_io_mgmt_send_sungjin\n");
-        print_sungjin(ssd->sungjin_stat.block_erased);
-         print_sungjin(ssd->sungjin_stat.copied);
+    print_sungjin(ssd->sungjin_stat.block_erased);
+    print_sungjin(ssd->sungjin_stat.copied);
 
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
@@ -1212,6 +1212,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             }
 
         }
+        print_sungjin(msssd_trim);
         g_free(range);
     }
    
