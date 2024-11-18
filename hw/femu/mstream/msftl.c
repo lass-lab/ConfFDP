@@ -782,17 +782,19 @@ static struct line *select_victim_line(struct ssd *ssd, bool force)
 
     victim_line = pqueue_peek(lm->victim_line_pq);
     if (!victim_line) {
+        printf("select_victim_line nulptr,eturn\n");
         return NULL;
     }
 
     if (!force && victim_line->ipc < ssd->sp.pgs_per_line / 8) {
+        printf("!force select_victim_line nulptr,eturn\n");
         return NULL;
     }
 
     pqueue_pop(lm->victim_line_pq);
     victim_line->pos = 0;
     lm->victim_line_cnt--;
-
+    printf("lm->victim_line_cnt %d\n",lm->victim_line_cnt);
     /* victim_line is a danggling node now */
     return victim_line;
 }
@@ -846,6 +848,7 @@ static int do_gc(struct ssd *ssd, bool force)
     struct nand_page *pg_iter = NULL;
 
     if (!victim_line) {
+        printf("no victim line, return\n");
         return -1;
     }
 
@@ -854,7 +857,9 @@ static int do_gc(struct ssd *ssd, bool force)
     ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
               victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
               ssd->lm.free_line_cnt);
-
+    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
+              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
+              ssd->lm.free_line_cnt);
     /* copy back valid data */
     // for (ch = 0; ch < spp->nchs; ch++) {
     //     for (lun = 0; lun < spp->luns_per_ch; lun++) {
