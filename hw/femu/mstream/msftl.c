@@ -1004,7 +1004,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 // }
 
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
-
+    return 0;
 }
 
 static uint64_t msssd_io_mgmt_recv(struct ssd* ssd, NvmeRequest* req){
