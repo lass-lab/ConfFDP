@@ -105,9 +105,9 @@ static uint16_t ms_admin_cmd(FemuCtrl *n, NvmeCmd *cmd)
 
 static uint16_t ms_get_log(FemuCtrl* n, NvmeCmd* cmd){
     uint32_t dw10 = le32_to_cpu(cmd->cdw10);
-    uint32_t dw11 = le32_to_cpu(cmd->cdw11);
-    uint32_t dw12 = le32_to_cpu(cmd->cdw12);
-    uint32_t dw13 = le32_to_cpu(cmd->cdw13);
+    // uint32_t dw11 = le32_to_cpu(cmd->cdw11);
+    // uint32_t dw12 = le32_to_cpu(cmd->cdw12);
+    // uint32_t dw13 = le32_to_cpu(cmd->cdw13);
     uint16_t lid = dw10 & 0xffff;
 
     switch (lid) {
