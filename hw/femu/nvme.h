@@ -321,6 +321,12 @@ enum NvmeIdCtrlCtratt {
     NVME_CTRATT_FDPS    = 1 << 19,
 };
 
+enum NvmeIomr2Mo {
+    NVME_IOMR_MO_NOP = 0x0,
+    NVME_IOMR_MO_RUH_STATUS = 0x1,
+    NVME_IOMR_MO_VENDOR_SPECIFIC = 0x255,
+};
+
 enum NvmeAdminCommands {
     NVME_ADM_CMD_DELETE_SQ      = 0x00,
     NVME_ADM_CMD_CREATE_SQ      = 0x01,
