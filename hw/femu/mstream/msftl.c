@@ -1049,6 +1049,8 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     ruhsd = (NvmeRuhStatusDescr *)(buf + sizeof(NvmeRuhStatus));
 
     hdr->nruhsd=cpu_to_le16(nruhsd);
+    // return (ssd->lm.free_line_cnt <= ssd->sp.gc_thres_lines);
+    hdr->free_space_ratio=(uint8_t)(ssd->lm.free_line_cnt*100/ssd->lm.tt_lines);
 
     // ruhid=ns-
     int stream;
