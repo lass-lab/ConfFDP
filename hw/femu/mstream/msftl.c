@@ -1069,6 +1069,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // struct ppa ppa;
     int i;
     struct ssdparams* spp= &ssd->sp;
+    struct line_mgmt *lm = &ssd->lm;
     printf("msssd_io_mgmt_send_sungjin\n");
         print_sungjin(ssd->sungjin_stat.block_erased);
          print_sungjin(ssd->sungjin_stat.copied);
@@ -1094,7 +1095,10 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     for(i=0;i<ssd->stream_number;i++){
         msssd_init_write_pointer(ssd,i);
     }
-    
+    print_sungjin(lm->free_line_cnt);
+    print_sungjin(lm->victim_line_cnt);
+    print_sungjin(lm->full_line_cnt);
+
 
     // for(slpn=0;;slpn++){
     //     ppa=get_maptbl_ent(ssd,(slpn));
