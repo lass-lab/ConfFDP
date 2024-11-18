@@ -201,6 +201,7 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id)
                 check_addr(wpp->blk, spp->blks_per_pl);
                 wpp->curline = NULL;
                 wpp->curline = get_next_free_line(ssd);
+                wpp->curline->stream_id=stream_id;
                 if (!wpp->curline) {
                     /* TODO */
                     abort();
@@ -920,7 +921,7 @@ static int do_gc(struct ssd *ssd, bool force)
                 
                 pg_iter = get_pg(ssd,&ppa);
                 // ftl_assert(pg_iter->status != PG_FREE);
-                print_sungjin(pg_iter);
+                // print_sungjin(pg_iter);
                 if(pg_iter->status == PG_FREE){
                     print_sungjin(pg_iter->status);
                 }
