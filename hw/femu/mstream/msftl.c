@@ -744,6 +744,7 @@ static void mark_page_valid(struct ssd *ssd, struct ppa *ppa)
 static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 {
     /* advance ssd status, we don't care about how long it takes */
+    print_sungjin(gc_read_page);
     if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcr;
         gcr.type = GC_IO;
@@ -759,7 +760,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     struct ppa new_ppa;
     struct nand_lun *new_lun;
     uint64_t lpn = get_rmap_ent(ssd, old_ppa);
-
+    print_sungjin(gc_write_page);
     ftl_assert(valid_lpn(ssd, lpn));
     new_ppa = get_new_page(ssd,stream_id);
     /* update maptbl */
@@ -912,7 +913,11 @@ static int do_gc(struct ssd *ssd, bool force)
                 ppa.g.pg=pg;
                 
                 pg_iter = get_pg(ssd,&ppa);
-                ftl_assert(pg_iter->status != PG_FREE);
+                // ftl_assert(pg_iter->status != PG_FREE);
+                print_sungjin(pg_iter);
+                if(pg_iter->status == PG_FREE){
+                    print_sungjin(pg_iter->status);
+                }
                 if (pg_iter->status == PG_VALID) {
                     gc_read_page(ssd, &ppa);
                     /* delay the maptbl update until "write" happens */

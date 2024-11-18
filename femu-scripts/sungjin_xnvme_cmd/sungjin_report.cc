@@ -29,7 +29,13 @@ struct nvme_fdp_ruh_status_desc {
   uint8_t rsvd16[16];
 };
 struct nvme_fdp_ruh_status {
-  uint8_t rsvd0[14];
+   union{ 
+    struct{
+        uint8_t free_space_ratio;
+        uint8_t rsvd0_tmp[13];
+    };
+    uint8_t  rsvd0[14];
+   };
   uint16_t nruhsd;
   struct nvme_fdp_ruh_status_desc ruhss[16];
 };
@@ -144,7 +150,7 @@ int main(int argc,char**argv){
 
 
 /////////////////
-    printf("ruh_status.nruhsd %d\n",ruh_status.nruhsd);
+    printf("ruh_status.nruhsd %d /// fr ratio %u\n",ruh_status.nruhsd,ruh_status.free_space_ratio);
     for(int i=0;i<ruh_status.nruhsd;i++){
         /*
           uint16_t pid;
