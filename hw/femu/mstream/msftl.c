@@ -946,17 +946,17 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     
     uint64_t debug_id = req->cmd.cdw11;
 
-    if(debug_id==1998){
-        /*
-            copy amount
-            gc time
-            block erased
-        */
-        // print_stat()
-        print_sungjin(ssd->sungjin_stat.block_erased);
-         print_sungjin(ssd->sungjin_stat.copied);
-        return 0;
-    }
+    // if(debug_id==1998){
+    //     /*
+    //         copy amount
+    //         gc time
+    //         block erased
+    //     */
+    //     // print_stat()
+    //     print_sungjin(ssd->sungjin_stat.block_erased);
+    //      print_sungjin(ssd->sungjin_stat.copied);
+    //     return 0;
+    // }
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
@@ -1043,6 +1043,8 @@ static uint64_t msssd_io_mgmt_sungjin(struct ssd* ssd, NvmeRequest* req){
     uint64_t slpn=0;
     struct ppa ppa;
     printf("msssd_io_mgmt_sungjin\n");
+        print_sungjin(ssd->sungjin_stat.block_erased);
+         print_sungjin(ssd->sungjin_stat.copied);
     for(slpn=0;;slpn++){
         ppa=get_maptbl_ent(ssd,(slpn));
         if ( !valid_ppa(ssd, &ppa)) {
