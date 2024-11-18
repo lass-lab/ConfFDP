@@ -389,7 +389,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     check_params(spp);
 }
 
-static void ssd_init_nand_page(struct nand_page *pg, struct ssdparams *spp)
+static void ssd_init_nand_page(struct nand_page *pg, struct ssdparams *spp,bool is_init)
 {
     pg->nsecs = spp->secs_per_pg;
     if(is_init){
@@ -1066,7 +1066,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
 
 static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // uint64_t slpn=0;
-    struct ppa ppa;
+    // struct ppa ppa;
     int i;
     struct ssdparams* spp= &ssd->sp;
     printf("msssd_io_mgmt_send_sungjin\n");
@@ -1075,7 +1075,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
 
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
-    
+
     for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp,false);
     }
