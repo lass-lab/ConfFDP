@@ -757,23 +757,28 @@ static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 /* move valid page data (already in DRAM) from victim line to a new page */
 static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id)
 {
+    int gc_i=0;
     struct ppa new_ppa;
     struct nand_lun *new_lun;
     uint64_t lpn = get_rmap_ent(ssd, old_ppa);
     print_sungjin(gc_write_page);
+    print_sungjin(stream_id);
     ftl_assert(valid_lpn(ssd, lpn));
     new_ppa = get_new_page(ssd,stream_id);
+    print_sungjin(gc_i++);
     /* update maptbl */
     set_maptbl_ent(ssd, lpn, &new_ppa);
     /* update rmap */
+     print_sungjin(gc_i++);
     set_rmap_ent(ssd, lpn, &new_ppa);
-
+     print_sungjin(gc_i++);
     mark_page_valid(ssd, &new_ppa);
+     print_sungjin(gc_i++);
     mark_page_invalid(ssd,old_ppa);
-
+     print_sungjin(gc_i++);
     /* need to advance the write pointer here */
     ssd_advance_write_pointer(ssd,stream_id);
-
+     print_sungjin(gc_i++);
     if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcw;
         gcw.type = GC_IO;
@@ -781,7 +786,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
         gcw.stime = 0;
         ssd_advance_status(ssd, &new_ppa, &gcw);
     }
-
+     print_sungjin(gc_i++);
     /* advance per-ch gc_endtime as well */
 #if 0
     new_ch = get_ch(ssd, &new_ppa);
@@ -789,8 +794,9 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
 #endif
 
     new_lun = get_lun(ssd, &new_ppa);
+     print_sungjin(gc_i++);
     new_lun->gc_endtime = new_lun->next_lun_avail_time;
-
+     print_sungjin(gc_i++);
     return 0;
 }
 
@@ -878,9 +884,9 @@ static int do_gc(struct ssd *ssd, bool force)
     ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
               victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
               ssd->lm.free_line_cnt);
-    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
+    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d\n", ppa.g.blk,
               victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
-              ssd->lm.free_line_cnt);
+              ssd->lm.free_line_cnt,stream_id);
     /* copy back valid data */
     // for (ch = 0; ch < spp->nchs; ch++) {
     //     for (lun = 0; lun < spp->luns_per_ch; lun++) {
