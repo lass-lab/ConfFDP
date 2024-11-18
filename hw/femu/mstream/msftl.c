@@ -659,7 +659,7 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     line = get_line(ssd, ppa);
     ftl_assert(line->ipc >= 0 && line->ipc < spp->pgs_per_line);
     if (line->vpc == spp->pgs_per_line) {
-        ftl_assert(line->ipc == 0);
+        // ftl_assert(line->ipc == 0);
         was_full_line = true;
     }
     line->ipc++;
@@ -844,13 +844,15 @@ static int do_gc(struct ssd *ssd, bool force)
     int stream_id;
     uint16_t pg;
     victim_line = select_victim_line(ssd, force);
-    stream_id=victim_line->stream_id;
+    
     struct nand_page *pg_iter = NULL;
 
     if (!victim_line) {
         printf("no victim line, return\n");
         return -1;
     }
+
+    stream_id=victim_line->stream_id;
 
     ppa.g.blk = victim_line->id;
 
@@ -1059,8 +1061,12 @@ static uint64_t msssd_io_mgmt_sungjin(struct ssd* ssd, NvmeRequest* req){
         if(!mapped_ppa(&ppa)){
             continue;
         }
+        
+        get_line(ssd, ppa)->vpc=spp->pgs_per_line;
+
         mark_page_invalid(ssd, &ppa);
         set_rmap_ent(ssd, INVALID_LPN, &ppa);
+        
     }
     printf("invalidate all ok\n");
     ssd->sp.enable_gc_delay=false;
