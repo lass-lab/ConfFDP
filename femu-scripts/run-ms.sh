@@ -44,12 +44,12 @@ NAND_BLOCK_SIZE_MB=4
 # fi
 
 # NAND_4MB_BLOCK=256
-
+G12=12288
 G30=30720
 G64=65536
 
 
-ssd_size=$G64
+ssd_size=$G12
 
 #Compose the entire FEMU BBSSD command line options
 FEMU_OPTIONS="-device femu"
