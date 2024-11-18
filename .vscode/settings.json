@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "*.inc": "c",
-        "msftl.h": "c"
+        "msftl.h": "c",
+        "*.code": "c",
+        "random": "c"
     }
 }

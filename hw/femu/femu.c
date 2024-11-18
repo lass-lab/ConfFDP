@@ -448,6 +448,9 @@ static void nvme_init_ctrl(FemuCtrl *n)
     }
 
     n->bar.cap = 0;
+    if(MSSSD(n)||FDPSSD(n)){
+        id->ctratt |= NVME_CTRATT_FDPS;
+    }
     NVME_CAP_SET_MQES(n->bar.cap, n->max_q_ents);
     NVME_CAP_SET_CQR(n->bar.cap, n->cqr);
     NVME_CAP_SET_AMS(n->bar.cap, 1);

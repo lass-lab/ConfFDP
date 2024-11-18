@@ -321,7 +321,7 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
             //     msssd_trim2(n,slba,nlb);
             // }
         }
-        if(MSSSD(n)){
+        if(MSSSD(n)||FDPSSD(n)){
             // msssd_trim2(n,slba,nlb);
             // printf("sungjin : give pointer %p\n",range);
             req->cmd.discard_range_pointer=(uint64_t)range;
@@ -454,6 +454,9 @@ static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
             return nvme_dsm(n, ns, cmd, req);
         }
         return NVME_INVALID_OPCODE | NVME_DNR;
+    case NVME_CMD_IO_MGMT_SEND:
+        printf("NVME_CMD_IO_MGMT_SEND sungjin\n");
+        return NVME_SUCCESS;
     case NVME_CMD_COMPARE:
         if (NVME_ONCS_COMPARE & n->oncs) {
             return nvme_compare(n, ns, cmd, req);

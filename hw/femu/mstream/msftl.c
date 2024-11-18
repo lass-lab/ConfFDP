@@ -1003,6 +1003,27 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 //     return 0;
 // }
 
+static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
+
+}
+
+static uint64_t msssd_io_mgmt_recv(struct ssd* ssd, NvmeRequest* req){
+    NvmeCmd *cmd = &req->cmd;
+    uint32_t cdw10 = le32_to_cpu(cmd->cdw10);
+    uint32_t numd = le32_to_cpu(cmd->cdw11);
+    uint8_t mo = (cdw10 & 0xff);
+    size_t len = (numd + 1) << 2;
+
+    switch (mo) {
+    case NVME_IOMR_MO_NOP:
+        return 0;
+    case NVME_IOMR_MO_RUH_STATUS:
+        return msssd_io_mgmt_recv_ruhs(ssd, req, len);
+    default:
+        return NVME_INVALID_FIELD | NVME_DNR;
+    };
+}
+
 static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     int i,j;
     struct ssdparams *spp = &ssd->sp;
@@ -1158,6 +1179,9 @@ static void *msftl_thread(void *arg)
                 break;
             case NVME_CMD_DSM:
                 lat = msssd_trim(ssd,req);
+                break;
+            case NVME_CMD_IO_MGMT_SEND:
+                lat = msssd_io_mgmt_recv(ssd,req);
                 break;
             default:
                 //ftl_err("FTL received unkown request type, ERROR\n");
