@@ -1008,8 +1008,8 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
 
     NvmeRuhStatus *hdr;
     NvmeRuhStatusDescr *ruhsd;
-    uint64_t prp1 = le64_to_cpu(cmd->dptr.prp1);
-    uint64_t prp2 = le64_to_cpu(cmd->dptr.prp2);
+    uint64_t prp1 = le64_to_cpu(req->cmd.dptr.prp1);
+    uint64_t prp2 = le64_to_cpu(req->cmd.dptr.prp2);
 
     size_t trans_len=sizeof(NvmeRuhStatus)+nruhsd*sizeof(NvmeRuhStatusDescr);
     void *buf = NULL;
