@@ -69,7 +69,7 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",blk_er_lat=${blk_er_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",ch_xfer_lat=${ch_xfer_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent=${gc_thres_pcent}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent_high=${gc_thres_pcent_high}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=4"
+FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=5"
 
 echo ${FEMU_OPTIONS}
 
