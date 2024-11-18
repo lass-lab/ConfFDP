@@ -902,6 +902,7 @@ static int do_gc(struct ssd *ssd, bool force)
     //     }
     // }
     
+    
     for(pg=0;pg<spp->pgs_per_blk;pg++){
         for(ch =0 ;ch<spp->nchs;ch++){
             for(lun=0;lun<spp->luns_per_ch;lun++){
@@ -923,7 +924,7 @@ static int do_gc(struct ssd *ssd, bool force)
         }
     }
     ssd->sungjin_stat.copied+=cnt;
-
+    printf("sungjin copy ok\n");
 
 // erase
     for (ch = 0; ch < spp->nchs; ch++) {
@@ -948,10 +949,10 @@ static int do_gc(struct ssd *ssd, bool force)
     }
     ftl_assert(get_line(ssd, ppa)->vpc == cnt);
     
-
+    printf("sungjin erase and advance status ok\n");
     /* update line status */
     mark_line_free(ssd, &ppa);
-
+    printf("sungjin mark line free status ok\n");
     return 0;
 }
 

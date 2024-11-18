@@ -322,7 +322,13 @@ enum NvmeIoms2Mo {
 };
 
 typedef struct QEMU_PACKED NvmeRuhStatus {
+   union{ 
+    struct{
+        uint8_t free_space_ratio;
+        uint8_t rsvd0_tmp[13];
+    };
     uint8_t  rsvd0[14];
+   }
     uint16_t nruhsd;
 } NvmeRuhStatus;
 
