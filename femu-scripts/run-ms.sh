@@ -49,7 +49,7 @@ G30=30720
 G64=65536
 
 
-ssd_size=$G12
+ssd_size=$G30
 
 #Compose the entire FEMU BBSSD command line options
 FEMU_OPTIONS="-device femu"

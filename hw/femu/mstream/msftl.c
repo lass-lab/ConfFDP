@@ -877,9 +877,9 @@ static int do_gc(struct ssd *ssd, bool force)
     ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
               victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
               ssd->lm.free_line_cnt);
-    // printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
-    //           victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
-    //           ssd->lm.free_line_cnt);
+    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
+              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
+              ssd->lm.free_line_cnt);
     /* copy back valid data */
     // for (ch = 0; ch < spp->nchs; ch++) {
     //     for (lun = 0; lun < spp->luns_per_ch; lun++) {
