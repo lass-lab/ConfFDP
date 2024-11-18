@@ -1007,7 +1007,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 // static uint64_t msssd_io_mgmt_send()
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     unsigned int nruhsd= ssd->stream_number;
-
+    print_sungjin(msssd_io_mgmt_recv_ruhs);
     NvmeRuhStatus *hdr;
     NvmeRuhStatusDescr *ruhsd;
     uint64_t prp1 = le64_to_cpu(req->cmd.dptr.prp1);
@@ -1095,7 +1095,7 @@ static uint64_t msssd_io_mgmt_recv(struct ssd* ssd, NvmeRequest* req){
     uint32_t numd = le32_to_cpu(cmd->cdw11);
     uint8_t mo = (cdw10 & 0xff);
     size_t len = (numd + 1) << 2;
-
+    print_sungjin(msssd_io_mgmt_recv);
     switch (mo) {
     case NVME_IOMR_MO_NOP:
         return 0;

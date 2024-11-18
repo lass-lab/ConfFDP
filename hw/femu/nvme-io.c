@@ -488,6 +488,7 @@ static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
         return nvme_io_mgmt_send(n,ns,cmd,req);
     case NVME_CMD_IO_MGMT_RECV:
         printf("NVME_CMD_IO_MGMT_RECV sungjin\n");
+        // return nvme_io_mgmt_send(n,ns,cmd,req);
         return NVME_SUCCESS;
     case NVME_CMD_COMPARE:
         if (NVME_ONCS_COMPARE & n->oncs) {
