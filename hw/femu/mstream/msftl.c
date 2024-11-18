@@ -1062,7 +1062,7 @@ static uint64_t msssd_io_mgmt_sungjin(struct ssd* ssd, NvmeRequest* req){
             continue;
         }
         
-        get_line(ssd, &ppa)->vpc=spp->pgs_per_line;
+        get_line(ssd, &ppa)->vpc=ssd->sp.pgs_per_line;
 
         mark_page_invalid(ssd, &ppa);
         set_rmap_ent(ssd, INVALID_LPN, &ppa);
