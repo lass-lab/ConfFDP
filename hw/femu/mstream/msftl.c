@@ -1057,15 +1057,15 @@ static uint64_t msssd_io_mgmt_sungjin(struct ssd* ssd, NvmeRequest* req){
         mark_page_invalid(ssd, &ppa);
         set_rmap_ent(ssd, INVALID_LPN, &ppa);
     }
-
+    printf("invalidate all ok\n");
     ssd->sp.enable_gc_delay=false;
 
     while(true){
         if(do_gc(ssd,true)==-1){
             break;
         }
-    }
-
+    }   
+printf("do gc ok\n");
     ssd->sp.enable_gc_delay=true;
 
     return 0;
