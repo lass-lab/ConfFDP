@@ -293,7 +293,7 @@ static uint16_t nvme_io_mgmt_sungjin(FemuCtrl* n,NvmeNamespace* ns,
     return NVME_SUCCESS;
 }
 static uint16_t nvme_io_mgmt_send(FemuCtrl* n,NvmeNamespace* ns,NvmeCmd* cmd,NvmeRequest* req){
-    NvmeCmd *cmd = &req->cmd;
+    // NvmeCmd *cmd = &req->cmd;
     uint32_t cdw10 = le32_to_cpu(cmd->cdw10);
     uint8_t mo = (cdw10 & 0xff);
 
