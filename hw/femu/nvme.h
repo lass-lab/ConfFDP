@@ -315,6 +315,12 @@ typedef struct NvmeCmd {
 #define NVME_CMD_FLAGS_FUSE(flags) (flags & 0x3)
 #define NVME_CMD_FLAGS_PSDT(flags) ((flags >> 6) & 0x3)
 
+enum NvmeIoms2Mo {
+    NVME_IOMS_MO_NOP = 0x0,
+    NVME_IOMS_MO_RUH_UPDATE = 0x1,
+    NVME_IOMS_MO_SUNGJIN=0x2,
+};
+
 typedef struct QEMU_PACKED NvmeRuhStatus {
     uint8_t  rsvd0[14];
     uint16_t nruhsd;
@@ -686,6 +692,11 @@ enum LogIdentifier {
     NVME_LOG_SMART_INFO     = 0x02,
     NVME_LOG_FW_SLOT_INFO   = 0x03,
     NVME_LOG_CMD_EFFECTS    = 0x05,
+    NVME_LOG_ENDGRP                     = 0x09,
+    NVME_LOG_FDP_CONFS                  = 0x20,
+    NVME_LOG_FDP_RUH_USAGE              = 0x21,
+    NVME_LOG_FDP_STATS                  = 0x22,
+    NVME_LOG_FDP_EVENTS                 = 0x23,
 };
 
 typedef struct NvmePSD {

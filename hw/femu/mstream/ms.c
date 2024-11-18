@@ -103,6 +103,34 @@ static uint16_t ms_admin_cmd(FemuCtrl *n, NvmeCmd *cmd)
     }
 }
 
+static uint16_t ms_get_log(FemuCtrl* n, NvmeCmd* cmd){
+    uint32_t dw10 = le32_to_cpu(cmd->cdw10);
+    uint32_t dw11 = le32_to_cpu(cmd->cdw11);
+    uint32_t dw12 = le32_to_cpu(cmd->cdw12);
+    uint32_t dw13 = le32_to_cpu(cmd->cdw13);
+    uint16_t lid = dw10 & 0xffff;
+
+    switch (lid) {
+    case NVME_LOG_FDP_CONFS:
+        // return nvme_error_log_info(n, cmd, len);
+        return NVME_SUCCESS;
+    case NVME_LOG_FDP_RUH_USAGE:
+        // return nvme_smart_info(n, cmd, len);
+        return NVME_SUCCESS;
+    case NVME_LOG_FDP_STATS:
+        // return nvme_fw_log_info(n, cmd, len);
+        return NVME_SUCCESS;
+    case NVME_LOG_FDP_EVENTS:
+        // return nvme_cmd_effects(n, cmd, csi, len, off);
+        return NVME_SUCCESS;
+    default:
+        // if (n->ext_ops.get_log) {
+        //     return n->ext_ops.get_log(n, cmd);
+        // }
+        return NVME_INVALID_LOG_ID | NVME_DNR;
+    }
+}
+
 int nvme_register_msssd(FemuCtrl *n)
 {
     n->ext_ops = (FemuExtCtrlOps) {
@@ -112,7 +140,7 @@ int nvme_register_msssd(FemuCtrl *n)
         .rw_check_req     = NULL,
         .admin_cmd        = ms_admin_cmd,
         .io_cmd           = ms_io_cmd,
-        .get_log          = NULL,
+        .get_log          = ms_get_log,
     };
 
     return 0;

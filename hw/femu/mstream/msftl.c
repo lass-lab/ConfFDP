@@ -1003,6 +1003,8 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 //     return 0;
 // }
 
+
+// static uint64_t msssd_io_mgmt_send()
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     unsigned int nruhsd= ssd->stream_number;
 
@@ -1035,6 +1037,54 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);
     g_free(buf);
     return 0;
+}
+
+static uint64_t msssd_io_mgmt_sungjin(struct ssd* ssd, NvmeRequest* req){
+    uint64_t slpn=0;
+    struct ppa ppa;
+    printf("msssd_io_mgmt_sungjin\n");
+    for(slpn=0;;slpn++){
+        ppa=get_maptbl_ent(ssd,(slpn));
+        if ( !valid_ppa(ssd, &ppa)) {
+            // continue;
+            break;
+        }
+        if(!mapped_ppa(&ppa)){
+            continue;
+        }
+        mark_page_invalid(ssd, &ppa);
+        set_rmap_ent(ssd, INVALID_LPN, &ppa);
+    }
+
+    ssd->sp.enable_gc_delay=false;
+
+    while(true){
+        if(do_gc(ssd,true)==-1){
+            break;
+        }
+    }
+
+    ssd->sp.enable_gc_delay=true;
+
+    return 0;
+}
+
+static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
+    NvmeCmd *cmd = &req->cmd;
+    uint32_t cdw10 = le32_to_cpu(cmd->cdw10);
+    uint8_t mo = (cdw10 & 0xff);
+
+    switch (mo) {
+    case NVME_IOMS_MO_NOP:
+        return 0;
+    case NVME_IOMS_MO_RUH_UPDATE:
+        // return nvme_io_mgmt_send_ruh_update(n, req);
+        return NVME_SUCCESS;
+    case NVME_IOMS_MO_SUNGJIN:
+        return msssd_io_mgmt_sungjin(ssd,req);
+    default:
+        return NVME_INVALID_FIELD | NVME_DNR;
+    };
 }
 
 static uint64_t msssd_io_mgmt_recv(struct ssd* ssd, NvmeRequest* req){
@@ -1085,7 +1135,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
-                if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
+                if (!valid_ppa(ssd, &ppa) || !mapped_ppa(&ppa)) {
                     continue;
                 }
                 mark_page_invalid(ssd, &ppa);
@@ -1215,7 +1265,9 @@ static void *msftl_thread(void *arg)
                 lat = msssd_io_mgmt_recv(ssd,req);
                 break;
             case NVME_CMD_IO_MGMT_SEND:
-                lat =0;
+
+                // if fdp ssd, handle update
+                lat =msssd_io_mgmt_send(ssd,req);
                 break;
             default:
                 //ftl_err("FTL received unkown request type, ERROR\n");

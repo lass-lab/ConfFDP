@@ -281,6 +281,34 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
 
     return NVME_DNR;
 }
+static uint16_t nvme_io_mgmt_sungjin(FemuCtrl* n,NvmeNamespace* ns,
+                NvmeCmd* cmd,NvmeRequest* req){
+
+    uint64_t slba=0;
+    uint64_t end_lba=slba+le64_to_cpu(ns->id_ns.nsze);
+    uint64_t clear_size= 256;
+    for(slba=0;slba<end_lba;slba+=clear_size){
+        bitmap_clear(ns->util, slba, clear_size);
+    }
+    return NVME_SUCCESS;
+}
+static uint16_t nvme_io_mgmt_send(FemuCtrl* n,NvmeNamespace* ns,NvmeCmd* cmd,NvmeRequest* req){
+    NvmeCmd *cmd = &req->cmd;
+    uint32_t cdw10 = le32_to_cpu(cmd->cdw10);
+    uint8_t mo = (cdw10 & 0xff);
+
+    switch (mo) {
+    case NVME_IOMS_MO_NOP:
+        return NVME_SUCCESS;
+    case NVME_IOMS_MO_RUH_UPDATE:
+        // return nvme_io_mgmt_send_ruh_update(n, req);
+        return NVME_SUCCESS;
+    case NVME_IOMS_MO_SUNGJIN:
+        return nvme_io_mgmt_sungjin(n,ns,cmd,req);
+    default:
+        return NVME_INVALID_FIELD | NVME_DNR;
+    };
+}
 
 static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                          NvmeRequest *req)
@@ -456,7 +484,8 @@ static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
         return NVME_INVALID_OPCODE | NVME_DNR;
     case NVME_CMD_IO_MGMT_SEND:
         printf("NVME_CMD_IO_MGMT_SEND sungjin\n");
-        return NVME_SUCCESS;
+
+        return nvme_io_mgmt_send(n,ns,cmd,req);
     case NVME_CMD_IO_MGMT_RECV:
         printf("NVME_CMD_IO_MGMT_RECV sungjin\n");
         return NVME_SUCCESS;
