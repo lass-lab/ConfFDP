@@ -745,7 +745,7 @@ static void mark_page_valid(struct ssd *ssd, struct ppa *ppa)
 static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 {
     /* advance ssd status, we don't care about how long it takes */
-    print_sungjin(gc_read_page);
+    // print_sungjin(gc_read_page);
     if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcr;
         gcr.type = GC_IO;
@@ -758,25 +758,25 @@ static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 /* move valid page data (already in DRAM) from victim line to a new page */
 static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id)
 {
-    int gc_i=0;
+    // int gc_i=0;
     struct ppa new_ppa;
     struct nand_lun *new_lun;
     uint64_t lpn = get_rmap_ent(ssd, old_ppa);
-    print_sungjin(gc_write_page);
-    print_sungjin(stream_id);
+    // print_sungjin(gc_write_page);
+    // print_sungjin(stream_id);
     ftl_assert(valid_lpn(ssd, lpn));
     new_ppa = get_new_page(ssd,stream_id);
-    print_sungjin(gc_i++);
+    // print_sungjin(gc_i++);
     /* update maptbl */
     set_maptbl_ent(ssd, lpn, &new_ppa);
     /* update rmap */
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     set_rmap_ent(ssd, lpn, &new_ppa);
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     mark_page_valid(ssd, &new_ppa);
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     mark_page_invalid(ssd,old_ppa);
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     /* need to advance the write pointer here */
     ssd_advance_write_pointer(ssd,stream_id);
      print_sungjin(gc_i++);
@@ -787,7 +787,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
         gcw.stime = 0;
         ssd_advance_status(ssd, &new_ppa, &gcw);
     }
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     /* advance per-ch gc_endtime as well */
 #if 0
     new_ch = get_ch(ssd, &new_ppa);
@@ -795,9 +795,9 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
 #endif
 
     new_lun = get_lun(ssd, &new_ppa);
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     new_lun->gc_endtime = new_lun->next_lun_avail_time;
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     return 0;
 }
 
