@@ -944,7 +944,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     uint64_t lpn;
     uint64_t sublat, maxlat = 0;
     
-    uint64_t debug_id = req->cmd.cdw11;
+    // uint64_t debug_id = req->cmd.cdw11;
 
     // if(debug_id==1998){
     //     /*
