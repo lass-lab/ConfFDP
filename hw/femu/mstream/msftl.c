@@ -779,7 +779,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     //  print_sungjin(gc_i++);
     /* need to advance the write pointer here */
     ssd_advance_write_pointer(ssd,stream_id);
-     print_sungjin(gc_i++);
+    //  print_sungjin(gc_i++);
     if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcw;
         gcw.type = GC_IO;
