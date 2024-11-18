@@ -328,7 +328,7 @@ typedef struct QEMU_PACKED NvmeRuhStatus {
         uint8_t rsvd0_tmp[13];
     };
     uint8_t  rsvd0[14];
-   }
+   };
     uint16_t nruhsd;
 } NvmeRuhStatus;
 
