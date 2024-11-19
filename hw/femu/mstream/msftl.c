@@ -105,7 +105,7 @@ static void ssd_init_lines(struct ssd *ssd,bool is_init)
         line->ipc = 0;
         line->vpc = 0;
         line->pos = 0;
-        if(is_init){
+        if(!is_init){
             print_sungjin(line->stream_id);
         }
             line->stream_id=-1;
