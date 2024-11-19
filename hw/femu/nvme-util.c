@@ -117,26 +117,26 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
     if (elba > le64_to_cpu(ns->id_ns.nsze)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_LBA_RANGE,
                             offsetof(NvmeRwCmd, nlb), elba, ns->id);
-        printf("sungjin error1-1\n")
+        printf("sungjin error1-1\n");
         return NVME_LBA_RANGE | NVME_DNR;
     }
     if (n->id_ctrl.mdts && data_size > n->page_size * (1 << n->id_ctrl.mdts)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_INVALID_FIELD,
                             offsetof(NvmeRwCmd, nlb), nlb, ns->id);
-        printf("sungjin error1-2\n")
+        printf("sungjin error1-2\n");
         return NVME_INVALID_FIELD | NVME_DNR;
     }
     if (meta_size) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_INVALID_FIELD,
                             offsetof(NvmeRwCmd, control), ctrl, ns->id);
-        printf("sungjin error1-3\n")
+        printf("sungjin error1-3\n");
         return NVME_INVALID_FIELD | NVME_DNR;
     }
     if ((ctrl & NVME_RW_PRINFO_PRACT) && !(ns->id_ns.dps & DPS_TYPE_MASK)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_INVALID_FIELD,
                             offsetof(NvmeRwCmd, control), ctrl, ns->id);
         /* Not contemplated in LightNVM for now */
-        printf("sungjin error1-3\n")
+        printf("sungjin error1-3\n");
         if (OCSSD(n)) {
             return 0;
         }
@@ -145,7 +145,7 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
     if (!req->is_write && find_next_bit(ns->uncorrectable, elba, slba) < elba) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_UNRECOVERED_READ,
                             offsetof(NvmeRwCmd, slba), elba, ns->id);
-        printf("sungjin error1-4\n")
+        printf("sungjin error1-4\n");
         return NVME_UNRECOVERED_READ;
     }
 
