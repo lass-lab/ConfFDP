@@ -312,7 +312,8 @@ typedef struct NvmeCmd {
 			uint32_t dspec : 16; ///< Directive Specific
 		};
 		uint32_t cdw13;
-	} dw13;
+	};
+    
     union{
         uint64_t discard_range_pointer;
         struct{
