@@ -1251,7 +1251,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t stream_id = req->cmd.dspec;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     if(stream_id>=ssd->stream_number){
-        femu_log("sungjin : stream id %ld -> %lu",stream_id,ssd->stream_number-1);
+        femu_log("sungjin : stream id %ld -> %u",stream_id,ssd->stream_number-1);
         stream_id=ssd->stream_number-1;
         // return 0;
     }
