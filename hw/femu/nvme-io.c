@@ -278,7 +278,7 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
 
     ret = backend_rw(n->mbe, &req->qsg, &data_offset, req->is_write);
     if (!ret) {
-        printf("sungjin error 3\n");
+        // printf("sungjin error 3\n");
         return NVME_SUCCESS;
     }
 
