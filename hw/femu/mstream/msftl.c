@@ -1374,7 +1374,7 @@ static void *msftl_thread(void *arg)
 
             /* clean one line if needed (in the background) */
             if (should_gc(ssd)) {
-                r=do_gc(ssd, false);
+                do_gc(ssd, false);
                 // if(r==-1){
                 //     continue;
                 // }
