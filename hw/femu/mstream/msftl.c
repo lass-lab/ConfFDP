@@ -206,7 +206,22 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id)
                 wpp->curline->stream_id=stream_id;
                 if (!wpp->curline) {
                     /* TODO */
-                    abort();
+                    while(true){
+
+                                printf("sungjin error here? abort\n");
+                                 wpp->curline = get_next_free_line(ssd);
+                                 if(wpp->curline){
+                                    break;
+                                 }
+                    }
+                    
+                    // abort();
+                    // do
+                    // {
+                    //     /* code */
+                    // } while (/* condition */);
+                    
+                   
                 }
                 wpp->blk = wpp->curline->id;
                 check_addr(wpp->blk, spp->blks_per_pl);
