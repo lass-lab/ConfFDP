@@ -140,7 +140,7 @@ static void msssd_init_write_pointer(struct ssd *ssd,int stream_id)
     wpp->ch = 0;
     wpp->lun = 0;
     wpp->pg = 0;
-    wpp->blk = 0;
+    wpp->blk = curline->id;
     wpp->pl = 0;
     // print_sungjin(msssd_init_write_pointer);
 }
@@ -682,9 +682,9 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     /* update corresponding page status */
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_VALID);
-    // if(pg->status==PG_INVALID){
-    //     return;
-    // }
+    if(pg->status==PG_INVALID){
+        return;
+    }
     pg->status = PG_INVALID;
 
 
