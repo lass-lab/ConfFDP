@@ -1217,6 +1217,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint32_t nlp;
     uint64_t slpn;
     struct ppa ppa;
+    struct nand_page* pg_iter;
     // uint64_t plp1 = req->cmd->plp1;
 
     // print_sungjin(msssd_trim);
@@ -1240,8 +1241,13 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 if (!valid_ppa(ssd, &ppa) || !mapped_ppa(&ppa)) {
                     continue;
                 }
-                mark_page_invalid(ssd, &ppa);
-                set_rmap_ent(ssd, INVALID_LPN, &ppa);
+                // if(ppa.ppa==PG_VALID)
+                pg_iter = get_pg(ssd, ppa);
+                if(pg_iter->status==PG_VALID){
+                    mark_page_invalid(ssd, &ppa);
+                }
+                // set_rmap_ent(ssd, INVALID_LPN, &ppa);
+                
             }
 
         }
