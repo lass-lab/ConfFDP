@@ -1318,7 +1318,7 @@ static void *msftl_thread(void *arg)
     uint64_t lat = 0;
     int rc;
     int i;
-    int r;
+    // int r;
     print_sungjin(msftl_thread);
     printf("msftl_thread start@@@@@@@@@\n");
     while (!*(ssd->dataplane_started_ptr)) {
