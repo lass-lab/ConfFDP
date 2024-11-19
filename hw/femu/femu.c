@@ -337,7 +337,8 @@ static void nvme_ns_init_identify(FemuCtrl *n, NvmeIdNs *id_ns)
     id_ns->dpc           = n->dpc;
     id_ns->dps           = n->dps;
     id_ns->dlfeat        = 0x9;
-    id_ns->lbaf[0].lbads = 14; // sungjin lba size is 4096 , 16KB
+    id_ns->lbaf[0].lbads = 12; // sungjin lba size is 4096 , 16KB
+    // id_ns->lbaf[0].lbads = 14; // sungjin lba size is 4096 , 16KB
     id_ns->lbaf[0].ms    = 0;
 
     // npdg = 1;
