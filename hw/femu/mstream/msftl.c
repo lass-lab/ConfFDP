@@ -1235,17 +1235,24 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             NvmeDsmRange* dmr = &range[i];
             slpn=dmr->slba/spp->secs_per_pg;
             nlp=dmr->nlb/spp->secs_per_pg;
+            if(dmr->nlb==0){
+                printf(" 0 occurs\n");
+            }
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
-                if (!valid_ppa(ssd, &ppa) || !mapped_ppa(&ppa)) {
+                if (!valid_ppa(ssd, &ppa)) {
                     continue;
                 }
                 // if(ppa.ppa==PG_VALID)
-                pg_iter = get_pg(ssd, &ppa);
-                if(pg_iter->status==PG_VALID){
+                if(mapped_ppa(&ppa)){
                     mark_page_invalid(ssd, &ppa);
+                    set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 }
+                // pg_iter = get_pg(ssd, &ppa);
+                // if(pg_iter->status==PG_VALID){
+                //     mark_page_invalid(ssd, &ppa);
+                // }
                 // set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 
             }
