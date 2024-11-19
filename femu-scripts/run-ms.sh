@@ -31,7 +31,7 @@ gc_thres_pcent=75
 gc_thres_pcent_high=95
 
 #-----------------------------------------------------------------------
-NAND_PAGE_SIZE_KB=16
+NAND_PAGE_SIZE_KB=4
 NAND_BLOCK_SIZE_MB=4
 
 

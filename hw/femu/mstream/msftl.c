@@ -682,7 +682,11 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     /* update corresponding page status */
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_VALID);
+    // if(pg->status==PG_INVALID){
+    //     return;
+    // }
     pg->status = PG_INVALID;
+
 
     /* update corresponding block status */
     blk = get_blk(ssd, ppa);
@@ -700,6 +704,9 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     }
     line->ipc++;
     ftl_assert(line->vpc > 0 && line->vpc <= spp->pgs_per_line);
+
+
+    
     /* Adjust the position of the victime line in the pq under over-writes */
     if (line->pos) {
         /* Note that line->vpc will be updated by this call */
@@ -726,6 +733,9 @@ static void mark_page_valid(struct ssd *ssd, struct ppa *ppa)
     /* update page status */
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_FREE);
+    // if(pg->status==PG_VALID){
+    //     return;
+    // }
     pg->status = PG_VALID;
 
     /* update corresponding block status */
