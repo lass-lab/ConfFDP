@@ -1139,7 +1139,7 @@ void nvme_process_sq_admin(void *opaque)
     hwaddr addr;
     NvmeCmd cmd;
     NvmeCqe cqe;
-    printf("sungjin nvme_process_sq_admin\n");
+    // printf("sungjin nvme_process_sq_admin\n");
     while (!(nvme_sq_empty(sq))) {
         if (sq->phys_contig) {
             addr = sq->dma_addr + sq->head * n->sqe_size;

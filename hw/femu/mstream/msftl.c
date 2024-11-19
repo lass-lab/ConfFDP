@@ -106,7 +106,7 @@ static void ssd_init_lines(struct ssd *ssd,bool is_init)
         line->vpc = 0;
         line->pos = 0;
         if(!is_init){
-            print_sungjin(line->stream_id);
+            // print_sungjin(line->stream_id);
         }
             line->stream_id=-1;
         /* initialize all the lines as free lines */
@@ -1296,7 +1296,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t stream_id =dword13.dspec;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     if(stream_id>=ssd->stream_number){
-        printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
+        // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         stream_id=ssd->stream_number-1;
         // return 0;
     }

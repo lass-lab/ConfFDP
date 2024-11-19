@@ -32,7 +32,9 @@ struct nvme_fdp_ruh_status {
    union{ 
     struct{
         uint8_t free_space_ratio;
-        uint8_t rsvd0_tmp[13];
+        uint32_t copied_page;
+        uint32_t block_erased;
+        uint8_t rsvd0_tmp[5];
     };
     uint8_t  rsvd0[14];
    };
@@ -97,7 +99,7 @@ int main(int argc,char**argv){
     for(int i=0;i<MAX_NR_QUEUE;i++){
         queues_[i] = nullptr;
         err=xnvme_queue_init(dev_,qdepth,0,&queues_[i]);
-         print_sungjin(xnvme_queue_init);
+        //  print_sungjin(xnvme_queue_init);
         if(err){
             printf("Error 2 :%d\n",i);
             return 0;
@@ -150,7 +152,9 @@ int main(int argc,char**argv){
 
 
 /////////////////
-    printf("ruh_status.nruhsd %d /// fr ratio %u\n",ruh_status.nruhsd,ruh_status.free_space_ratio);
+    printf("ruh_status.nruhsd %d /// fr ratio %u copied page %u block erase %u\n",
+    ruh_status.nruhsd,ruh_status.free_space_ratio
+    ,ruh_status.copied_page,ruh_status.block_erased);
     for(int i=0;i<ruh_status.nruhsd;i++){
         /*
           uint16_t pid;
