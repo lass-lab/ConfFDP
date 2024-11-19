@@ -1242,7 +1242,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     continue;
                 }
                 // if(ppa.ppa==PG_VALID)
-                pg_iter = get_pg(ssd, ppa);
+                pg_iter = get_pg(ssd, &ppa);
                 if(pg_iter->status==PG_VALID){
                     mark_page_invalid(ssd, &ppa);
                 }
