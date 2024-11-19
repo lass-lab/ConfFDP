@@ -123,7 +123,10 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
     if (n->id_ctrl.mdts && data_size > n->page_size * (1 << n->id_ctrl.mdts)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_INVALID_FIELD,
                             offsetof(NvmeRwCmd, nlb), nlb, ns->id);
-        printf("sungjin error1-2\n");
+        printf("sungjin error1-2\n");////
+        print_sungjin(n->id_ctrl.mdts);
+        print_sungjin(data_size);
+        print_sungjin(n->page_size );
         return NVME_INVALID_FIELD | NVME_DNR;
     }
     if (meta_size) {
