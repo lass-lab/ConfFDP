@@ -925,7 +925,7 @@ static int do_gc(struct ssd *ssd, bool force)
                 // ftl_assert(pg_iter->status != PG_FREE);
                 // print_sungjin(pg_iter);
                 if(pg_iter->status == PG_FREE){
-                    print_sungjin(pg_iter->status);
+                    // print_sungjin(pg_iter->status);
                 }
                 if (pg_iter->status == PG_VALID) {
                     gc_read_page(ssd, &ppa);
