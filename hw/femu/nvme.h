@@ -313,7 +313,7 @@ typedef struct NvmeCmd {
 		};
 		uint32_t cdw13;
 	};
-    
+
     union{
         uint64_t discard_range_pointer;
         struct{
@@ -337,7 +337,9 @@ typedef struct QEMU_PACKED NvmeRuhStatus {
    union{ 
     struct{
         uint8_t free_space_ratio;
-        uint8_t rsvd0_tmp[13];
+        uint32_t copied_page;
+        uint32_t block_erased;
+        uint8_t rsvd0_tmp[5];
     };
     uint8_t  rsvd0[14];
    };
