@@ -810,12 +810,12 @@ static struct line *select_victim_line(struct ssd *ssd, bool force)
 
     victim_line = pqueue_peek(lm->victim_line_pq);
     if (!victim_line) {
-        printf("select_victim_line nulptr,eturn\n");
+        // printf("select_victim_line nulptr,eturn\n");
         return NULL;
     }
 
     if (!force && victim_line->ipc < ssd->sp.pgs_per_line / 8) {
-        printf("!force select_victim_line nulptr,eturn\n");
+        // printf("!force select_victim_line nulptr,eturn\n");
         return NULL;
     }
 
@@ -876,7 +876,7 @@ static int do_gc(struct ssd *ssd, bool force)
     struct nand_page *pg_iter = NULL;
 
     if (!victim_line) {
-        printf("no victim line, return\n");
+        // printf("no victim line, return\n");
         return -1;
     }
 
