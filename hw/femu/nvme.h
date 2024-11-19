@@ -301,7 +301,18 @@ typedef struct NvmeCmd {
     uint32_t    cdw10;
     uint32_t    cdw11; // dspec
     uint32_t    cdw12;
-    uint32_t    cdw13;
+    // uint32_t    cdw13;
+	union {
+		struct {
+			uint32_t af    : 4; ///< Access Frequency
+			uint32_t al    : 2; ///< Access Latency
+			uint32_t sr    : 1; ///< Sequential Request
+			uint32_t incom : 1; ///< Incompressible
+			uint32_t rsvd3 : 8;
+			uint32_t dspec : 16; ///< Directive Specific
+		};
+		uint32_t val;
+	} cdw13;
     union{
         uint64_t discard_range_pointer;
         struct{
