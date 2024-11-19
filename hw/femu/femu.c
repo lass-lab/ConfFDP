@@ -45,8 +45,8 @@ static void nvme_clear_ctrl(FemuCtrl *n, bool shutdown)
 
 static int nvme_start_ctrl(FemuCtrl *n)
 {
-    // uint32_t page_bits = NVME_CC_MPS(n->bar.cc) + 12; //sungjin page_bits
-    uint32_t page_bits = NVME_CC_MPS(n->bar.cc) + 14;
+    uint32_t page_bits = NVME_CC_MPS(n->bar.cc) + 12; //sungjin page_bits
+    // uint32_t page_bits = NVME_CC_MPS(n->bar.cc) + 14;
     uint32_t page_size = 1 << page_bits;
 
     if (n->cq[0] || n->sq[0] || !n->bar.asq || !n->bar.acq ||
