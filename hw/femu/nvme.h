@@ -289,12 +289,18 @@ enum NvmePsdt {
 };
 
 typedef struct NvmeCmdDWORD13{
-	uint32_t af    : 4; ///< Access Frequency
+    union{	    
+            
+            struct{
+            uint32_t af    : 4; ///< Access Frequency
 			uint32_t al    : 2; ///< Access Latency
 			uint32_t sr    : 1; ///< Sequential Request
 			uint32_t incom : 1; ///< Incompressible
 			uint32_t rsvd3 : 8;
 			uint32_t dspec : 16; ///< Directive Specific
+            };
+            uint32_t val : 32;
+    };
 } NvmeCmdDWORD13;
 
 typedef struct NvmeCmd {

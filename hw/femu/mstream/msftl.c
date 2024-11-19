@@ -1249,7 +1249,8 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t curlat = 0, maxlat = 0;
 
     uint32_t tmp=req->cmd.cdw13;
-    NvmeCmdDWORD13 dword13 = (NvmeCmdDWORD13)tmp;
+    NvmeCmdDWORD13 dword13;
+    dword13.val = tmp;
 
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     // uint8_t dtype = (dw12 >> 20) & 0xf;
