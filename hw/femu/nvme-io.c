@@ -286,9 +286,10 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
 }
 static uint16_t nvme_io_mgmt_sungjin(FemuCtrl* n,NvmeNamespace* ns,
                 NvmeCmd* cmd,NvmeRequest* req){
-
+    print_sungjin(nvme_io_mgmt_sungjin);
     uint64_t slba=0;
     uint64_t end_lba=slba+le64_to_cpu(ns->id_ns.nsze);
+    print_sungjin(end_lba);
     uint64_t clear_size= 256;
     for(slba=0;slba<end_lba;slba+=clear_size){
         bitmap_clear(ns->util, slba, clear_size);
