@@ -1248,14 +1248,15 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
 
+    NvmeCmdDWORD13 dword13= req->cmd.cdw13;;
 
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     // uint8_t dtype = (dw12 >> 20) & 0xf;
 
-    uint16_t stream_id = req->cmd.dspec;
+    uint16_t stream_id =dword13.dspec;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     if(stream_id>=ssd->stream_number){
-        printf("sungjin : stream id %u -> %u\n",stream_id,ssd->stream_number-1);
+        printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         stream_id=ssd->stream_number-1;
         // return 0;
     }
