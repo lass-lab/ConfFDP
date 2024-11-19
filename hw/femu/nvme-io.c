@@ -86,7 +86,7 @@ static void nvme_process_sq_io(void *opaque, int index_poller)
             /* Normal I/Os that don't need delay emulation */
             req->status = status;
         } else {
-            femu_err("Error IO processed!\n");
+            femu_err("Error IO processed! %d\n",req->cmd_opcode);
         }
 
         processed++;
@@ -259,12 +259,14 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
 
     err = femu_nvme_rw_check_req(n, ns, cmd, req, slba, elba, nlb, ctrl,
                                  data_size, meta_size);
-    if (err)
+    if (err){
+        printf("sungjin error 1\n");
         return err;
-
+    }
     if (nvme_map_prp(&req->qsg, &req->iov, prp1, prp2, data_size, n)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_INVALID_FIELD,
                             offsetof(NvmeRwCmd, prp1), 0, ns->id);
+                        printf("sungjin error 2\n");
         return NVME_INVALID_FIELD | NVME_DNR;
     }
 
@@ -276,6 +278,7 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
 
     ret = backend_rw(n->mbe, &req->qsg, &data_offset, req->is_write);
     if (!ret) {
+        printf("sungjin error 3\n");
         return NVME_SUCCESS;
     }
 
