@@ -616,9 +616,9 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
 
     uint64_t nand_stime;
     uint64_t chnl_stime =0;
-    uint64_t cmd_stime=
-        (req->stime == 0) ? qemu_clock_get_ns(QEMU_CLOCK_REALTIME) 
-            : req->stime ;
+    // uint64_t cmd_stime=
+    //     (req->stime == 0) ? qemu_clock_get_ns(QEMU_CLOCK_REALTIME) 
+            // : req->stime ;
     switch (c) {
     case NAND_READ:
 
