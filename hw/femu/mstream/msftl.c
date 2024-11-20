@@ -598,28 +598,48 @@ static inline struct nand_page *get_pg(struct ssd *ssd, struct ppa *ppa)
     return &(blk->pg[ppa->g.pg]);
 }
 
+
+
+
 static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
         nand_cmd *ncmd)
 {
     int c = ncmd->cmd;
     uint64_t cmd_stime = (ncmd->stime == 0) ? \
         qemu_clock_get_ns(QEMU_CLOCK_REALTIME) : ncmd->stime;
-    uint64_t nand_stime;
-    uint64_t chnl_stime =0;
+
     struct ssdparams *spp = &ssd->sp;
     struct nand_lun *lun = get_lun(ssd, ppa);
     // ssd_channel *get_ch
     struct ssd_channel* ch = get_ch(ssd,ppa);
     uint64_t lat = 0;
 
+    uint64_t nand_stime;
+    uint64_t chnl_stime =0;
+    uint64_t cmd_stime=
+        (req->stime == 0) ? qemu_clock_get_ns(QEMU_CLOCK_REALTIME) 
+            : req->stime ;
     switch (c) {
     case NAND_READ:
+
+
+////////////
+        nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \
+                     lun->next_lun_avail_time;
+        lun->next_lun_avail_time = nand_stime + spp->pg_rd_lat;
+        // lat = lun->next_lun_avail_time - cmd_stime;
+        chnl_stime = (ch->next_ch_avail_time < lun->next_lun_avail_time) ?
+                        lun->next_avail_time : ch->next_ch_avail_time;
+        ch->next_ch_avail_time = chnl_stime + spp->ch_xfer_lat;
+        lat = ch->next_ch_avail_time - cmd_stime
+///////////
+#if 0
         /* read: perform NAND cmd first */
         nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \
                      lun->next_lun_avail_time;
         lun->next_lun_avail_time = nand_stime + spp->pg_rd_lat;
         lat = lun->next_lun_avail_time - cmd_stime;
-#if 1
+// #if 0
         lun->next_lun_avail_time = nand_stime + spp->pg_rd_lat;
 
         /* read: then data transfer through channel */
@@ -632,6 +652,15 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
         break;
 
     case NAND_WRITE:
+        nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \
+                     lun->next_lun_avail_time;
+        lun->next_lun_avail_time = nand_stime + spp->pg_wr_lat;
+        // lat = lun->next_lun_avail_time - cmd_stime;
+        chnl_stime = (ch->next_ch_avail_time < lun->next_lun_avail_time) ?
+                        lun->next_avail_time : ch->next_ch_avail_time;
+        ch->next_ch_avail_time = chnl_stime + spp->ch_xfer_lat;
+        lat = ch->next_ch_avail_time - cmd_stime
+#if 0
         /* write: transfer data through channel first */
         nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \
                      lun->next_lun_avail_time;
@@ -642,7 +671,7 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
         }
         lat = lun->next_lun_avail_time - cmd_stime;
 
-#if 1
+// #if 0
         chnl_stime = (ch->next_ch_avail_time < cmd_stime) ? cmd_stime : \
                      ch->next_ch_avail_time;
         ch->next_ch_avail_time = chnl_stime + spp->ch_xfer_lat;
