@@ -92,7 +92,7 @@ sudo $QEMU \
     -m 20G \
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-hd,drive=hd0 \
-    -drive file=$OSIMGF,if=none,aio=native,cache=none,format=qcow2,id=hd0 \
+    -drive file=$OSIMGF,if=none,aio=io_uring,cache=none,format=qcow2,id=hd0 \
     ${FEMU_OPTIONS} \
     -net user,hostfwd=tcp::8095-:22 \
     -net nic,model=virtio \
