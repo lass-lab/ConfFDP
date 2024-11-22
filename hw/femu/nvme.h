@@ -369,6 +369,13 @@ typedef struct NvmeRuhStatusDescr {
     uint8_t  rsvd16[16];
 } NvmeRuhStatusDescr;
 
+
+enum NvmeDirectiveTypes {
+    NVME_DIRECTIVE_IDENTIFY       = 0x0,
+    NVME_DIRECTIVE_STREAM         = 0x1,
+    NVME_DIRECTIVE_DATA_PLACEMENT = 0x2,
+};
+
 enum NvmeIdCtrlCtratt {
     NVME_CTRATT_ENDGRPS = 1 <<  4,
     NVME_CTRATT_ELBAS   = 1 << 15,

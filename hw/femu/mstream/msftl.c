@@ -1324,6 +1324,12 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
 
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     // uint8_t dtype = (dw12 >> 20) & 0xf;
+/*
+    NVME_DIRECTIVE_IDENTIFY       = 0x0,
+    NVME_DIRECTIVE_STREAM         = 0x1,
+    NVME_DIRECTIVE_DATA_PLACEMENT = 0x2,
+*/
+    
 
     uint16_t stream_id =dword13.dspec;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
