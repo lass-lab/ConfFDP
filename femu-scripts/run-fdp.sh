@@ -36,7 +36,7 @@ NAND_BLOCK_SIZE_MB=4
 
 # FDP
 # luns_per_rg=32
-rg_number=8 # 1~64
+rg_number=2 # 1~64
 handle_number=2 # should be power of 2, smaller than luns_per_ch*nchs
 
 
