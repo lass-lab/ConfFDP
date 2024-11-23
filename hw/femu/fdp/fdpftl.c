@@ -690,12 +690,12 @@ static inline bool valid_ppa(struct ssd *ssd, struct ppa *ppa)
 static inline int get_rg_id(struct ssd* ssd,struct ppa* ppa){
 
     if(ssd->sp.chnls_per_rg>1){ // big rg, include many channels
-        return ppa.g.ch/ssd->sp->chnls_per_rg;
+        return ppa->g.ch/ssd->sp->chnls_per_rg;
     }else if(ssd->sp.rgs_per_chnl>1){ // rgs in channel
-        return (ppa.g.ch*ssd->sp.rgs_per_chnl)+
-        (ppa.g.lun/ssd->sp.luns_per_rg);
-    }else if(ssd->sp.pgs_per_chnl==1&&ssd->sp.chnls_per_rg==1){
-        return ppa.g.ch;
+        return (ppa->g.ch*ssd->sp.rgs_per_chnl)+
+        (ppa->g.lun/ssd->sp.luns_per_rg);
+    }else if(ssd->sp.rgs_per_chnl==1&&ssd->sp.chnls_per_rg==1){
+        return ppa->g.ch;
         // rg == channel
     }
     // else
@@ -1107,9 +1107,9 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 
     ppa.g.blk = victim_line->id;
 
-    ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
-              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
-              ssd->lm.free_line_cnt);
+    // ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
+    //           victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm.full_line_cnt,
+    //           ssd->lm.free_line_cnt);
 
 
     //////////////////////////////////
@@ -1120,8 +1120,8 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 
     printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_lun_id=%d,start_ch_id=%d,end_ch_id=%d\
                start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
-              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
-              ssd->lm.free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
+              victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
+              ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
               start_lun_id,end_lun_id);
     /////////////////////////////////
     for(pg=0;pg<spp->pgs_per_blk;pg++){
@@ -1304,6 +1304,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 // static uint64_t msssd_io_mgmt_send()
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     // unsigned int nruhsd= ssd->stream_number;
+    uint8_t ph,rg;
     unsigned int nruhsd= ssd->stream_number*ssd->rg_number;
     print_sungjin(msssd_io_mgmt_recv_ruhs);
     NvmeRuhStatus *hdr;
@@ -1322,7 +1323,12 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
 
     hdr->nruhsd=cpu_to_le16(nruhsd);
     // return (ssd->lm.free_line_cnt <= ssd->sp.gc_thres_lines);
-    hdr->free_space_ratio=(uint8_t)(ssd->lm.free_line_cnt*100/ssd->lm.tt_lines);
+    int total_free_line=0;
+    for(rg=0;rg<ssd->rg_number;rg++){
+        total_free_line+=ssd->lm[rg].free_line_cnt;
+    }
+    // total_free_line/=rg;
+    hdr->free_space_ratio=(uint8_t)(total_free_line*100/(ssd->lm.tt_lines*ssd->rg_number));
     hdr->copied_page=ssd->sungjin_stat.copied;
     hdr->block_erased=ssd->sungjin_stat.block_erased;
     // ruhid=ns-
@@ -1333,7 +1339,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     //     ruhsd->earutr = 0;
     //     ruhsd->ruamw=0;
     // }
-    uin8_t ph,rg;
+    
     for(rg=0;rg<ssd->rg_number;rg++){
         for(ph=0;ph<ssd->stream_number;ph++){
             NvmeCmdDWORD13 dword13;
@@ -1357,7 +1363,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // struct ppa ppa;
     int i,j;
     struct ssdparams* spp= &ssd->sp;
-    struct line_mgmt *lm = &ssd->lm;
+    // struct line_mgmt *lm = &ssd->lm[];
     printf("msssd_io_mgmt_send_sungjin\n");
     print_sungjin(ssd->sungjin_stat.block_erased);
     print_sungjin(ssd->sungjin_stat.copied);
@@ -1390,9 +1396,9 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
         }
     }
     
-    print_sungjin(lm->free_line_cnt);
-    print_sungjin(lm->victim_line_cnt);
-    print_sungjin(lm->full_line_cnt);
+    // print_sungjin(lm->free_line_cnt);
+    // print_sungjin(lm->victim_line_cnt);
+    // print_sungjin(lm->full_line_cnt);
 
 
     // for(slpn=0;;slpn++){
@@ -1685,7 +1691,7 @@ static void *msftl_thread(void *arg)
 
             /* clean one line if needed (in the background) */
 
-            for(i=0;i<ssd->sp->rg_number;i++){
+            for(i=0;i<ssd->sp.rg_number;i++){
                 if (should_gc(ssd,i)) {
                     do_gc(ssd, false,i);
                     // if(r==-1){
