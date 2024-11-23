@@ -1339,8 +1339,9 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     //     ruhsd->ruamw=0;
     // }
     
-    for(rg=0;rg<ssd->rg_number;rg++){
-        for(ph=0;ph<ssd->stream_number;ph++){
+    
+    for(ph=0;ph<ssd->stream_number;ph++){
+        for(rg=0;rg<ssd->rg_number;rg++){
             NvmeCmdDWORD13 dword13;
             dword13.rg=rg;
             dword13.ph=ph;
