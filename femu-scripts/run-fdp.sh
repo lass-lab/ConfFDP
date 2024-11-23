@@ -36,7 +36,7 @@ NAND_BLOCK_SIZE_MB=4
 
 # FDP
 # luns_per_rg=32
-rg_number=64 # 1~64
+rg_number=8 # 1~64
 handle_number=2 # should be power of 2, smaller than luns_per_ch*nchs
 
 
@@ -76,8 +76,8 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",blk_er_lat=${blk_er_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",ch_xfer_lat=${ch_xfer_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent=${gc_thres_pcent}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent_high=${gc_thres_pcent_high}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=${handle_number}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=${rg_number}"
+FEMU_OPTIONS=${FEMU_OPTIONS}",handle_number=${handle_number}"
+FEMU_OPTIONS=${FEMU_OPTIONS}",rg_number=${rg_number}"
 
 echo ${FEMU_OPTIONS}
 
