@@ -35,8 +35,11 @@ NAND_PAGE_SIZE_KB=16
 NAND_BLOCK_SIZE_MB=4
 
 # FDP
-luns_per_rg=32
-handle_number=8
+# luns_per_rg=32
+rg_number=8 # 1~64
+handle_number=8 # should be power of 2, smaller than luns_per_ch*nchs
+
+
 # if [ $NAND_BLOCK_SIZE -eq 64 ]; then
 #     pgs_per_blk=4096 # number of pages per flash block
 # elif [ $NAND_BLOCK_SIZE -eq 32 ]; then
@@ -73,7 +76,8 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",blk_er_lat=${blk_er_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",ch_xfer_lat=${ch_xfer_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent=${gc_thres_pcent}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent_high=${gc_thres_pcent_high}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=6"
+FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=${handle_number}"
+FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=${rg_number}"
 
 echo ${FEMU_OPTIONS}
 

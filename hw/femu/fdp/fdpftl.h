@@ -121,6 +121,7 @@ struct ssdparams {
 
     //fdp
     int luns_per_rg;
+    int chnls_per_rg;
     int rgs_per_chnl;
     
 

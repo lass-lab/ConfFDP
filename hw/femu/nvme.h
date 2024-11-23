@@ -1421,7 +1421,7 @@ typedef struct FemuCtrl {
     uint8_t         femu_mode;
     uint8_t         stream_number;
 
-    uint8_t         luns_per_rg;
+    uint8_t         rg_number;
     uint8_t         handle_number;
 
     uint8_t         lver; /* Coperd: OCSSD version, 0x1 -> OC1.2, 0x2 -> OC2.0 */
