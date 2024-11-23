@@ -159,15 +159,15 @@ static inline void rg2physical(struct ssdparams *spp ,
         // return -1;
 }
 
-static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg)
+static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
 {
 
 
     struct ssdparams *spp = &ssd->sp;
-    struct write_pointer *wpp = &(ssd->wp[stream_id][rg]);
+    struct write_pointer *wpp = &(ssd->wp[stream_id][rg_id]);
 
 
-    struct line_mgmt *lm = &ssd->lm[rg];
+    struct line_mgmt *lm = &ssd->lm[rg_id];
     struct line *curline = NULL;
 
     curline = QTAILQ_FIRST(&lm->free_line_list);
@@ -196,9 +196,10 @@ static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg)
         .
         27~31 -> ch 7
     */
-
-    wpp->ch = rg/spp->rgs_per_chnl;
-    wpp->lun = (rg%spp->rgs_per_chnl)*spp->luns_per_rg;
+   int tmp1,tmp2;
+    rg2physical(spp,rg_id,&wpp->ch,&wpp->lun,&tmp1,&tmp2);
+    // wpp->ch = rg/spp->rgs_per_chnl;
+    // wpp->lun = (rg%spp->rgs_per_chnl)*spp->luns_per_rg;
 
     wpp->pg = 0;
     wpp->blk = curline->id;
@@ -510,7 +511,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
 
     // fdp
     spp->rgs_per_chnl = n->rg_number/spp->nchs;
-    spp->luns_per_rg = (spp->luns_per_ch*spp->nchs)/n->rg_number;;
+    spp->luns_per_rg = (spp->luns_per_ch*spp->nchs)/n->rg_number;
     spp->chnls_per_rg = spp->luns_per_rg/spp->luns_per_ch;
     
     check_params(spp);
