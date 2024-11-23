@@ -39,7 +39,7 @@ struct nvme_fdp_ruh_status {
     uint8_t  rsvd0[14];
    };
   uint16_t nruhsd;
-  struct nvme_fdp_ruh_status_desc ruhss[16];
+  struct nvme_fdp_ruh_status_desc ruhss[256];
 };
 
 

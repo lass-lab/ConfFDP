@@ -1306,6 +1306,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     uint8_t ph,rg;
     unsigned int nruhsd= ssd->stream_number*ssd->rg_number;
     print_sungjin(msssd_io_mgmt_recv_ruhs);
+    print_sungjin(len);
     NvmeRuhStatus *hdr;
     NvmeRuhStatusDescr *ruhsd;
     uint64_t prp1 = le64_to_cpu(req->cmd.dptr.prp1);
@@ -1313,7 +1314,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
 
     size_t trans_len=sizeof(NvmeRuhStatus)+nruhsd*sizeof(NvmeRuhStatusDescr);
     void *buf = NULL;
-    buf = g_malloc(trans_len);
+    buf = g_malloc0(trans_len);
 
     trans_len = MIN(trans_len, len);
 
@@ -1349,6 +1350,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
             ruhsd->ruhid=dword13.dspec; // how to do ? pid == ruhid?
             ruhsd->earutr = 0;
             ruhsd->ruamw=0;
+            printf("dword13.dspec %u ruhsd->pid %u\n",dword13.dspec,ruhsd->pid);
         }
     }
 
