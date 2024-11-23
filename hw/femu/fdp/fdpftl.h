@@ -173,6 +173,7 @@ typedef struct line {
     /* position in the priority queue for victim lines */
     size_t                  pos;
     int stream_id;
+    int rg_id;
 } line;
 
 /* wp: record next write addr */

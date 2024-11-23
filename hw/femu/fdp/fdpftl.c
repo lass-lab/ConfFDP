@@ -120,6 +120,46 @@ static void fdpssd_init_lines(struct ssd *ssd,bool is_init, int rg)
     lm->full_line_cnt = 0;
 }
 
+static inline void rg2physical(struct ssdparams *spp , 
+    int rg_id, int* start_ch, int* start_lun,int *end_ch, int* end_lun){
+    if(spp->chnls_per_rg>1){ // big rg, include many channels
+    
+        // return ppa.g.ch/spp->chnls_per_rg;
+        *start_ch=rg_id*spp->chnls_per_rg;
+        *start_lun=0;
+
+        *end_ch=*start_ch +spp->chnls_per_rg-1;
+        *end_lun=spp->luns_per_ch-1;
+
+    }else if(spp->rgs_per_chnl>1){ // rgs in channel
+        return (ppa.g.ch*spp->rgs_per_chnl)+
+        (ppa.g.lun/spp->luns_per_rg);
+
+        *start_ch=rg_id/spp->rgs_per_chnl;
+        *start_lun=(rg_id%spp->rgs_per_chnl)*spp->luns_per_rg;
+        
+        *end_ch=rg_id/spp->rgs_per_chnl;
+        *end_lun=(*start_lun ) + spp->luns_per_rg-1;
+
+    }else if(spp->rgs_per_chnl==1&&spp->chnls_per_rg==1){
+        // return ppa.g.ch;
+        *start_ch=rg_id;
+        *start_lun=0;
+        *end_ch=rg_id;
+        *end_lun=spp->luns_per_ch-1;
+        // rg == channel
+    }
+        printf("rg2physical\n");
+        print_sungjin(spp->rgs_per_chnl);
+        print_sungjin(spp->chnls_per_rg);
+        print_sungjin(rg_id);
+        *start_ch=-1;
+        *start_lun=-1;
+        *end_ch=-1;
+        *end_lun=-1;
+        // return -1;
+}
+
 static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg)
 {
 
@@ -470,8 +510,8 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     spp->enable_gc_delay = true;
 
     // fdp
-    spp->rgs_per_chnl = ssd->rg_number/spp->nchs;
-    spp->luns_per_rg = (spp->luns_per_ch*spp->nchs)/ssd->rg_number;
+    spp->rgs_per_chnl = n->rg_number;/spp->nchs;
+    spp->luns_per_rg = (spp->luns_per_ch*spp->nchs)/n->rg_number;;
     spp->chnls_per_rg = spp->luns_per_rg/spp->luns_per_ch;
     
     check_params(spp);
@@ -589,7 +629,7 @@ void fdpssd_init(FemuCtrl *n)
     /* initialize ssd internal layout architecture */
     ssd->ch = g_malloc0(sizeof(struct ssd_channel) * spp->nchs);
 
-    ssd->lm=g_malloc0(sizeof(struct line_mgmt),ssd->rg_number);
+    ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->rg_number);
     ssd->wp=g_malloc(sizeof(struct write_pointer*)*n->stream_number);
     for(i=0;i<ssd->rg_number;i++){
         ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
@@ -642,69 +682,19 @@ static inline bool valid_ppa(struct ssd *ssd, struct ppa *ppa)
     return false;
 }
 
-static inline int rg2ch(struct ssdparams *spp , int rg_id){
-    if(spp->chnls_per_rg>1){ // big rg, include many channels
 
-        return ppa.g.ch/spp->chnls_per_rg;
-    }else if(spp->rgs_per_chnl>1){ // rgs in channel
-        return (ppa.g.ch*spp->rgs_per_chnl)+
-        (ppa.g.lun/spp->luns_per_rg);
-    }else if(spp->rgs_per_chnl==1&&spp->chnls_per_rg==1){
-        return ppa.g.ch;
-        // rg == channel
-    }
-}
 
-static inline int rg2lun(struct ssdparams *spp , int rg_id){
 
-}
 
-static inline void rg2physical(struct ssdparams *spp , 
-    int rg_id, int* start_ch, int* start_lun,int *end_ch, int* end_lun){
-    if(spp->chnls_per_rg>1){ // big rg, include many channels
-    
-        // return ppa.g.ch/spp->chnls_per_rg;
-        *start_ch=rg_id*spp->chnls_per_rg;
-        *start_lun=0;
-
-        *end_ch=*start_ch +spp->chnls_per_rg-1;
-        *end_lun=spp->luns_per_ch-1;
-
-    }else if(spp->rgs_per_chnl>1){ // rgs in channel
-        return (ppa.g.ch*spp->rgs_per_chnl)+
-        (ppa.g.lun/spp->luns_per_rg);
-
-        *start_ch=rg_id/spp->rgs_per_chnl;
-        *start_lun=(rg_id%spp->rgs_per_chnl)*spp->luns_per_rg;
-        
-        *end_ch=rg_id/spp->rgs_per_chnl;
-        *end_lun=(*start_lun ) + spp->luns_per_rg-1;
-
-    }else if(spp->rgs_per_chnl==1&&spp->chnls_per_rg==1){
-        // return ppa.g.ch;
-        *start_ch=rg_id;
-        *start_lun=0;
-        *end_ch=rg_id;
-        *end_lun=spp->luns_per_ch-1;
-        // rg == channel
-    }
-        printf("rg2physical\n");
-        print_sungjin(spp->rgs_per_chnl);
-        print_sungjin(spp->chnls_per_rg);
-        print_sungjin(rg_id);
-        *ch=-1;
-        *lun=-1;
-        // return -1;
-}
 
 static inline int get_rg_id(struct ssd* ssd,struct ppa* ppa){
 
-    if(ssd->sp->chnls_per_rg>1){ // big rg, include many channels
+    if(ssd->sp.chnls_per_rg>1){ // big rg, include many channels
         return ppa.g.ch/ssd->sp->chnls_per_rg;
-    }else if(ssd->sp->rgs_per_chnl>1){ // rgs in channel
-        return (ppa.g.ch*ssd->sp->rgs_per_chnl)+
-        (ppa.g.lun/ssd->sp->luns_per_rg);
-    }else if(ssd->sp->rgs_per_chnl==1&&ssd->sp->chnls_per_rg==1){
+    }else if(ssd->sp.rgs_per_chnl>1){ // rgs in channel
+        return (ppa.g.ch*ssd->sp.rgs_per_chnl)+
+        (ppa.g.lun/ssd->sp.luns_per_rg);
+    }else if(ssd->sp.pgs_per_chnl==1&&ssd->sp.chnls_per_rg==1){
         return ppa.g.ch;
         // rg == channel
     }
@@ -712,8 +702,8 @@ static inline int get_rg_id(struct ssd* ssd,struct ppa* ppa){
     // {
 
         printf("get_rg_id\n");
-        print_sungjin(ssd->sp->rgs_per_chnl);
-        print_sungjin(ssd->sp->chnls_per_rg);
+        print_sungjin(ssd->sp.rgs_per_chnl);
+        print_sungjin(ssd->sp.chnls_per_rg);
         return -1;
     // }
 
