@@ -1117,7 +1117,7 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
     rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
-    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_lun_id=%d,start_ch_id=%d,end_ch_id=%d\
+    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
                start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
