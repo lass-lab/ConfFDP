@@ -509,7 +509,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     spp->enable_gc_delay = true;
 
     // fdp
-    spp->rgs_per_chnl = n->rg_number;/spp->nchs;
+    spp->rgs_per_chnl = n->rg_number/spp->nchs;
     spp->luns_per_rg = (spp->luns_per_ch*spp->nchs)/n->rg_number;;
     spp->chnls_per_rg = spp->luns_per_rg/spp->luns_per_ch;
     
@@ -689,7 +689,7 @@ static inline bool valid_ppa(struct ssd *ssd, struct ppa *ppa)
 static inline int get_rg_id(struct ssd* ssd,struct ppa* ppa){
 
     if(ssd->sp.chnls_per_rg>1){ // big rg, include many channels
-        return ppa->g.ch/ssd->sp->chnls_per_rg;
+        return ppa->g.ch/ssd->sp.chnls_per_rg;
     }else if(ssd->sp.rgs_per_chnl>1){ // rgs in channel
         return (ppa->g.ch*ssd->sp.rgs_per_chnl)+
         (ppa->g.lun/ssd->sp.luns_per_rg);
@@ -748,7 +748,7 @@ static inline struct line *get_line(struct ssd *ssd, struct ppa *ppa)
 {
     int rg_id=(get_rg_id(ssd,ppa));
 
-    return &(ssd->lm.lines[rg_id][ppa->g.blk]);
+    return &(ssd->lm[rg_id].lines[ppa->g.blk]);
 }
 
 static inline struct nand_page *get_pg(struct ssd *ssd, struct ppa *ppa)
@@ -1327,7 +1327,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
         total_free_line+=ssd->lm[rg].free_line_cnt;
     }
     // total_free_line/=rg;
-    hdr->free_space_ratio=(uint8_t)(total_free_line*100/(ssd->lm.tt_lines*ssd->rg_number));
+    hdr->free_space_ratio=(uint8_t)(total_free_line*100/(ssd->lm[0].tt_lines*ssd->rg_number));
     hdr->copied_page=ssd->sungjin_stat.copied;
     hdr->block_erased=ssd->sungjin_stat.block_erased;
     // ruhid=ns-
@@ -1690,7 +1690,7 @@ static void *msftl_thread(void *arg)
 
             /* clean one line if needed (in the background) */
 
-            for(i=0;i<ssd->sp.rg_number;i++){
+            for(i=0;i<ssd->rg_number;i++){
                 if (should_gc(ssd,i)) {
                     do_gc(ssd, false,i);
                     // if(r==-1){
