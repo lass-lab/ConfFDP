@@ -124,23 +124,21 @@ static inline void rg2physical(struct ssdparams *spp ,
     int rg_id, int* start_ch, int* start_lun,int *end_ch, int* end_lun){
     if(spp->chnls_per_rg>1){ // big rg, include many channels
     
-        // return ppa.g.ch/spp->chnls_per_rg;
+
         *start_ch=rg_id*spp->chnls_per_rg;
         *start_lun=0;
 
         *end_ch=*start_ch +spp->chnls_per_rg-1;
         *end_lun=spp->luns_per_ch-1;
-
+        return;
     }else if(spp->rgs_per_chnl>1){ // rgs in channel
-        return (ppa.g.ch*spp->rgs_per_chnl)+
-        (ppa.g.lun/spp->luns_per_rg);
 
         *start_ch=rg_id/spp->rgs_per_chnl;
         *start_lun=(rg_id%spp->rgs_per_chnl)*spp->luns_per_rg;
         
         *end_ch=rg_id/spp->rgs_per_chnl;
         *end_lun=(*start_lun ) + spp->luns_per_rg-1;
-
+        return;
     }else if(spp->rgs_per_chnl==1&&spp->chnls_per_rg==1){
         // return ppa.g.ch;
         *start_ch=rg_id;
@@ -148,6 +146,7 @@ static inline void rg2physical(struct ssdparams *spp ,
         *end_ch=rg_id;
         *end_lun=spp->luns_per_ch-1;
         // rg == channel
+        return;
     }
         printf("rg2physical\n");
         print_sungjin(spp->rgs_per_chnl);
