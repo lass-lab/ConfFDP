@@ -7,6 +7,8 @@
 #define INVALID_LPN     (~(0ULL))
 #define UNMAPPED_PPA    (~(0ULL))
 
+
+#define RGIF 0
 enum {
     NAND_READ =  0,
     NAND_WRITE = 1,
@@ -117,6 +119,11 @@ struct ssdparams {
     int nchs;         /* # of channels in the SSD */
 
 
+    //fdp
+    int luns_per_rg;
+    int rgs_per_chnl;
+    
+
     int pg_rd_lat;    /* NAND page read latency in nanoseconds */
     int pg_wr_lat;    /* NAND page program latency in nanoseconds */
     int blk_er_lat;   /* NAND block erase latency in nanoseconds */
@@ -165,7 +172,6 @@ typedef struct line {
     /* position in the priority queue for victim lines */
     size_t                  pos;
     int stream_id;
-    int rg_id;
 } line;
 
 /* wp: record next write addr */
@@ -208,11 +214,10 @@ struct ssd {
     struct ssd_channel *ch;
     struct ppa *maptbl; /* page level mapping table */
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
-    struct write_pointer* wp;
-    struct line_mgmt lm;
+    struct write_pointer** wp;
+    struct line_mgmt* lm;
     uint8_t stream_number;
-
-    
+    uint8_t rg_number;
     void* femuctrl;
     /* lockless ring for communication with NVMe IO thread */
     struct rte_ring **to_ftl;
@@ -222,25 +227,79 @@ struct ssd {
     struct sungjin_stat sungjin_stat;
 };
 
-void msssd_init(FemuCtrl *n);
+void fdpssd_init(FemuCtrl *n);
 
 
-static inline NvmeLBAF *ms_ns_lbaf(NvmeNamespace *ns)
+static inline NvmeLBAF *ms_ns_lbaf(struct ssd *ns)
 {
     NvmeIdNs *id_ns = &ns->id_ns;
     return &id_ns->lbaf[NVME_ID_NS_FLBAS_INDEX(id_ns->flbas)];
 }
 
-static inline uint8_t ms_ns_lbads(NvmeNamespace *ns)
+static inline uint8_t ms_ns_lbads(struct ssd *ns)
 {
     /* NvmeLBAF */
     return ms_ns_lbaf(ns)->lbads;
 }
 
-static inline size_t ms_l2b(NvmeNamespace *ns, uint64_t lba)
+static inline size_t ms_l2b(struct ssd *ns, uint64_t lba)
 {
     return lba << ms_ns_lbads(ns);
 }
+
+
+////////////////////
+
+
+static inline bool nvme_ph_valid(struct ssd *ns, uint16_t ph)
+{
+    return ph < ns->stream_number;
+}
+
+static inline bool nvme_rg_valid(struct ssd *ns, uint16_t rg)
+{
+    return rg < (spp->luns_per_ch*spp->nchs)/spp->luns_per_rg;
+}
+
+static inline uint16_t nvme_pid2rg(struct ssd *ns, uint16_t pid)
+{
+    uint16_t rgif = ns->rgif;
+
+    if (!rgif) {
+        return 0;
+    }
+
+    return pid >> (16 - rgif);
+}
+
+
+static inline uint16_t nvme_pid2ph(struct ssd *ns, uint16_t pid)
+{
+    uint16_t rgif = ns->endgrp->fdp.rgif;
+
+    if (!rgif) {
+        return pid;
+    }
+
+    return pid & ((1 << (15 - rgif)) - 1);
+}
+
+static inline bool nvme_parse_pid(struct ssd *ns, uint16_t pid,
+                                  uint16_t *ph, uint16_t *rg)
+{
+    *rg = nvme_pid2rg(ns, pid);
+    *ph = nvme_pid2ph(ns, pid);
+
+    return nvme_ph_valid(ns, *ph) && nvme_rg_valid(ns->endgrp, *rg);
+}
+
+
+
+
+
+
+
+
 
 // uint64_t msssd_trim2(FemuCtrl *n,uint64_t slba,uint64_t nlb);
 

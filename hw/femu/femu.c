@@ -532,7 +532,7 @@ static int nvme_register_extensions(FemuCtrl *n)
     }else if(MSSSD(n)){
         nvme_register_msssd(n);
     }else if(FDPSSD(n)){
-        // nvme_register_fdpssd(n);
+        nvme_register_fdpssd(n);
         /* TODO: For future extensions */
     }
 
@@ -663,7 +663,11 @@ static Property femu_props[] = {
     DEFINE_PROP_UINT16("vid", FemuCtrl, vid, 0x1d1d),
     DEFINE_PROP_UINT16("did", FemuCtrl, did, 0x1f1f),
     DEFINE_PROP_UINT8("femu_mode", FemuCtrl, femu_mode, FEMU_NOSSD_MODE),
-    DEFINE_PROP_UINT8("stream_number", FemuCtrl, stream_number, 1),
+    DEFINE_PROP_UINT8("stream_number", FemuCtrl, stream_number, 4),
+
+    DEFINE_PROP_UINT8("stream_number", FemuCtrl, luns_per_rg, 2),
+    DEFINE_PROP_UINT8("stream_number", FemuCtrl, handle_number, 4),
+
     DEFINE_PROP_UINT8("flash_type", FemuCtrl, flash_type, MLC),
     DEFINE_PROP_UINT8("lver", FemuCtrl, lver, 0x2),
     DEFINE_PROP_UINT16("lsec_size", FemuCtrl, oc_params.sec_size, 4096),

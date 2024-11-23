@@ -288,6 +288,11 @@ enum NvmePsdt {
     NVME_PSDT_SGL_MPTR_SGL        = 0x2,
 };
 
+struct NvmeFDPDspec{
+    uint32_t rg : 16;
+    uint32_t ph : 16;
+};
+
 typedef struct NvmeCmdDWORD13{
     union{	    
             
@@ -297,7 +302,18 @@ typedef struct NvmeCmdDWORD13{
 			uint32_t sr    : 1; ///< Sequential Request
 			uint32_t incom : 1; ///< Incompressible
 			uint32_t rsvd3 : 8;
-			uint32_t dspec : 16; ///< Directive Specific
+            union 
+            {
+                /* data */
+                uint32_t dspec : 16; ///< Directive Specific
+                // NvmeFDPDspec fdp_dspec;
+                struct{
+                    uint32_t rg : 8;
+                    uint32_t ph : 8;
+                };
+            };
+            
+			
             };
             uint32_t val : 32;
     };
@@ -1404,6 +1420,10 @@ typedef struct FemuCtrl {
 
     uint8_t         femu_mode;
     uint8_t         stream_number;
+
+    uint8_t         luns_per_rg;
+    uint8_t         handle_number;
+
     uint8_t         lver; /* Coperd: OCSSD version, 0x1 -> OC1.2, 0x2 -> OC2.0 */
     uint32_t        memsz;
     OcCtrlParams    oc_params;
