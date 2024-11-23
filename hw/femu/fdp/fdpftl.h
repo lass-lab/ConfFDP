@@ -252,47 +252,47 @@ static inline size_t ms_l2b(struct ssd *ns, uint64_t lba)
 ////////////////////
 
 
-static inline bool nvme_ph_valid(struct ssd *ns, uint16_t ph)
-{
-    return ph < ns->stream_number;
-}
+// static inline bool nvme_ph_valid(struct ssd *ns, uint16_t ph)
+// {
+//     return ph < ns->stream_number;
+// }
 
-static inline bool nvme_rg_valid(struct ssd *ns, uint16_t rg)
-{
-    return rg < (spp->luns_per_ch*spp->nchs)/spp->luns_per_rg;
-}
+// static inline bool nvme_rg_valid(struct ssd *ns, uint16_t rg)
+// {
+//     return rg < (spp->luns_per_ch*spp->nchs)/spp->luns_per_rg;
+// }
 
-static inline uint16_t nvme_pid2rg(struct ssd *ns, uint16_t pid)
-{
-    uint16_t rgif = ns->rgif;
+// static inline uint16_t nvme_pid2rg(struct ssd *ns, uint16_t pid)
+// {
+//     uint16_t rgif = ns->rgif;
 
-    if (!rgif) {
-        return 0;
-    }
+//     if (!rgif) {
+//         return 0;
+//     }
 
-    return pid >> (16 - rgif);
-}
+//     return pid >> (16 - rgif);
+// }
 
 
-static inline uint16_t nvme_pid2ph(struct ssd *ns, uint16_t pid)
-{
-    uint16_t rgif = ns->endgrp->fdp.rgif;
+// static inline uint16_t nvme_pid2ph(struct ssd *ns, uint16_t pid)
+// {
+//     uint16_t rgif = ns->endgrp->fdp.rgif;
 
-    if (!rgif) {
-        return pid;
-    }
+//     if (!rgif) {
+//         return pid;
+//     }
 
-    return pid & ((1 << (15 - rgif)) - 1);
-}
+//     return pid & ((1 << (15 - rgif)) - 1);
+// }
 
-static inline bool nvme_parse_pid(struct ssd *ns, uint16_t pid,
-                                  uint16_t *ph, uint16_t *rg)
-{
-    *rg = nvme_pid2rg(ns, pid);
-    *ph = nvme_pid2ph(ns, pid);
+// static inline bool nvme_parse_pid(struct ssd *ns, uint16_t pid,
+//                                   uint16_t *ph, uint16_t *rg)
+// {
+//     *rg = nvme_pid2rg(ns, pid);
+//     *ph = nvme_pid2ph(ns, pid);
 
-    return nvme_ph_valid(ns, *ph) && nvme_rg_valid(ns->endgrp, *rg);
-}
+//     return nvme_ph_valid(ns, *ph) && nvme_rg_valid(ns->endgrp, *rg);
+// }
 
 
 
