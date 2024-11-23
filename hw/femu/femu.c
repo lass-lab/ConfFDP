@@ -664,8 +664,8 @@ static Property femu_props[] = {
     DEFINE_PROP_UINT16("did", FemuCtrl, did, 0x1f1f),
     DEFINE_PROP_UINT8("femu_mode", FemuCtrl, femu_mode, FEMU_NOSSD_MODE),
     DEFINE_PROP_UINT8("stream_number", FemuCtrl, stream_number, 4),
-    
-    DEFINE_PROP_UINT8("rg_number", FemuCtrl, rg_number, 8)
+
+    DEFINE_PROP_UINT8("rg_number", FemuCtrl, rg_number, 8),
     // DEFINE_PROP_UINT8("stream_number", FemuCtrl, luns_per_rg, 2),
     DEFINE_PROP_UINT8("handle_number", FemuCtrl, handle_number, 4),
 
