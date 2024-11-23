@@ -1346,7 +1346,8 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
             NvmeCmdDWORD13 dword13;
             dword13.rg=rg;
             dword13.ph=ph;
-            ruhsd->pid=dword13.dspec; 
+            // ruhsd->pid=dword13.dspec; 
+            ruhsd->pid = dword13.rg<<8 | dword13.ph;
             ruhsd->ruhid=dword13.dspec; // how to do ? pid == ruhid?
             ruhsd->earutr = 0;
             ruhsd->ruamw=0;
