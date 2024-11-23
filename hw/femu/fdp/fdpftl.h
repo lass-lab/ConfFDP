@@ -232,19 +232,19 @@ struct ssd {
 void fdpssd_init(FemuCtrl *n);
 
 
-static inline NvmeLBAF *ms_ns_lbaf(struct ssd *ns)
+static inline NvmeLBAF *ms_ns_lbaf(NvmeNamespace *ns)
 {
     NvmeIdNs *id_ns = &ns->id_ns;
     return &id_ns->lbaf[NVME_ID_NS_FLBAS_INDEX(id_ns->flbas)];
 }
 
-static inline uint8_t ms_ns_lbads(struct ssd *ns)
+static inline uint8_t ms_ns_lbads(NvmeNamespace *ns)
 {
     /* NvmeLBAF */
     return ms_ns_lbaf(ns)->lbads;
 }
 
-static inline size_t ms_l2b(struct ssd *ns, uint64_t lba)
+static inline size_t ms_l2b(NvmeNamespace *ns, uint64_t lba)
 {
     return lba << ms_ns_lbads(ns);
 }
