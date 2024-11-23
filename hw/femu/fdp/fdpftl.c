@@ -197,17 +197,17 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
     // int ch_id;
     // int lun_id;
 
-    int start_ch_id,start_lun_id;
-    rg2physical(spp,rg_id,&start_ch_id,&start_lun_id);
+    int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
+    rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
-    int end_ch_id=start_ch_id+spp->chnls_per_rg;
-    int end_lun_id=start_lun_id+(spp->luns_per_rg%spp->luns_per_ch);
+    // int end_ch_id=start_ch_id+spp->chnls_per_rg;
+    // int end_lun_id=start_lun_id+(spp->luns_per_rg%spp->luns_per_ch);
 
     wpp->ch++;
-    if(wpp->ch==end_ch_id){
+    if(wpp->ch > end_ch_id){ // sungjin
         wpp->ch=start_ch_id;
         wpp->lun++;
-        if(wpp->lun==end_lun_id){
+        if(wpp->lun>end_lun_id){
             wpp->lun=start_lun_id;
             wpp->pg++;
             if (wpp->pg == spp->pgs_per_blk) {
@@ -586,8 +586,6 @@ void fdpssd_init(FemuCtrl *n)
     // ssd->rg_number= (spp->nchs*spp->luns_per_ch)/spp->luns_per_rg;
 
 
-    spp->rgs_per_chnl=ssd->rg_number/spp->nchs;
-
     /* initialize ssd internal layout architecture */
     ssd->ch = g_malloc0(sizeof(struct ssd_channel) * spp->nchs);
 
@@ -661,23 +659,33 @@ static inline int rg2lun(struct ssdparams *spp , int rg_id){
 
 }
 
-static inline void rg2physical(struct ssdparams *spp , int rg_id, int* ch, int* lun){
+static inline void rg2physical(struct ssdparams *spp , 
+    int rg_id, int* start_ch, int* start_lun,int *end_ch, int* end_lun){
     if(spp->chnls_per_rg>1){ // big rg, include many channels
     
         // return ppa.g.ch/spp->chnls_per_rg;
-        *ch=rg_id*spp->chnls_per_rg;
-        *lun=0;
+        *start_ch=rg_id*spp->chnls_per_rg;
+        *start_lun=0;
+
+        *end_ch=*start_ch +spp->chnls_per_rg-1;
+        *end_lun=spp->luns_per_ch-1;
+
     }else if(spp->rgs_per_chnl>1){ // rgs in channel
         return (ppa.g.ch*spp->rgs_per_chnl)+
         (ppa.g.lun/spp->luns_per_rg);
 
-        *ch=rg_id/spp->rgs_per_chnl;
-        *lun=(rg_id%spp->rgs_per_chnl)*spp->luns_per_rg;
+        *start_ch=rg_id/spp->rgs_per_chnl;
+        *start_lun=(rg_id%spp->rgs_per_chnl)*spp->luns_per_rg;
+        
+        *end_ch=rg_id/spp->rgs_per_chnl;
+        *end_lun=(*start_lun ) + spp->luns_per_rg-1;
 
     }else if(spp->rgs_per_chnl==1&&spp->chnls_per_rg==1){
         // return ppa.g.ch;
-        *ch=rg_id;
-        *lun=0;
+        *start_ch=rg_id;
+        *start_lun=0;
+        *end_ch=rg_id;
+        *end_lun=spp->luns_per_ch-1;
         // rg == channel
     }
         printf("rg2physical\n");
@@ -971,30 +979,30 @@ static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 {
     /* advance ssd status, we don't care about how long it takes */
     // print_sungjin(gc_read_page);
-    if (ssd->sp.enable_gc_delay) {
+    // if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcr;
         gcr.type = GC_IO;
         gcr.cmd = NAND_READ;
         gcr.stime = 0;
         ssd_advance_status(ssd, ppa, &gcr);
-    }
+    // }
 }
 
 /* move valid page data (already in DRAM) from victim line to a new page */
-static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id)
+static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id,int rg_id)
 {
     // int gc_i=0;
-    int rg_id;
+    // int rg_id;
     struct ppa new_ppa;
     struct nand_lun *new_lun;
     uint64_t lpn = get_rmap_ent(ssd, old_ppa);
     // print_sungjin(gc_write_page);
     // print_sungjin(stream_id);
     ftl_assert(valid_lpn(ssd, lpn));
-    new_ppa = get_new_page(ssd,stream_id);
+    new_ppa = get_new_page(ssd,stream_id,rg_id);
     // print_sungjin(gc_i++);
     /* update maptbl */
-    rg_id=get_rg_id(ssd,&new_ppa);
+    // rg_id=get_rg_id(ssd,&new_ppa);
     set_maptbl_ent(ssd, lpn, &new_ppa);
     /* update rmap */
     //  print_sungjin(gc_i++);
@@ -1007,13 +1015,13 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     /* need to advance the write pointer here */
     ssd_advance_write_pointer(ssd,stream_id,rg_id);
     //  print_sungjin(gc_i++);
-    if (ssd->sp.enable_gc_delay) {
+    // if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcw;
         gcw.type = GC_IO;
         gcw.cmd = NAND_WRITE;
         gcw.stime = 0;
         ssd_advance_status(ssd, &new_ppa, &gcw);
-    }
+    // }
     //  print_sungjin(gc_i++);
     /* advance per-ch gc_endtime as well */
 #if 0
@@ -1112,57 +1120,32 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     ftl_debug("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d\n", ppa.g.blk,
               victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
               ssd->lm.free_line_cnt);
-    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d\n", ppa.g.blk,
-              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
-              ssd->lm.free_line_cnt,stream_id,rg_id);
+
 
     //////////////////////////////////
     // fdp
 
+    int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
+    rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
-
+    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_lun_id=%d,start_ch_id=%d,end_ch_id=%d\
+               start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
+              victim_line->ipc, ssd->lm.victim_line_cnt, ssd->lm.full_line_cnt,
+              ssd->lm.free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
+              start_lun_id,end_lun_id);
     /////////////////////////////////
-    /* copy back valid data */
-    // for (ch = 0; ch < spp->nchs; ch++) {
-    //     for (lun = 0; lun < spp->luns_per_ch; lun++) {
-    //         ppa.g.ch = ch;
-    //         ppa.g.lun = lun;
-    //         ppa.g.pl = 0;
-    //         lunp = get_lun(ssd, &ppa);
-    //         clean_one_block(ssd, &ppa,stream_id);
-    //         mark_block_free(ssd, &ppa);
-
-    //         if (spp->enable_gc_delay) {
-    //             struct nand_cmd gce;
-    //             gce.type = GC_IO;
-    //             gce.cmd = NAND_ERASE;
-    //             gce.stime = 0;
-    //             ssd_advance_status(ssd, &ppa, &gce);
-    //         }
-
-    //         lunp->gc_endtime = lunp->next_lun_avail_time;
-    //     }
-    // }
-    
-    
     for(pg=0;pg<spp->pgs_per_blk;pg++){
-        for(ch =0 ;ch<spp->nchs;ch++){
-            for(lun=0;lun<spp->luns_per_ch;lun++){
+        for(ch =start_ch_id ; ch<=end_ch_id; ch++){
+            for(lun=start_lun_id;lun<=end_lun_id;lun++){
                 ppa.g.ch=ch;
                 ppa.g.lun=lun;
                 ppa.g.pl=0;
                 ppa.g.pg=pg;
-                
                 pg_iter = get_pg(ssd,&ppa);
-                // ftl_assert(pg_iter->status != PG_FREE);
-                // print_sungjin(pg_iter);
-                if(pg_iter->status == PG_FREE){
-                    // print_sungjin(pg_iter->status);
-                }
                 if (pg_iter->status == PG_VALID) {
                     gc_read_page(ssd, &ppa);
                     /* delay the maptbl update until "write" happens */
-                    gc_write_page(ssd, &ppa, stream_id);
+                    gc_write_page(ssd, &ppa, stream_id,rg_id);
                     cnt++;
                 }
                 pg_iter->status=PG_FREE;
@@ -1170,11 +1153,10 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
         }
     }
     ssd->sungjin_stat.copied+=cnt;
-    // printf("sungjin copy ok\n");
 
-// erase
-    for (ch = 0; ch < spp->nchs; ch++) {
-        for (lun = 0; lun < spp->luns_per_ch; lun++) {
+     // erase
+    for(ch =start_ch_id ; ch<=end_ch_id; ch++){
+        for(lun=start_lun_id;lun<=end_lun_id;lun++){
             ppa.g.ch = ch;
             ppa.g.lun = lun;
             ppa.g.pl = 0;
@@ -1184,20 +1166,73 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
             blk->vpc = 0;
             blk->erase_cnt++;
             ssd->sungjin_stat.block_erased++;
-            if (spp->enable_gc_delay) {
-                struct nand_cmd gce;
-                gce.type = GC_IO;
-                gce.cmd = NAND_ERASE;
-                gce.stime = 0;
-                ssd_advance_status(ssd, &ppa, &gce);
-            }
+            struct nand_cmd gce;
+            gce.type = GC_IO;
+            gce.cmd = NAND_ERASE;
+            gce.stime = 0;
+            ssd_advance_status(ssd, &ppa, &gce);
         }
     }
-    ftl_assert(get_line(ssd, ppa)->vpc == cnt);
-    
-    // printf("sungjin erase and advance status ok\n");
-    /* update line status */
     mark_line_free(ssd, &ppa,rg_id);
+
+
+
+
+    
+    
+//     for(pg=0;pg<spp->pgs_per_blk;pg++){
+//         for(ch =0 ;ch<spp->nchs;ch++){
+//             for(lun=0;lun<spp->luns_per_ch;lun++){
+//                 ppa.g.ch=ch;
+//                 ppa.g.lun=lun;
+//                 ppa.g.pl=0;
+//                 ppa.g.pg=pg;
+                
+//                 pg_iter = get_pg(ssd,&ppa);
+//                 // ftl_assert(pg_iter->status != PG_FREE);
+//                 // print_sungjin(pg_iter);
+//                 if(pg_iter->status == PG_FREE){
+//                     // print_sungjin(pg_iter->status);
+//                 }
+//                 if (pg_iter->status == PG_VALID) {
+//                     gc_read_page(ssd, &ppa);
+//                     /* delay the maptbl update until "write" happens */
+//                     gc_write_page(ssd, &ppa, stream_id);
+//                     cnt++;
+//                 }
+//                 pg_iter->status=PG_FREE;
+//             }
+//         }
+//     }
+//     ssd->sungjin_stat.copied+=cnt;
+//     // printf("sungjin copy ok\n");
+
+// // erase
+//     for (ch = 0; ch < spp->nchs; ch++) {
+//         for (lun = 0; lun < spp->luns_per_ch; lun++) {
+//             ppa.g.ch = ch;
+//             ppa.g.lun = lun;
+//             ppa.g.pl = 0;
+//             // mark_block_free(ssd, &ppa);
+//             struct nand_block *blk = get_blk(ssd, &ppa);
+//             blk->ipc = 0;
+//             blk->vpc = 0;
+//             blk->erase_cnt++;
+//             ssd->sungjin_stat.block_erased++;
+//             if (spp->enable_gc_delay) {
+//                 struct nand_cmd gce;
+//                 gce.type = GC_IO;
+//                 gce.cmd = NAND_ERASE;
+//                 gce.stime = 0;
+//                 ssd_advance_status(ssd, &ppa, &gce);
+//             }
+//         }
+//     }
+//     ftl_assert(get_line(ssd, ppa)->vpc == cnt);
+    
+//     // printf("sungjin erase and advance status ok\n");
+//     /* update line status */
+//     mark_line_free(ssd, &ppa,rg_id);
     // printf("sungjin mark line free status ok\n");
     return 0;
 }

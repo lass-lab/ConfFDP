@@ -805,13 +805,13 @@ static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 {
     /* advance ssd status, we don't care about how long it takes */
     // print_sungjin(gc_read_page);
-    if (ssd->sp.enable_gc_delay) {
+    // if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcr;
         gcr.type = GC_IO;
         gcr.cmd = NAND_READ;
         gcr.stime = 0;
         ssd_advance_status(ssd, ppa, &gcr);
-    }
+    // }
 }
 
 /* move valid page data (already in DRAM) from victim line to a new page */
@@ -839,13 +839,13 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     /* need to advance the write pointer here */
     ssd_advance_write_pointer(ssd,stream_id);
     //  print_sungjin(gc_i++);
-    if (ssd->sp.enable_gc_delay) {
+    // if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcw;
         gcw.type = GC_IO;
         gcw.cmd = NAND_WRITE;
         gcw.stime = 0;
         ssd_advance_status(ssd, &new_ppa, &gcw);
-    }
+    // }
     //  print_sungjin(gc_i++);
     /* advance per-ch gc_endtime as well */
 #if 0
@@ -1009,13 +1009,13 @@ static int do_gc(struct ssd *ssd, bool force)
             blk->vpc = 0;
             blk->erase_cnt++;
             ssd->sungjin_stat.block_erased++;
-            if (spp->enable_gc_delay) {
+            // if (spp->enable_gc_delay) {
                 struct nand_cmd gce;
                 gce.type = GC_IO;
                 gce.cmd = NAND_ERASE;
                 gce.stime = 0;
                 ssd_advance_status(ssd, &ppa, &gce);
-            }
+            // }
         }
     }
     ftl_assert(get_line(ssd, ppa)->vpc == cnt);
