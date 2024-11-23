@@ -631,7 +631,7 @@ void fdpssd_init(FemuCtrl *n)
 
     ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->rg_number);
     ssd->wp=g_malloc(sizeof(struct write_pointer*)*ssd->stream_number);
-    for(i=0;i<ssd->rg_number;i++){
+    for(i=0;i<ssd->stream_number;i++){
         ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
     }
     
