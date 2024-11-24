@@ -145,7 +145,7 @@ static void fdpssd_init_lines(struct ssd *ssd,bool is_init, int rg)
         line->vpc = 0;
         line->pos = 0;
         if(!is_init){
-            // print_sungjin(line->stream_id);
+            print_sungjin(line->stream_id);
         }
         line->stream_id=-1;
         line->rg_id=rg;
@@ -687,7 +687,9 @@ void fdpssd_init(FemuCtrl *n)
     /* initialize all the lines */
     // ssd->lm=g_malloc0
     for(i=0;i<ssd->rg_number;i++){
+        printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,true,i);
+        printf("------------------------------------\n")
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
