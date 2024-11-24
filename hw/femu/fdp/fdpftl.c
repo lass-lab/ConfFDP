@@ -1386,9 +1386,10 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
             NvmeCmdDWORD13 dword13;
             dword13.rg=rg;
             dword13.ph=ph;
-            // ruhsd->pid=dword13.dspec; 
-            ruhsd->pid = (uint16_t)(dword13.rg<<8 | dword13.ph);
-            ruhsd->ruhid=(uint16_t)(dword13.rg<<8 | dword13.ph); // how to do ? pid == ruhid?
+            ruhsd->pid=cpu_to_le16(dword13.dspec); 
+            ruhsd->ruhid=cpu_to_le16(dword13.dspec); 
+            // ruhsd->pid = (uint16_t)(dword13.rg<<8 | dword13.ph);
+            // ruhsd->ruhid=(uint16_t)(dword13.rg<<8 | dword13.ph); // how to do ? pid == ruhid?
             ruhsd->earutr = 0;
             ruhsd->ruamw=0;
             printf("dword13.dspec %u ruhsd->pid %u\n",dword13.dspec,ruhsd->pid);
@@ -1590,7 +1591,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // uint32_t tmp=req->cmd.cdw13;
     NvmeCmdDWORD13 dword13;
     dword13.dspec=0;
-    dword13.val = req->cmd.cdw13;
+    dword13.val = le16_to_cpu(req->cmd.cdw13);
 
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     // uint8_t dtype = (dw12 >> 20) & 0xf;
