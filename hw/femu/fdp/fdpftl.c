@@ -1392,7 +1392,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
             ruhsd->ruhid=(uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph); // how to do ? pid == ruhid?
             ruhsd->earutr = 0;
             ruhsd->ruamw=0;
-            printf("dword13.dspec %u ruhsd->pid %u\n",dword13.dspec,ruhsd->pid);
+            printf("dword13.dspec %u ruhsd->pid %u\n",dword13.parsed.dspec,ruhsd->pid);
         }
     }
 
@@ -1605,7 +1605,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint8_t stream_id =dword13.parsed.ph;
     uint8_t rg_id =dword13.parsed.rg;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
-    printf("sungjin test %d %d dtype %u dspec %u, sizeofdword13 %u\n",stream_id,rg_id,dtype,dword13.dspec,sizeof(NvmeCmdDWORD13));
+    printf("sungjin test %d %d dtype %u dspec %u, sizeofdword13 %u\n",stream_id,rg_id,dtype,dword13.parsed.dspec,sizeof(NvmeCmdDWORD13));
     if(stream_id>=ssd->stream_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
