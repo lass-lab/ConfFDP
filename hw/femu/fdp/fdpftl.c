@@ -689,7 +689,7 @@ void fdpssd_init(FemuCtrl *n)
     for(i=0;i<ssd->rg_number;i++){
         printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,true,i);
-        printf("------------------------------------\n")
+        printf("------------------------------------\n");
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
