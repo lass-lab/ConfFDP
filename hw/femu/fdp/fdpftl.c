@@ -1606,10 +1606,12 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     if(stream_id>=ssd->stream_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
+        printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
         stream_id=ssd->stream_number-1;
         // return 0;
     }
     if(rg_id>=ssd->rg_number){
+        printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,stream_id,ssd->rg_number-1);
         rg_id=ssd->rg_number-1;
     }
 
