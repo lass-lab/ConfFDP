@@ -1384,8 +1384,8 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     for(ph=0;ph<ssd->stream_number;ph++){
         for(rg=0;rg<ssd->rg_number;rg++,ruhsd++){
             NvmeCmdDWORD13 dword13;
-            dword13.rg=rg;
-            dword13.ph=ph;
+            dword13.rg=cpu_to_le16(rg);
+            dword13.ph=cpu_to_le16(ph);
             // ruhsd->pid=cpu_to_le16(dword13.dspec); 
             // ruhsd->ruhid=cpu_to_le16(dword13.dspec); 
             ruhsd->pid = (uint16_t)(dword13.rg<<8 | dword13.ph);
@@ -1605,6 +1605,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint8_t stream_id =dword13.ph;
     uint8_t rg_id =dword13.rg;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
+    print("sungjin test %d %d\n",stream_id,rg_id);
     if(stream_id>=ssd->stream_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
