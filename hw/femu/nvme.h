@@ -394,9 +394,9 @@ typedef struct NvmeCmd {
     };
 
 } NvmeCmd;
-#if sizeof(NvmeCmd) != 64
-    qwerwqe
-#endif
+// #if sizeof(NvmeCmd) != 64
+//     qwerwqe
+// #endif
 
 #define NVME_CMD_FLAGS_FUSE(flags) (flags & 0x3)
 #define NVME_CMD_FLAGS_PSDT(flags) ((flags >> 6) & 0x3)

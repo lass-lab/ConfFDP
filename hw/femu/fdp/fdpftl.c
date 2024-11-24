@@ -1587,7 +1587,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     struct ppa ppa;
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
-
+    // if(sizeof(NvmeCmd))
     // uint32_t dw13=req->cmd.cdw13;
     print_sungjin(req->cmd.cdw13);
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
@@ -1608,6 +1608,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 
     uint8_t stream_id = pid & 0xff;
     uint8_t rg_id =pid>>8;
+    printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
     if(stream_id>=ssd->stream_number){
