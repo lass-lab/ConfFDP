@@ -563,9 +563,10 @@ typedef struct NvmeRwCmd {
     uint16_t    nlb;
     uint16_t    control;
     // uint32_t    dsmgmt;
-        uint8_t     dsmgmt;
+    uint8_t     dsmgmt;
     uint8_t     rsvd;
     uint16_t    dspec;
+    
     uint32_t    reftag;
     uint16_t    apptag;
     uint16_t    appmask;
