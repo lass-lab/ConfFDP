@@ -1594,7 +1594,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     dword13.val = le32_to_cpu(req->cmd.cdw13);
 
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
-    // uint8_t dtype = (dw12 >> 20) & 0xf;
+    uint8_t dtype = (req->cmd.cdw12 >> 20) & 0xf;
 /*
     NVME_DIRECTIVE_IDENTIFY       = 0x0,
     NVME_DIRECTIVE_STREAM         = 0x1,
@@ -1605,7 +1605,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint8_t stream_id =dword13.ph;
     uint8_t rg_id =dword13.rg;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
-    printf("sungjin test %d %d\n",stream_id,rg_id);
+    printf("sungjin test %d %d dtype %u dspec \n",stream_id,rg_id,dtype,dword13.dspec);
     if(stream_id>=ssd->stream_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
