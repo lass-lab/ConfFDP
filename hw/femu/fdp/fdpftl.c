@@ -9,10 +9,49 @@ static inline bool should_gc(struct ssd *ssd,int rg_id)
     return (ssd->lm[rg_id].free_line_cnt <= ssd->sp.gc_thres_lines);
 }
 
+
 static inline bool should_gc_high(struct ssd *ssd,int rg_id)
 {
     return (ssd->lm[rg_id].free_line_cnt <= ssd->sp.gc_thres_lines_high);
 }
+
+static inline int right_rg(struct ssd*ssd,int rg_id){
+    for(;rg_id<ssd->rg_number;rg_id++){
+        if(!should_gc_high(ssd,rg_id)){
+            return rg_id;
+        }
+    }
+    return -1;
+}
+
+static inline int left_rg(struct ssd*ssd,int rg_id){
+    for(;rg_id>=0;rg_id--){
+        if(!should_gc_high(ssd,rg_id)){
+            return rg_id;
+        }
+    }
+    return -1;
+}
+
+static int find_near_rg_id(struct ssd*ssd,int rg_id){
+    int right_rg=right_rg(ssd,rg_id+1);
+    int left_rg=left_rg(ssd,rg_id-1);
+    // if(right_rg==-1)
+    if(right_rg==-1&&left_rg==-1){
+        return rg_id;
+    }
+    if(right_rg!=-1&&left_rg!=-1){
+        return rg_id-left_rg > right_rg-rg_id ? right_rg :left_rg;
+    }
+    if(right_rg==-1&&left_rg!=-1){
+        return left_rg;
+    }
+    return right_rg;
+    // int ret=rg_id;
+    // bool flip=false;
+
+}
+
 
 static inline struct ppa get_maptbl_ent(struct ssd *ssd, uint64_t lpn)
 {
@@ -1594,6 +1633,10 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         r = do_gc(ssd, true,rg_id);
         if (r == -1)
             break;
+    }
+    if(should_gc_high(ssd,rg_id)){
+        // rg_id++;
+        rg_id=find_near_rg_id(ssd,rg_id);
     }
 
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
