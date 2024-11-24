@@ -1384,8 +1384,8 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     for(ph=0;ph<ssd->stream_number;ph++){
         for(rg=0;rg<ssd->rg_number;rg++,ruhsd++){
             NvmeCmdDWORD13 dword13;
-            dword13.rg=cpu_to_le16(rg);
-            dword13.ph=cpu_to_le16(ph);
+            dword13.parsed.rg=cpu_to_le16(rg);
+            dword13.parsed.ph=cpu_to_le16(ph);
             // ruhsd->pid=cpu_to_le16(dword13.dspec); 
             // ruhsd->ruhid=cpu_to_le16(dword13.dspec); 
             ruhsd->pid = (uint16_t)(dword13.rg<<8 | dword13.ph);
@@ -1595,7 +1595,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     dword13.val=tmp;
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     uint8_t dtype = (req->cmd.cdw12 >> 20) & 0xf;
-/*
+/*ord13.rg=cpu_t
     NVME_DIRECTIVE_IDENTIFY       = 0x0,
     NVME_DIRECTIVE_STREAM         = 0x1,
     NVME_DIRECTIVE_DATA_PLACEMENT = 0x2,
