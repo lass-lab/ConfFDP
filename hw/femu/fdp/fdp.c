@@ -137,8 +137,10 @@ static uint16_t fdp_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
 {
     // print_sungjin(fdp_io_cmd);
     switch (cmd->opcode) {
-    case NVME_CMD_READ:
     case NVME_CMD_WRITE:
+        print_sungjin(cmd->cdw13);
+        print_sungjin(req->cmd.cdw13);
+    case NVME_CMD_READ:
         return ms_nvme_rw(n, ns, cmd, req);
     case NVME_CMD_DSM:
     //     // sungjin

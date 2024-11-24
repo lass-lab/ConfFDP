@@ -1589,6 +1589,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t curlat = 0, maxlat = 0;
 
     // uint32_t dw13=req->cmd.cdw13;
+    print_sungjin(req->cmd.cdw13);
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
      uint16_t pid = le16_to_cpu(rw->dspec);
     // NvmeCmdDWORD13 dword13;
