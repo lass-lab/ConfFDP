@@ -1608,7 +1608,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint8_t stream_id = pid & 0xff;
     uint8_t rg_id =pid>>8;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
-    printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13));
+    printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
     if(stream_id>=ssd->stream_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
