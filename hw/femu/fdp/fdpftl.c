@@ -1588,13 +1588,16 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
 
-    uint32_t tmp=req->cmd.cdw13;
-    NvmeCmdDWORD13 dword13;
-    dword13.parsed.dspec=0;
+    // uint32_t dw13=req->cmd.cdw13;
+    NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
+     uint16_t pid = le16_to_cpu(rw->dspec);
+    // NvmeCmdDWORD13 dword13;
+    // dword13.parsed.dspec=0;
     // dword13.val = le32_to_cpu(req->cmd.cdw13);
-    dword13.val=tmp;
+    // dword13.val=tmp;
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
-    uint8_t dtype = (req->cmd.cdw12 >> 20) & 0xf;
+    uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
+    uint8_t dtype = (dw12 >> 20) & 0xf;
 /*ord13.rg=cpu_t
     NVME_DIRECTIVE_IDENTIFY       = 0x0,
     NVME_DIRECTIVE_STREAM         = 0x1,
@@ -1602,8 +1605,8 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 */
     
 
-    uint8_t stream_id =dword13.parsed.ph;
-    uint8_t rg_id =dword13.parsed.rg;
+    uint8_t stream_id = pid & 0xff;
+    uint8_t rg_id =pid>>8;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     printf("sungjin test %d %d dtype %u dspec %u, sizeofdword13 %lu\n",stream_id,rg_id,dtype,dword13.parsed.dspec,sizeof(NvmeCmdDWORD13));
     if(stream_id>=ssd->stream_number){

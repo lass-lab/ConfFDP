@@ -339,6 +339,26 @@ typedef struct NvmeCmdDWORD13{
     };
 } NvmeCmdDWORD13;
 
+typedef struct NvmeRwCmd {
+    uint8_t     opcode;
+    uint8_t     flags;
+    uint16_t    cid;
+    uint32_t    nsid;
+    uint32_t    cdw2;
+    uint32_t    cdw3;
+    uint64_t    mptr;
+    NvmeCmdDptr dptr;
+    uint64_t    slba;
+    uint16_t    nlb;
+    uint16_t    control;
+    uint8_t     dsmgmt;
+    uint8_t     rsvd;
+    uint16_t    dspec;
+    uint32_t    reftag;
+    uint16_t    apptag;
+    uint16_t    appmask;
+} NvmeRwCmd;
+
 typedef struct NvmeCmd {
     uint16_t    opcode : 8;
     uint16_t    fuse   : 2;
