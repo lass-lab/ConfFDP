@@ -15,7 +15,7 @@ static inline bool should_gc_high(struct ssd *ssd,int rg_id)
     return (ssd->lm[rg_id].free_line_cnt <= ssd->sp.gc_thres_lines_high);
 }
 
-static inline int right_rg(struct ssd*ssd,int rg_id){
+static inline int get_right_rg(struct ssd*ssd,int rg_id){
     for(;rg_id<ssd->rg_number;rg_id++){
         if(!should_gc_high(ssd,rg_id)){
             return rg_id;
@@ -24,7 +24,7 @@ static inline int right_rg(struct ssd*ssd,int rg_id){
     return -1;
 }
 
-static inline int left_rg(struct ssd*ssd,int rg_id){
+static inline int get_left_rg(struct ssd*ssd,int rg_id){
     for(;rg_id>=0;rg_id--){
         if(!should_gc_high(ssd,rg_id)){
             return rg_id;
@@ -34,8 +34,8 @@ static inline int left_rg(struct ssd*ssd,int rg_id){
 }
 
 static int find_near_rg_id(struct ssd*ssd,int rg_id){
-    int right_rg=right_rg(ssd,rg_id+1);
-    int left_rg=left_rg(ssd,rg_id-1);
+    int right_rg=get_right_rg(ssd,rg_id+1);
+    int left_rg=get_left_rg(ssd,rg_id-1);
     // if(right_rg==-1)
     if(right_rg==-1&&left_rg==-1){
         return rg_id;
