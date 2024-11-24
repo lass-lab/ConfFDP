@@ -293,10 +293,7 @@ struct NvmeFDPDspec{
     uint32_t ph : 16;
 };
 
-typedef struct NvmeCmdDWORD13{
-    union{	    
-            
-            struct{
+struct NvmeCmdDWORD13_parsed{
             uint32_t af    : 4; ///< Access Frequency
 			uint32_t al    : 2; ///< Access Latency
 			uint32_t sr    : 1; ///< Sequential Request
@@ -314,7 +311,30 @@ typedef struct NvmeCmdDWORD13{
             };
             
 			
-            };
+};
+
+typedef struct NvmeCmdDWORD13{
+    union{	    
+            struct NvmeCmdDWORD13_parsed parsed;            
+            // struct{
+            // uint32_t af    : 4; ///< Access Frequency
+			// uint32_t al    : 2; ///< Access Latency
+			// uint32_t sr    : 1; ///< Sequential Request
+			// uint32_t incom : 1; ///< Incompressible
+			// uint32_t rsvd3 : 8;
+            // union 
+            // {
+            //     /* data */
+            //     uint32_t dspec : 16; ///< Directive Specific
+            //     // NvmeFDPDspec fdp_dspec;
+            //     struct{
+            //         uint32_t rg : 8;
+            //         uint32_t ph : 8;
+            //     };
+            // };
+            
+			
+            // };
             uint32_t val : 32;
     };
 } NvmeCmdDWORD13;

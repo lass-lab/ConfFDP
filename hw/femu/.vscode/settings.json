@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "cstdint": "cpp",
-        "fdpftl.h": "c"
+        "cstdint": "cpp"
     }
 }

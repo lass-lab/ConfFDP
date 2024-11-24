@@ -1602,8 +1602,8 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 */
     
 
-    uint8_t stream_id =dword13.ph;
-    uint8_t rg_id =dword13.rg;
+    uint8_t stream_id =dword13.parsed.ph;
+    uint8_t rg_id =dword13.parsed.rg;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     printf("sungjin test %d %d dtype %u dspec %u\n",stream_id,rg_id,dtype,dword13.dspec);
     if(stream_id>=ssd->stream_number){

@@ -118,9 +118,11 @@ int main(int argc,char**argv){
      PlacementID pid;
      pid.rg=rg;
      pid.ph=ph;
-    printf("%u / %u = %u\n",pid.rg,pid.ph,pid.pid);
+    
     xnvme_ctx->cmd.nvm.dtype = 2;
     xnvme_ctx->cmd.nvm.cdw13.dspec = pid.pid;
+    
+    printf("%u / %u = %u\n",pid.rg,pid.ph,pid.pid);
 
     err = xnvme_cmd_pass(xnvme_ctx, buf, BUF_SIZE, nullptr, 0);
     if (err) {
