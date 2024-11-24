@@ -687,9 +687,9 @@ void fdpssd_init(FemuCtrl *n)
     /* initialize all the lines */
     // ssd->lm=g_malloc0
     for(i=0;i<ssd->rg_number;i++){
-        printf("\nRG %u-----------------------------\n",i);
+        // printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,true,i);
-        printf("------------------------------------\n");
+        // printf("------------------------------------\n");
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
@@ -1429,7 +1429,9 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
 
     /* initialize all the lines */
     for(i=0;i<ssd->rg_number;i++){
+        printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,false,i);
+        printf("------------------------------------\n");
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
