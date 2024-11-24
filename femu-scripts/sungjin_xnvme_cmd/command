@@ -1,0 +1,6 @@
+
+
+sudo /home/femu/FDP_ROCKSDB/db_bench --benchmarks="fillrandom,stats" -subcompactions=8 -histogram -max_background_compactions=4 -max_background_flushes=4 -num=83886080 -stream_option=4 --fs_uri=torfs:xnvme:/dev/nvme0n1?be=thrpool
+
+
+sudo fio --ioengine=libaio --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=16K --group_reporting  --name=write --size=16G --numjobs=32 --time_based=1 --runtime=10 --iodepth=32
