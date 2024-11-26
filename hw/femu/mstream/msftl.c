@@ -1319,9 +1319,11 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t curlat = 0, maxlat = 0;
 
     // uint32_t tmp=req->cmd.cdw13;
-    NvmeCmdDWORD13 dword13;
-    dword13.parsed.dspec=0;
-    dword13.val = req->cmd.cdw13;
+    // NvmeCmdDWORD13 dword13;
+    // dword13.parsed.dspec=0;
+    // dword13.val = req->cmd.cdw13;
+    NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
+    uint16_t stream_id = le16_to_cpu(rw->dspec);
 
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     // uint8_t dtype = (dw12 >> 20) & 0xf;
@@ -1332,7 +1334,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
 */
     
 
-    uint16_t stream_id =dword13.parsed.dspec;
+    // uint16_t stream_id =dword13.parsed.dspec;
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     printf("stream id  sungjin %u\n",stream_id);
     if(stream_id>=ssd->stream_number){
