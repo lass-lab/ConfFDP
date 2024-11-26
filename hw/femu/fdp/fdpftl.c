@@ -1030,7 +1030,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     // print_sungjin(gc_write_page);
     // print_sungjin(stream_id);
     ftl_assert(valid_lpn(ssd, lpn));
-    int new_rg_id=0;
+    int new_rg_id=rg_id;
     if(to_other_rg){
         new_rg_id=find_near_rg_id(ssd,rg_id);
     }
