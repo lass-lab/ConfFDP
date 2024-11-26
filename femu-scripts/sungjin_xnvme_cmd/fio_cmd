@@ -1,0 +1,23 @@
+sudo ./fio /home/femu/fio_fdp/examples/sungjin5_alone.fio
+
+sudo ./fio --ioengine=io_uring --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=1m --group_reporting=0  --name=SUNGJIN --size=1G --numjobs=2 --threads=1 --stonewall --time_based=1 --runtime=2 --iodepth=32
+
+sudo ./fio --ioengine=io_uring --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=1m --group_reporting=0  --name=SUNGJIN --size=1M --numjobs=2 --threads=1  --time_based=1 --runtime=2 --iodepth=32 -fdp
+
+
+
+sudo ./fio --ioengine=io_uring_cmd --direct=0 --filename=/dev/ng0n1 --rw=write --bs=1m --group_reporting=0  --name=write --size=1M --numjobs=2 --thread=1 --stonewall --time_based=1 --runtime=10 --iodepth=32 --offset=1G -fdp=1 --debug=all
+
+
+
+--debug=all
+
+
+
+sudo ./fio /home/femu/fio_fdp/examples/sungjin5_alone.fio
+
+
+sudo ./fio /home/femu/fio_fdp/examples/sungjin5.fio
+
+
+sudo ./fio /home/femu/fio_fdp/examples/sungjin5_nofdp.fio

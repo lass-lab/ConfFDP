@@ -1020,7 +1020,7 @@ static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 }
 
 /* move valid page data (already in DRAM) from victim line to a new page */
-static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id,int rg_id)
+static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id,int rg_id,bool to_other_rg)
 {
     // int gc_i=0;
     // int rg_id;
@@ -1030,7 +1030,11 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     // print_sungjin(gc_write_page);
     // print_sungjin(stream_id);
     ftl_assert(valid_lpn(ssd, lpn));
-    new_ppa = get_new_page(ssd,stream_id,rg_id);
+    int new_rg_id=0;
+    if(to_other_rg){
+        new_rg_id=find_near_rg_id(ssd,rg_id);
+    }
+    new_ppa = get_new_page(ssd,stream_id,new_rg_id);
     // print_sungjin(gc_i++);
     /* update maptbl */
     // rg_id=get_rg_id(ssd,&new_ppa);
@@ -1044,7 +1048,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     mark_page_invalid(ssd,old_ppa);
     //  print_sungjin(gc_i++);
     /* need to advance the write pointer here */
-    ssd_advance_write_pointer(ssd,stream_id,rg_id);
+    ssd_advance_write_pointer(ssd,stream_id,new_rg_id);
     //  print_sungjin(gc_i++);
     // if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcw;
@@ -1082,6 +1086,7 @@ static struct line *select_victim_line(struct ssd *ssd, bool force,int rg_id)
         // printf("!force select_victim_line nulptr,eturn\n");
         return NULL;
     }
+    // if(victim_line->ipc < ssd->sp.pgs_per_line / 16)
 
     pqueue_pop(lm->victim_line_pq);
     victim_line->pos = 0;
@@ -1131,12 +1136,13 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     struct line *victim_line = NULL;
     struct ssdparams *spp = &ssd->sp;
     // struct nand_lun *lunp;
+    bool to_other_rg=false;
     struct ppa ppa;
     int ch, lun,cnt=0;
     int stream_id;
     uint16_t pg;
     victim_line = select_victim_line(ssd, force,rg_id);
-    
+
     struct nand_page *pg_iter = NULL;
 
     if (!victim_line) {
@@ -1165,6 +1171,8 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
               start_lun_id,end_lun_id);
     /////////////////////////////////
+    to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
+
     for(pg=0;pg<spp->pgs_per_blk;pg++){
         for(ch =start_ch_id ; ch<=end_ch_id; ch++){
             for(lun=start_lun_id;lun<=end_lun_id;lun++){
@@ -1176,7 +1184,7 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
                 if (pg_iter->status == PG_VALID) {
                     gc_read_page(ssd, &ppa);
                     /* delay the maptbl update until "write" happens */
-                    gc_write_page(ssd, &ppa, stream_id,rg_id);
+                    gc_write_page(ssd, &ppa, stream_id,rg_id,to_other_rg);
                     cnt++;
                 }
                 pg_iter->status=PG_FREE;

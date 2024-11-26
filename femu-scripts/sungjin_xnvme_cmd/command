@@ -5,4 +5,4 @@ sudo /home/femu/FDP_ROCKSDB/db_bench --benchmarks="fillrandom,stats" -subcompact
 
 sudo fio --ioengine=libaio --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=16K --group_reporting  --name=write --size=16G --numjobs=32 --time_based=1 --runtime=10 --iodepth=32
 
-sudo ./fio --ioengine=io_uring --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=1m --group_reporting=0  --name=write --size=1G --numjobs=2 --threads=1 --stonewall --time_based=1 --runtime=2 --iodepth=32 -fdp=1 
+sudo ./fio --ioengine=io_uring --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=1m --group_reporting=0  --name=write --size=1M --numjobs=2 --threads=1 --stonewall --time_based=1 --runtime=2 --iodepth=32 -fdp=1 -sungjinpid=512 
