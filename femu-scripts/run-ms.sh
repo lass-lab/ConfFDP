@@ -48,7 +48,7 @@ G12=12288
 G30=30720
 G64=65536
 
-
+stream_number=2
 ssd_size=$G30
 
 #Compose the entire FEMU BBSSD command line options
@@ -71,7 +71,7 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",blk_er_lat=${blk_er_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",ch_xfer_lat=${ch_xfer_lat}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent=${gc_thres_pcent}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent_high=${gc_thres_pcent_high}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=6"
+FEMU_OPTIONS=${FEMU_OPTIONS}",stream_number=${stream_number}"
 
 echo ${FEMU_OPTIONS}
 
