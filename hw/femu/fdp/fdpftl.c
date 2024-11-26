@@ -1591,6 +1591,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     struct ppa ppa;
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
+    int i;
     // if(sizeof(NvmeCmd))
     // uint32_t dw13=req->cmd.cdw13;
     // print_sungjin(req->cmd.cdw13);
@@ -1640,12 +1641,15 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
 
-    while (should_gc_high(ssd,rg_id)) {
+    for (i=0;i<5;i++) {
         /* perform GC here until !should_gc(ssd) */
         // printf("doing gc?\n");
-        r = do_gc(ssd, true,rg_id);
-        if (r == -1)
-            break;
+        if(should_gc_high(ssd,rg_id)){
+            r = do_gc(ssd, true,rg_id);
+            if (r == -1)
+                break;
+        }
+
     }
     if(should_gc_high(ssd,rg_id)){
         // rg_id++;
