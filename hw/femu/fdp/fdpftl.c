@@ -537,7 +537,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     spp->tt_luns = spp->luns_per_ch * spp->nchs;//8*8
 
     /* line is special, put it at the end */
-    spp->blks_per_line = spp->tt_luns; /* TODO: to fix under multiplanes */
+    spp->blks_per_line = spp->tt_luns/n->rg_number; /* TODO: to fix under multiplanes */
     spp->pgs_per_line = spp->blks_per_line * spp->pgs_per_blk;
     spp->secs_per_line = spp->pgs_per_line * spp->secs_per_pg;
     spp->tt_lines = spp->blks_per_lun; /* TODO: to fix under multiplanes */ // 256
