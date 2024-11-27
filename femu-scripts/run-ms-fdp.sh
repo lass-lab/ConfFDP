@@ -59,11 +59,11 @@ G64=65536
 ssd_size=$G30
 
 #Compose the entire FEMU BBSSD command line options
-FEMU_OPTIONS_MS="-device femu"
+FEMU_OPTIONS_MS="-device femud"
 
 # FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",mdts=18"
 FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",devsz_mb=${ssd_size}"
-FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",namespaces=${rg_number}"
+FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",namespaces=${stream_number}"
 FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",femu_mode=7"
 FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",secsz=${secsz}"
 FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",nand_page_size_kb=${NAND_PAGE_SIZE_KB}"
@@ -84,7 +84,7 @@ FEMU_OPTIONS_MS=${FEMU_OPTIONS_MS}",stream_number=${stream_number}"
 
 
 
-FEMU_OPTIONS_FDP="-device femu"
+FEMU_OPTIONS_FDP="-device femua"
 
 # FEMU_OPTIONS_FDP=${FEMU_OPTIONS_FDP}",mdts=18"
 FEMU_OPTIONS_FDP=${FEMU_OPTIONS_FDP}",devsz_mb=${ssd_size}"
@@ -125,7 +125,7 @@ sudo $QEMU \
     -m 20G \
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-hd,drive=hd0 \
-    -drive file=$OSIMGF,if=none,aio=native,cache=none,format=qcow2,id=hd0 \
+    -drive file=$OSIMGF,if=none,aio=io_uring,cache=none,format=qcow2,id=hd0 \
     ${FEMU_OPTIONS_MS} \
     ${FEMU_OPTIONS_FDP} \
     -net user,hostfwd=tcp::8095-:22 \
