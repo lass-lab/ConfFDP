@@ -31,7 +31,7 @@ gc_thres_pcent=75
 gc_thres_pcent_high=95
 
 #-----------------------------------------------------------------------
-NAND_PAGE_SIZE_KB=16
+NAND_PAGE_SIZE_KB=4
 NAND_BLOCK_SIZE_MB=64
 
 
@@ -49,7 +49,7 @@ G30=30720
 G64=65536
 
 stream_number=2
-ssd_size=$G30
+ssd_size=$G64
 
 #Compose the entire FEMU BBSSD command line options
 FEMU_OPTIONS="-device femu"
