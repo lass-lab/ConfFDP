@@ -1322,11 +1322,13 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     // NvmeCmdDWORD13 dword13;
     // dword13.parsed.dspec=0;
     // dword13.val = req->cmd.cdw13;
+#if 0
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
-    uint16_t stream_id = le16_to_cpu(rw->dspec);
 
-    stream_id=(req->cmd.nsid-1);
-    
+    uint16_t stream_id = le16_to_cpu(rw->dspec);
+#else
+    uint16_t stream_id=(req->cmd.nsid-1);
+#endif    
     // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
     // uint8_t dtype = (dw12 >> 20) & 0xf;
 /*

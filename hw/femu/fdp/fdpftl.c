@@ -1603,24 +1603,15 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // if(sizeof(NvmeCmd))
     // uint32_t dw13=req->cmd.cdw13;
     // print_sungjin(req->cmd.cdw13);
+#if 0
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
-     uint16_t pid = le16_to_cpu(rw->dspec);
-    // NvmeCmdDWORD13 dword13;
-    // dword13.parsed.dspec=0;
-    // dword13.val = le32_to_cpu(req->cmd.cdw13);
-    // dword13.val=tmp;
-    // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
-    // uint32_t dw12 = le32_to_cpu(req->cmd.cdw12);
-    // uint8_t dtype = (dw12 >> 20) & 0xf;
-/*ord13.rg=cpu_t
-    NVME_DIRECTIVE_IDENTIFY       = 0x0,
-    NVME_DIRECTIVE_STREAM         = 0x1,
-    NVME_DIRECTIVE_DATA_PLACEMENT = 0x2,
-*/
-    
-
+    uint16_t pid = le16_to_cpu(rw->dspec);
     uint8_t stream_id = pid & 0xff;
     uint8_t rg_id =pid>>8;
+#else
+    uint16_t rg_id=(req->cmd.nsid-1);
+    uint16_t stream_id=0;
+#endif
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     // printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
