@@ -32,7 +32,7 @@ gc_thres_pcent_high=95
 
 #-----------------------------------------------------------------------
 NAND_PAGE_SIZE_KB=16
-NAND_BLOCK_SIZE_MB=4
+NAND_BLOCK_SIZE_MB=64
 
 
 # if [ $NAND_BLOCK_SIZE -eq 64 ]; then
