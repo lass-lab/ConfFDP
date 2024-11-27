@@ -1148,7 +1148,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     printf("msssd_io_mgmt_send_sungjin\n");
     print_sungjin(spp->blks_per_line);
     print_sungjin(spp->pgs_per_line);
-    
+
     print_sungjin(ssd->sungjin_stat.block_erased);
     print_sungjin(ssd->sungjin_stat.copied);
 
@@ -1325,7 +1325,7 @@ static uint64_t msssd_write(struct ssd *ssd, NvmeRequest *req)
     // NvmeCmdDWORD13 dword13;
     // dword13.parsed.dspec=0;
     // dword13.val = req->cmd.cdw13;
-#if 0
+#if 1
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
 
     uint16_t stream_id = le16_to_cpu(rw->dspec);
