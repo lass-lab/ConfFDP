@@ -407,10 +407,14 @@ static void nvme_init_ctrl(FemuCtrl *n)
     id->ieee[0]      = 0x00;
     id->ieee[1]      = 0x02;
     id->ieee[2]      = 0xb3;
-    id->cmic         = 0;
+    
+    // id->cmic         = 0;
+    id->cmic         = 1;
+    id->cntlid=n->femu_mode;
+
     id->mdts         = n->mdts;
     id->ver          = 0x00010300;
-    id->cntlid=n->femu_mode;
+    
     /* TODO: NVME_OACS_NS_MGMT */
     id->oacs         = cpu_to_le16(n->oacs | NVME_OACS_DBBUF);
     id->acl          = n->acl;
