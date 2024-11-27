@@ -6,3 +6,17 @@ sudo /home/femu/FDP_ROCKSDB/db_bench --benchmarks="fillrandom,stats" -subcompact
 sudo fio --ioengine=libaio --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=16K --group_reporting  --name=write --size=16G --numjobs=32 --time_based=1 --runtime=10 --iodepth=32
 
 sudo ./fio --ioengine=io_uring --direct=1 --filename=/dev/nvme0n1 --rw=write --bs=1m --group_reporting=0  --name=write --size=1M --numjobs=2 --threads=1 --stonewall --time_based=1 --runtime=2 --iodepth=32 -fdp=1 -sungjinpid=512 
+
+//////////////////
+
+
+
+sudo /home/femu/fio_fdp/fio --ioengine=io_uring_cmd --name=writetenant --filename=/dev/ng1n2 --iodepth=64 --bs=64k --randseed=3245 --rw=randwrite --io_size=40G --offset=0  --numjobs=2  --fdp=1 --sungjinpid=0 --runtime=60 --time_based=1
+
+
+>resultwrite &
+
+sudo /home/femu/fio_fdp/fio --ioengine=io_uring_cmd  --name=readtenant --filename=/dev/ng1n3 --iodepth=64 --bs=64k --randseed=3245 --rw=randread --io_size=40G --offset=0  --numjobs=1 --fdp=1 --sungjinpid=1 --runtime=60 --time_based=1
+
+
+  >resultread&

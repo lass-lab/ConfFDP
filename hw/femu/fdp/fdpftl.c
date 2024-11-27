@@ -1606,7 +1606,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // if(sizeof(NvmeCmd))
     // uint32_t dw13=req->cmd.cdw13;
     // print_sungjin(req->cmd.cdw13);
-#if 1
+#if 0
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
     uint16_t pid = le16_to_cpu(rw->dspec);
     uint8_t stream_id = pid & 0xff;
