@@ -61,7 +61,7 @@ FEMU_OPTIONS="-device femu"
 
 # FEMU_OPTIONS=${FEMU_OPTIONS}",mdts=18"
 FEMU_OPTIONS=${FEMU_OPTIONS}",devsz_mb=${ssd_size}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",namespaces=1"
+FEMU_OPTIONS=${FEMU_OPTIONS}",namespaces=${rg_number}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",femu_mode=6"
 FEMU_OPTIONS=${FEMU_OPTIONS}",secsz=${secsz}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",nand_page_size_kb=${NAND_PAGE_SIZE_KB}"
