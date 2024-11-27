@@ -408,9 +408,9 @@ static void nvme_init_ctrl(FemuCtrl *n)
     id->ieee[1]      = 0x02;
     id->ieee[2]      = 0xb3;
     
-    id->cmic         = 0;
-    // id->cmic         = cpu_to_le16(1 << 1);
-    id->cntlid=n->femu_mode;
+    // id->cmic         = 0;
+    id->cmic         = cpu_to_le16(1 << 1);
+    // id->cntlid=n->femu_mode;
 
     id->mdts         = n->mdts;
     id->ver          = 0x00010300;
