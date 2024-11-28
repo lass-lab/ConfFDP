@@ -1637,7 +1637,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t rg_id=(req->cmd.nsid-1);
     uint16_t stream_id=0;
 #endif
-    print_sungjin(rg_id);
+    // print_sungjin(rg_id);
     // print_sungjin(req->cmd.nsid);
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
@@ -1658,12 +1658,12 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     
     int r;
     // print_sungjin(fdpssd_write);
-    print_sungjin(lba);
-    print_sungjin(start_lpn);
-    print_sungjin(len);
-    print_sungjin(end_lpn);
-    print_sungjin(rg_id);
-    print_sungjin(req->cmd.nsid);
+    // print_sungjin(lba);
+    // print_sungjin(start_lpn);
+    // print_sungjin(len);
+    // print_sungjin(end_lpn);
+    // print_sungjin(rg_id);
+    // print_sungjin(req->cmd.nsid);
 
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
@@ -1681,10 +1681,10 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     if(should_gc_high(ssd,rg_id)){
         // rg_id++;
-        print_sungjin(should_gc_high);
+        // print_sungjin(should_gc_high);
         rg_id=find_near_rg_id(ssd,rg_id);
     }
-    print_sungjin(rg_id);
+    // print_sungjin(rg_id);
     // printf(:)
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
         // printf("sungjin loop : lpn %lu\n",lpn);
@@ -1694,7 +1694,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
             mark_page_invalid(ssd, &ppa);
             set_rmap_ent(ssd, INVALID_LPN, &ppa);
         }
-        print_sungjin(lpn);
+        // print_sungjin(lpn);
         /* new write */
         ppa = get_new_page(ssd,stream_id,rg_id);
         /* update maptbl */
@@ -1717,7 +1717,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     // uint64_t data_offset= ms_l2b(req->ns,lba);
     // backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,true);
-    printf("sungjin mssd write return\n");
+    // printf("sungjin mssd write return\n");
 
     return maxlat;
 }
