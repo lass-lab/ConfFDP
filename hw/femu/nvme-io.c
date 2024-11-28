@@ -265,6 +265,10 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
     err = femu_nvme_rw_check_req(n, ns, cmd, req, slba, elba, nlb, ctrl,
                                  data_size, meta_size);
     if (err){
+        print_sungjin(req->ns->id);
+        print_sungjin(ns->start_block);
+        print_sungjin(slba);
+        print_sungjin(elba);
         printf("sungjin error 1\n");
         return err;
     }
