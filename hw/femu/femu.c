@@ -346,7 +346,8 @@ static void nvme_ns_init_identify(FemuCtrl *n, NvmeIdNs *id_ns)
     id_ns->npda = id_ns->npdg = npdg - 1;
 
     for (i = 1; i < n->nlbaf; i++) {
-        id_ns->lbaf[i].lbads = BDRV_SECTOR_BITS + i;
+        // id_ns->lbaf[i].lbads = BDRV_SECTOR_BITS + i;
+        id_ns->lbaf[i].lbads =12;
         id_ns->lbaf[i].ms    = cpu_to_le16(n->meta);
     }
 }

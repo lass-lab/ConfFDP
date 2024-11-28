@@ -156,6 +156,17 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_UNRECOVERED_READ,
                             offsetof(NvmeRwCmd, slba), elba, ns->id);
         printf("sungjin error1-4\n");
+        /*
+        print_sungjin(elba) : {8388609}
+        print_sungjin(slba) : {8388608}
+        print_sungjin(elba-ns->start_block) : {1}
+        print_sungjin(slba-ns->start_block) : {0}
+        print_sungjin(req->ns->id) : {2}
+        print_sungjin(ns->start_block) : {8388608}
+        print_sungjin(slba) : {8388608}
+        print_sungjin(elba) : {8388609}
+
+        */
         print_sungjin(elba);
         print_sungjin(slba);
         print_sungjin(elba-ns->start_block);
