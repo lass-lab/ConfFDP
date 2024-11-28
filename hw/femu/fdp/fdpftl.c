@@ -1454,7 +1454,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     for(i=0;i<ssd->rg_number;i++){
         int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
         rg2physical(spp,i,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
-        printf("RG %d channel %d-%d / lun %d-%d\n",start_ch_id,end_ch_id,start_lun_id,end_lun_id);
+        printf("RG %d channel %d-%d / lun %d-%d\n",i,start_ch_id,end_ch_id,start_lun_id,end_lun_id);
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
