@@ -1618,7 +1618,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // uint64_t start_lpn = lba / spp->secs_per_pg;
     // uint64_t end_lpn = (lba + len - 1) / spp->secs_per_pg;
     uint64_t start_lpn = lba + req->ns->start_block;
-    uint64_t end_lpn = (lba + len );
+    uint64_t end_lpn = (start_lpn + len );
 
 
     struct ppa ppa;
