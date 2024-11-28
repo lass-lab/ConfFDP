@@ -114,7 +114,7 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                                 uint64_t meta_size)
 {
 
-    if (elba > le64_to_cpu(ns->id_ns.nsze)) {
+    if (elba > (ns->start_block)+le64_to_cpu(ns->id_ns.nsze)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_LBA_RANGE,
                             offsetof(NvmeRwCmd, nlb), elba, ns->id);
         printf("sungjin error1-1\n");
