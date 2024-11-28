@@ -384,7 +384,8 @@ static int nvme_init_namespaces(FemuCtrl *n, Error **errp)
         NvmeNamespace *ns = &n->namespaces[i];
         ns->size = n->ns_size;
         // ns->start_block = i * n->ns_size >> BDRV_SECTOR_BITS;
-        ns->start_block = i * n->ns_size /((1 << ns->id_ns.lbaf[0].lbads));
+        // ns->start_block = i * n->ns_size /((1 << ns->id_ns.lbaf[0].lbads));
+        ns->start_block = i * n->ns_size /(1<<12);
         ns->id = i + 1;
 
         if (nvme_init_namespace(n, ns, errp)) {
