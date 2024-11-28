@@ -305,7 +305,7 @@ static uint16_t nvme_io_mgmt_sungjin(FemuCtrl* n,NvmeNamespace* ns,
     //     bitmap_clear(ns->util, slba, clear_size);
     // }
     for (i = 0; i < n->num_namespaces; i++) {
-        NvmeNamespace *ns = &n->namespaces[i];
+        ns = &n->namespaces[i];
         for(slba=0;slba<end_lba;slba+=clear_size){
             bitmap_clear(ns->util, slba, clear_size);
         }
