@@ -348,7 +348,8 @@ static void nvme_ns_init_identify(FemuCtrl *n, NvmeIdNs *id_ns)
     for (i = 1; i < n->nlbaf; i++) {
         // id_ns->lbaf[i].lbads = BDRV_SECTOR_BITS + i;
         id_ns->lbaf[i].lbads =12;
-        id_ns->lbaf[i].ms    = cpu_to_le16(n->meta);
+        // id_ns->lbaf[i].ms    = cpu_to_le16(n->meta);
+         id_ns->lbaf[i].ms    =0;
     }
 }
 
