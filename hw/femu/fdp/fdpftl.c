@@ -1657,13 +1657,17 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 
     
     int r;
-    // print_sungjin(fdpssd_write);
-    // print_sungjin(lba);
-    // print_sungjin(start_lpn);
-    // print_sungjin(len);
-    // print_sungjin(end_lpn);
-    // print_sungjin(rg_id);
-    // print_sungjin(req->cmd.nsid);
+    print_sungjin(fdpssd_write);
+    print_sungjin(req->ns->start_block);
+    print_sungjin(req->slba);
+    print_sungjin(lba);
+    print_sungjin(len);
+    print_sungjin(start_lpn);
+    print_sungjin(end_lpn);
+    print_sungjin(rg_id);
+    print_sungjin(req->cmd.nsid);
+    print_sungjin(req->ns->ns_blks);
+    print_sungjin(ssd->sp.tt_pgs);
 
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
