@@ -1296,8 +1296,9 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     // uint64_t start_lpn = lba / spp->secs_per_pg;
     // uint64_t end_lpn = (lba + nsecs - 1) / spp->secs_per_pg;
 
-    uint64_t start_lpn = lba + req->ns->start_block;
-    uint64_t end_lpn = (lba + nsecs);
+    // uint64_t start_lpn = lba + req->ns->start_block;
+    uint64_t start_lpn = lba;
+    uint64_t end_lpn = (start_lpn + nsecs);
 
     uint64_t lpn;
     uint64_t sublat, maxlat = 0;
