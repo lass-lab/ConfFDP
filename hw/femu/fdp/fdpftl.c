@@ -275,7 +275,9 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
 
     // int ch_id;
     // int lun_id;
-
+    print_sungjin(ssd_advance_write_pointer);
+    print_sungjin(rg_id);
+    print_sungjin(stream_id);
     int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
     rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
@@ -1635,7 +1637,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t rg_id=(req->cmd.nsid-1);
     uint16_t stream_id=0;
 #endif
-    // print_sungjin(rg_id);
+    print_sungjin(rg_id);
     // print_sungjin(req->cmd.nsid);
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
@@ -1656,10 +1658,12 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     
     int r;
     // print_sungjin(fdpssd_write);
-    // print_sungjin(lba);
-    // print_sungjin(start_lpn);
-    // print_sungjin(len);
-    // print_sungjin(end_lpn);
+    print_sungjin(lba);
+    print_sungjin(start_lpn);
+    print_sungjin(len);
+    print_sungjin(end_lpn);
+    print_sungjin(rg_id);
+    print_sungjin(req->cmd.nsid);
 
     if (end_lpn >= spp->tt_pgs) {
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
@@ -1667,7 +1671,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 
     for (i=0;i<5&&should_gc_high(ssd,rg_id);i++) {
         /* perform GC here until !should_gc(ssd) */
-        // printf("doing gc?\n");
+        printf("doing gc? %d\n",rg_id);
         // if(should_gc_high(ssd,rg_id)){
             r = do_gc(ssd, true,rg_id);
             if (r == -1)
@@ -1677,9 +1681,11 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     if(should_gc_high(ssd,rg_id)){
         // rg_id++;
+        print_sungjin(should_gc_high);
         rg_id=find_near_rg_id(ssd,rg_id);
     }
-
+    print_sungjin(rg_id);
+    // printf(:)
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
         // printf("sungjin loop : lpn %lu\n",lpn);
         ppa = get_maptbl_ent(ssd, lpn);
@@ -1688,7 +1694,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
             mark_page_invalid(ssd, &ppa);
             set_rmap_ent(ssd, INVALID_LPN, &ppa);
         }
-
+        print_sungjin(lpn);
         /* new write */
         ppa = get_new_page(ssd,stream_id,rg_id);
         /* update maptbl */
@@ -1711,7 +1717,8 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     // uint64_t data_offset= ms_l2b(req->ns,lba);
     // backend_rw(req->ns->ctrl->mbe,&req->qsg,&data_offset,true);
-    // printf("sungjin mssd write return\n");
+    printf("sungjin mssd write return\n");
+
     return maxlat;
 }
 
