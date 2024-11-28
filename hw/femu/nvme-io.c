@@ -406,7 +406,8 @@ static uint16_t nvme_compare(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                             offsetof(NvmeRwCmd, prp1), 0, ns->id);
         return NVME_INVALID_FIELD | NVME_DNR;
     }
-    if (find_next_bit(ns->uncorrectable, elba, slba) < elba) {
+    // if (find_next_bit(ns->uncorrectable, elba, slba) < elba) {
+    if (!req->is_write && find_next_bit(ns->uncorrectable, (elba-ns->start_block), (slba-ns->start_block) ) < elba) {
         return NVME_UNRECOVERED_READ;
     }
 

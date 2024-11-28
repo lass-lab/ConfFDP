@@ -151,7 +151,8 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         }
         return NVME_INVALID_FIELD | NVME_DNR;
     }
-    if (!req->is_write && find_next_bit(ns->uncorrectable, elba, slba) < elba) {
+    // if (!req->is_write && find_next_bit(ns->uncorrectable, elba, slba) < elba) {
+    if (!req->is_write && find_next_bit(ns->uncorrectable, (elba-ns->start_block), (slba-ns->start_block) ) < elba) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_UNRECOVERED_READ,
                             offsetof(NvmeRwCmd, slba), elba, ns->id);
         printf("sungjin error1-4\n");
