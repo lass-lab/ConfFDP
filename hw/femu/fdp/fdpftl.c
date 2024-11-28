@@ -1450,6 +1450,12 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
         fdpssd_init_lines(ssd,false,i);
         printf("------------------------------------\n");
     }
+
+    for(i=0;i<ssd->rg_number;i++){
+        int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
+        rg2physical(spp,i,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
+        printf("RG %d channel %d-%d / lun %d-%d\n",start_ch_id,end_ch_id,start_lun_id,end_lun_id);
+    }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
     // for(i=0;i<ssd->stream_number;i++){
@@ -1655,14 +1661,14 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
 
-    for (i=0;i<5;i++) {
+    for (i=0;i<5&&should_gc_high(ssd,rg_id);i++) {
         /* perform GC here until !should_gc(ssd) */
         // printf("doing gc?\n");
-        if(should_gc_high(ssd,rg_id)){
+        // if(should_gc_high(ssd,rg_id)){
             r = do_gc(ssd, true,rg_id);
             if (r == -1)
                 break;
-        }
+        // }
 
     }
     if(should_gc_high(ssd,rg_id)){
