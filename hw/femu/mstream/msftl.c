@@ -1154,7 +1154,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     print_sungjin(spp->blks_per_line);
     print_sungjin(spp->pgs_per_line);
     print_sungjin(req->ns->start_block);
-    print_sungjin(ns->id_ns.lbaf[0].lbads);
+    print_sungjin(req->ns->id_ns.lbaf[0].lbads);
     print_sungjin(ssd->sungjin_stat.block_erased);
     print_sungjin(ssd->sungjin_stat.copied);
 
