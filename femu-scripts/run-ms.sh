@@ -88,8 +88,8 @@ sudo $QEMU \
     -name "FEMU-MSSSD-VM" \
     -enable-kvm \
     -cpu host \
-    -smp 16 \
-    -m 20G \
+    -smp 64 \
+    -m 32G \
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-hd,drive=hd0 \
     -drive file=$OSIMGF,if=none,aio=io_uring,cache=none,format=qcow2,id=hd0 \
