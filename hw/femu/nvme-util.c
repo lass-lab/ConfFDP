@@ -172,12 +172,13 @@ uint16_t femu_nvme_rw_check_req(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         print_sungjin(elba-ns->start_block);
         print_sungjin(slba-ns->start_block);
         return NVME_UNRECOVERED_READ;
-    }else{
-        print_sungjin(elba);
-        print_sungjin(slba);
-        print_sungjin(elba-ns->start_block);
-        print_sungjin(slba-ns->start_block);
     }
+    // else{
+    //     print_sungjin(elba);
+    //     print_sungjin(slba);
+    //     print_sungjin(elba-ns->start_block);
+    //     print_sungjin(slba-ns->start_block);
+    // }
 
     return 0;
 }
