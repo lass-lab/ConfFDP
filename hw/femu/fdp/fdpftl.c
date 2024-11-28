@@ -1625,6 +1625,8 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t rg_id=(req->cmd.nsid-1);
     uint16_t stream_id=0;
 #endif
+    print_sungjin(rg_id);
+    print_sungjin(req->cmd.nsid);
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     // printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
