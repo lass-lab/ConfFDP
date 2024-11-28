@@ -275,9 +275,9 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
 
     // int ch_id;
     // int lun_id;
-    print_sungjin(ssd_advance_write_pointer);
-    print_sungjin(rg_id);
-    print_sungjin(stream_id);
+    // print_sungjin(ssd_advance_write_pointer);
+    // print_sungjin(rg_id);
+    // print_sungjin(stream_id);
     int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
     rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
