@@ -78,6 +78,8 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent=${gc_thres_pcent}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent_high=${gc_thres_pcent_high}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",handle_number=${handle_number}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",rg_number=${rg_number}"
+FEMU_OPTIONS=${FEMU_OPTIONS}",multipoller_enabled=1"
+
 
 echo ${FEMU_OPTIONS}
 

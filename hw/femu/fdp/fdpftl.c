@@ -291,6 +291,8 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
             wpp->pg++;
             if (wpp->pg == spp->pgs_per_blk) {
                 wpp->pg = 0;
+
+
                 if (wpp->curline->vpc == spp->pgs_per_line) {
                     /* all pgs are still valid, move to full line list */
                     ftl_assert(wpp->curline->ipc == 0);
@@ -307,6 +309,8 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
                 wpp->curline = get_next_free_line(ssd,rg_id);
                 wpp->curline->stream_id=stream_id;
                 wpp->blk = wpp->curline->id;
+
+
             }
         }
     }
@@ -1631,8 +1635,8 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t rg_id=(req->cmd.nsid-1);
     uint16_t stream_id=0;
 #endif
-    print_sungjin(rg_id);
-    print_sungjin(req->cmd.nsid);
+    // print_sungjin(rg_id);
+    // print_sungjin(req->cmd.nsid);
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     // printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
