@@ -361,6 +361,7 @@ static int nvme_init_namespace(FemuCtrl *n, NvmeNamespace *ns, Error **errp)
 
     lba_index = NVME_ID_NS_FLBAS_INDEX(ns->id_ns.flbas);
     num_blks = n->ns_size / ((1 << id_ns->lbaf[lba_index].lbads));
+
     id_ns->nuse = id_ns->ncap = id_ns->nsze = cpu_to_le64(num_blks);
 
     n->csi = NVME_CSI_NVM;
@@ -382,7 +383,8 @@ static int nvme_init_namespaces(FemuCtrl *n, Error **errp)
     for (i = 0; i < n->num_namespaces; i++) {
         NvmeNamespace *ns = &n->namespaces[i];
         ns->size = n->ns_size;
-        ns->start_block = i * n->ns_size >> BDRV_SECTOR_BITS;
+        // ns->start_block = i * n->ns_size >> BDRV_SECTOR_BITS;
+        ns->start_block = i * n->ns_size /((1 << ns->id_ns.lbaf[0].lbads));
         ns->id = i + 1;
 
         if (nvme_init_namespace(n, ns, errp)) {

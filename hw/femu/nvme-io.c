@@ -245,7 +245,8 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
     NvmeRwCmd *rw = (NvmeRwCmd *)cmd;
     uint16_t ctrl = le16_to_cpu(rw->control);
     uint32_t nlb  = le16_to_cpu(rw->nlb) + 1;
-    uint64_t slba = le64_to_cpu(rw->slba);
+    // uint64_t slba = le64_to_cpu(rw->slba);
+    uint64_t slba = le64_to_cpu(rw->slba)+ns->start_block;
     uint64_t prp1 = le64_to_cpu(rw->prp1);
     uint64_t prp2 = le64_to_cpu(rw->prp2);
     const uint8_t lba_index = NVME_ID_NS_FLBAS_INDEX(ns->id_ns.flbas);
@@ -256,6 +257,7 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
     uint64_t meta_size = nlb * ms;
     uint64_t elba = slba + nlb;
     uint16_t err;
+
     int ret;
 
     req->is_write = (rw->opcode == NVME_CMD_WRITE) ? 1 : 0;

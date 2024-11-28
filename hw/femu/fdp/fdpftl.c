@@ -1282,11 +1282,17 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 {
     struct ssdparams *spp = &ssd->sp;
+    // req->ctrl
+    // FemuCtrl* n =(FemuCtrl*)ssd->femuctrl;
     uint64_t lba = req->slba;
     int nsecs = req->nlb;
     struct ppa ppa;
-    uint64_t start_lpn = lba / spp->secs_per_pg;
-    uint64_t end_lpn = (lba + nsecs - 1) / spp->secs_per_pg;
+    // uint64_t start_lpn = lba / spp->secs_per_pg;
+    // uint64_t end_lpn = (lba + nsecs - 1) / spp->secs_per_pg;
+
+    uint64_t start_lpn = lba + req->ns->start_block;
+    uint64_t end_lpn = (lba + nsecs);
+
     uint64_t lpn;
     uint64_t sublat, maxlat = 0;
     
@@ -1597,8 +1603,12 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t lba = req->slba;
     struct ssdparams *spp = &ssd->sp;
     int len = req->nlb;
-    uint64_t start_lpn = lba / spp->secs_per_pg;
-    uint64_t end_lpn = (lba + len - 1) / spp->secs_per_pg;
+    // uint64_t start_lpn = lba / spp->secs_per_pg;
+    // uint64_t end_lpn = (lba + len - 1) / spp->secs_per_pg;
+    uint64_t start_lpn = lba + req->ns->start_block;
+    uint64_t end_lpn = (lba + len );
+
+
     struct ppa ppa;
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
