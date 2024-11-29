@@ -862,7 +862,7 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
 
     case NAND_WRITE:
 
-        chnl_stime= ch->next_ch_avail_time < cmd_stime ? : cmd_stime : ch->next_ch_avail_time;
+        chnl_stime= ch->next_ch_avail_time < cmd_stime ?  cmd_stime : ch->next_ch_avail_time;
         ch->next_ch_avail_time = chnl_stime + spp->ch_xfer_lat;
 
         nand_stime = lun->next_lun_avail_time < ch->next_ch_avail_time ? 
