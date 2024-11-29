@@ -861,14 +861,24 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
         break;
 
     case NAND_WRITE:
-        nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \
-                     lun->next_lun_avail_time;
-        lun->next_lun_avail_time = nand_stime + spp->pg_wr_lat;
-        // lat = lun->next_lun_avail_time - cmd_stime;
-        chnl_stime = (ch->next_ch_avail_time < lun->next_lun_avail_time) ?
-                        lun->next_lun_avail_time : ch->next_ch_avail_time;
+
+        chnl_stime= ch->next_ch_avail_time < cmd_stime ? : cmd_stime : ch->next_ch_avail_time;
         ch->next_ch_avail_time = chnl_stime + spp->ch_xfer_lat;
-        lat = ch->next_ch_avail_time - cmd_stime;
+
+        nand_stime = lun->next_lun_avail_time < ch->next_ch_avail_time ? 
+                ch->next_ch_avail_time : lun->next_lun_avail_time;
+        lun->next_lun_avail_time = nand_stime + spp->pg_wr_lat;
+
+        lat = lun->next_lun_avail_time-cmd_stime;
+    //////////////////// 
+        // nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \
+        //              lun->next_lun_avail_time;
+        // lun->next_lun_avail_time = nand_stime + spp->pg_wr_lat;
+        // // lat = lun->next_lun_avail_time - cmd_stime;
+        // chnl_stime = (ch->next_ch_avail_time < lun->next_lun_avail_time) ?
+        //                 lun->next_lun_avail_time : ch->next_ch_avail_time;
+        // ch->next_ch_avail_time = chnl_stime + spp->ch_xfer_lat;
+        // lat = ch->next_ch_avail_time - cmd_stime;
 #if 0
         /* write: transfer data through channel first */
         nand_stime = (lun->next_lun_avail_time < cmd_stime) ? cmd_stime : \

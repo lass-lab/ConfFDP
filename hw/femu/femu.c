@@ -498,6 +498,14 @@ static void nvme_init_pci(FemuCtrl *n)
 {
     uint8_t *pci_conf = n->parent_obj.config;
 
+
+    n->pci_simulation =g_malloc0(sizeof(PCIe_Gen3_x4));
+    n->pci_simulation->stime=0;
+    n->pci_simulation->ntime=0;
+    n->pci_simulation->bw=Interface_PCIeGen3x4_bw;
+    // int ret =pthread_spin_init(&n->pci_lock, PTHREAD_PROCESS_SHARED);
+    if(ret)
+        femu_err("femu.c:477 nvme_init_pci(): lock alloc failed\n");
     pci_conf[PCI_INTERRUPT_PIN] = 1;
     /* Coperd: QEMU-OCSSD(0x1d1d,0x1f1f), QEMU-NVMe(0x8086,0x5845) */
     pci_config_set_prog_interface(pci_conf, 0x2);

@@ -31,6 +31,17 @@
 #define NVME_ID_NS_LBAF_DS(ns, lba_index) (ns->id_ns.lbaf[lba_index].lbads)
 #define NVME_ID_NS_LBAF_MS(ns, lba_index) (ns->id_ns.lbaf[lba_index].ms)
 
+
+#define Interface_PCIeGen3x4_bwmb (4034 * MiB) //MB.s
+#define Interface_PCIeGen3x4_bw 4034
+typedef struct _PCIe_Gen3_x4 {
+    //lock
+    uint64_t bw;
+    uint64_t stime;
+    uint64_t ntime; 
+    bool busy;
+}PCIe_Gen3_x4; //FOR real zns
+
 typedef struct NvmeBar {
     uint64_t    cap;
     uint32_t    vs;
@@ -1366,6 +1377,8 @@ typedef struct FemuCtrl {
     uint32_t        max_active_zones;
     uint32_t        max_open_zones;
     uint32_t        zd_extension_size;
+
+    PCIe_Gen3_x4    *pci_simulation;
 
     const uint32_t  *iocs;
     uint8_t         csi;
