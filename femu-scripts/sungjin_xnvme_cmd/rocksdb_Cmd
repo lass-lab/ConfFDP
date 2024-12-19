@@ -1,0 +1,13 @@
+1. fill nvme0n1 20GB
+
+
+2-1. write tenant : write bursty at nvmen0n2
+overwrite
+2-1. read tenant : read at nvme0n1
+
+
+
+sudo /home/femu/rocksdb/db_bench --benchmarks="fillrandom,stats" -subcompactions=8 -value_size=1024 -histogram -max_background_compactions=2 -max_background_flushes=1 -num=20971520 -db=/home/femu/testdir
+
+
+sudo /home/femu/rocksdb/db_bench --benchmarks="fillrandom,stats" -subcompactions=8 -value_size=1024 -histogram -max_background_compactions=2 -max_background_flushes=1 -num=20971520 -db=/home/femu/testdir2
