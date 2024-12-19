@@ -419,18 +419,31 @@ enum NvmeIoms2Mo {
 };
 
 typedef struct QEMU_PACKED NvmeRuhStatus {
-   union{ 
-    struct{
-        uint8_t free_space_ratio;
-        uint32_t copied_page;
-        uint32_t block_erased;
-        uint8_t rsvd0_tmp[5];
+   union { 
+    struct {
+        uint8_t free_space_ratio;    // 1 byte
+        uint8_t rsvd0_tmp[3];        // 3 bytes to align copied_page
+        uint32_t copied_page;        // 4 bytes
+        uint32_t block_erased;       // 4 bytes
+        uint8_t rsvd1_tmp[2];        // 2 bytes to fill up to 14 bytes
     };
-    uint8_t  rsvd0[14];
+    uint8_t  rsvd0[14];              // Full 14-byte buffer
    };
-    uint8_t  rsvd0[14];
-    uint16_t nruhsd;
+   uint16_t nruhsd;                  // 2 bytes (not part of the 14-byte union)
 } NvmeRuhStatus;
+
+// typedef struct QEMU_PACKED NvmeRuhStatus {
+//    union{ 
+//     struct{
+//         uint8_t free_space_ratio;
+//         uint32_t copied_page;
+//         uint32_t block_erased;
+//         uint8_t rsvd0_tmp[5];
+//     };
+//     uint8_t  rsvd0[14];
+//    };
+//     uint16_t nruhsd;
+// } NvmeRuhStatus;
 
 typedef struct NvmeRuhStatusDescr {
     uint16_t pid;
