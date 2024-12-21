@@ -1401,9 +1401,9 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
         total_free_line+=ssd->lm[rg].free_line_cnt;
     }
     // total_free_line/=rg;
-    hdr->free_space_ratio=(uint8_t)(total_free_line*100/(ssd->lm[0].tt_lines*ssd->rg_number));
-    hdr->copied_page=ssd->sungjin_stat.copied;
-    hdr->block_erased=ssd->sungjin_stat.block_erased;
+    // hdr->free_space_ratio=(uint8_t)(total_free_line*100/(ssd->lm[0].tt_lines*ssd->rg_number));
+    // hdr->copied_page=ssd->sungjin_stat.copied;
+    // hdr->block_erased=ssd->sungjin_stat.block_erased;
     // ruhid=ns-
     // int stream;
     // for(stream=0;stream<nruhsd;stream++,ruhsd++){
