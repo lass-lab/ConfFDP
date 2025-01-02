@@ -1427,7 +1427,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
             // ruhsd->ruhid=cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph)); // how to do ? pid == ruhid?
             ruhsd->pid = cpu_to_le16((uint16_t)(rg<<8 | ph));
             ruhsd->ruhid=cpu_to_le16((uint16_t)(rg<<8 | ph)); // how to do ? pid == ruhid?
-            printf("ruhsd->ruhid %u\b",ruhsd->ruhid)
+            printf("ruhsd->ruhid %u\b",ruhsd->ruhid);
             // printf("dword13.dspec %u ruhsd->pid %u\n",dword13.parsed.dspec,ruhsd->pid);
         }
     }
