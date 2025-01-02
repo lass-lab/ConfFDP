@@ -1417,15 +1417,17 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     for(ph=0;ph<ssd->stream_number;ph++){
         for(rg=0;rg<ssd->rg_number;rg++,ruhsd++){
             NvmeCmdDWORD13 dword13;
-            dword13.parsed.rg=cpu_to_le16(rg);
-            dword13.parsed.ph=cpu_to_le16(ph);
+            // dword13.parsed.rg=cpu_to_le16(rg);
+            // dword13.parsed.ph=cpu_to_le16(ph);
             //ruhsd->pid=cpu_to_le16(dword13.dspec); 
             //ruhsd->ruhid=cpu_to_le16(dword13.dspec); 
             ruhsd->earutr = 0;
             ruhsd->ruamw=0;
-            ruhsd->pid = cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph));
-            ruhsd->ruhid=cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph)); // how to do ? pid == ruhid?
-
+            // ruhsd->pid = cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph));
+            // ruhsd->ruhid=cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph)); // how to do ? pid == ruhid?
+            ruhsd->pid = cpu_to_le16((uint16_t)(rg<<8 | ph));
+            ruhsd->ruhid=cpu_to_le16((uint16_t)(rg<<8 | ph)); // how to do ? pid == ruhid?
+            
             printf("dword13.dspec %u ruhsd->pid %u\n",dword13.parsed.dspec,ruhsd->pid);
         }
     }
