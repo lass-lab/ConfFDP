@@ -450,6 +450,8 @@ typedef struct QEMU_PACKED NvmeFdpEvent {
     uint64_t vendor[3];
 } NvmeFdpEvent;
 
+#define NVME_FDP_MAX_EVENTS 63
+
 typedef struct NvmeFdpEventBuffer {
     NvmeFdpEvent     events[NVME_FDP_MAX_EVENTS];
     unsigned int     nelems;
