@@ -9,6 +9,14 @@
 
 
 #define RGIF 0
+#define VALID_FDP 0
+#define FDPA 0
+#define NVME_FDP_MAXPIDS 256
+// REG8(FDPA, 0x0)
+//     FIELD(FDPA, RGIF, 0, 4)
+//     FIELD(FDPA, VWC, 4, 1)
+//     FIELD(FDPA, VALID, 7, 1);
+
 enum {
     NAND_READ =  0,
     NAND_WRITE = 1,

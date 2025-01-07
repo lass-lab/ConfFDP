@@ -418,6 +418,85 @@ enum NvmeIoms2Mo {
     NVME_IOMS_MO_SUNGJIN=0x2,
 };
 
+//////////////////////////////
+typedef struct QEMU_PACKED NvmeFdpDescrHdr {
+    uint16_t descr_size;
+    uint8_t  fdpa;
+    uint8_t  vss;
+    uint32_t nrg;
+    uint16_t nruh;
+    uint16_t maxpids;
+    uint32_t nnss;
+    uint64_t runs;
+    uint32_t erutl;
+    uint8_t  rsvd28[36];
+} NvmeFdpDescrHdr;
+
+typedef struct QEMU_PACKED NvmeRuhDescr {
+    uint8_t ruht;
+    uint8_t rsvd1[3];
+} NvmeRuhDescr;
+
+typedef struct QEMU_PACKED NvmeFdpEvent {
+    uint8_t  type;
+    uint8_t  flags;
+    uint16_t pid;
+    uint64_t timestamp;
+    uint32_t nsid;
+    uint64_t type_specific[2];
+    uint16_t rgid;
+    uint8_t  ruhid;
+    uint8_t  rsvd35[5];
+    uint64_t vendor[3];
+} NvmeFdpEvent;
+
+typedef struct NvmeFdpEventBuffer {
+    NvmeFdpEvent     events[NVME_FDP_MAX_EVENTS];
+    unsigned int     nelems;
+    unsigned int     start;
+    unsigned int     next;
+} NvmeFdpEventBuffer;
+
+enum NvmeRuhType {
+    NVME_RUHT_INITIALLY_ISOLATED = 1,
+    NVME_RUHT_PERSISTENTLY_ISOLATED = 2,
+};
+
+
+typedef struct NvmeEnduranceGroup {
+    uint8_t event_conf;
+
+    struct {
+        NvmeFdpEventBuffer host_events, ctrl_events;
+
+        uint16_t nruh;
+        uint16_t nrg;
+        uint8_t  rgif;
+        uint64_t runs;
+
+        uint64_t hbmw;
+        uint64_t mbmw;
+        uint64_t mbe;
+
+        bool enabled;
+
+        NvmeRuHandle *ruhs;
+    } fdp;
+} NvmeEnduranceGroup;
+
+typedef struct QEMU_PACKED NvmeFdpConfsHdr {
+    uint16_t num_confs;
+    uint8_t  version;
+    uint8_t  rsvd3;
+    uint32_t size;
+    uint8_t  rsvd8[8];
+} NvmeFdpConfsHdr;
+
+
+////////////////////////////////
+
+
+
 typedef struct QEMU_PACKED NvmeRuhStatus {
 //    union { 
 //     // struct {

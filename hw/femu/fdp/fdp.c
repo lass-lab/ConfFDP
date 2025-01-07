@@ -57,6 +57,8 @@ static inline uint16_t nvme_pid2rg(NvmeNamespace *ns, uint16_t pid)
 #include "../nvme.h"
 #include "./fdpftl.h"
 
+
+
 static void fdp_init_ctrl_str(FemuCtrl *n)
 {
     static int fsid_vbb = 0;
@@ -170,6 +172,120 @@ static uint16_t fdp_admin_cmd(FemuCtrl *n, NvmeCmd *cmd)
     }
 }
 
+
+static size_t sizeof_fdp_conf_descr(size_t nruh, size_t vss)
+{
+    size_t entry_siz = sizeof(NvmeFdpDescrHdr) + nruh * sizeof(NvmeRuhDescr)
+                       + vss;
+    return ROUND_UP(entry_siz, 8);
+}
+
+
+// static uint16_t fdp_confs(NvmeCtrl *n, uint32_t endgrpid, uint32_t buf_len,
+//                                uint64_t off, NvmeRequest *req)
+static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
+{
+    printf("FDP CONFFS@@@@@@@@@@@@@@@22\n");
+    struct ssd *ssd = n->ssd;
+    struct ssdparams *spp = &ssd->sp;
+    uint32_t dw10 = le32_to_cpu(cmd->cdw10);
+    uint32_t dw11 = le32_to_cpu(cmd->cdw11);
+    uint32_t dw12 = le32_to_cpu(cmd->cdw12);
+    uint32_t dw13 = le32_to_cpu(cmd->cdw13);
+    uint8_t  lid = dw10 & 0xff;
+    uint8_t  lsp = (dw10 >> 8) & 0xf;
+    uint8_t  rae = (dw10 >> 15) & 0x1;
+    uint8_t  csi = le32_to_cpu(cmd->cdw14) >> 24;
+    uint32_t numdl, numdu, endgrpid;
+    uint64_t off, lpol, lpou;
+    size_t   buf_len;
+    uint16_t status;
+    uint64_t prp1, prp2;
+    prp1 = le64_to_cpu(cmd->dptr.prp1);
+    prp2 = le64_to_cpu(cmd->dptr.prp2);
+
+    numdl = (dw10 >> 16);
+    numdu = (dw11 & 0xffff);
+    endgrpid = (dw11 >> 16);
+    lpol = dw12;
+    lpou = dw13;
+
+    buf_len = (((numdu << 16) | numdl) + 1) << 2;
+    off = (lpou << 32ULL) | lpol;
+
+
+
+
+    uint32_t log_size, trans_len;
+    g_autofree uint8_t *buf = NULL;
+    NvmeFdpDescrHdr *hdr;
+    NvmeRuhDescr *ruhd;
+    NvmeEnduranceGroup *endgrp;
+    NvmeFdpConfsHdr *log;
+    size_t nruh, fdp_descr_size;
+    int i;
+
+    // if (endgrpid != 1 || !n->subsys) {
+    //     return NVME_INVALID_FIELD | NVME_DNR;
+    // }
+
+    // endgrp = &n->subsys->endgrp;
+
+    if (true) {
+        nruh = n->stream_number*n->rg_number;
+    } else {
+        nruh = 1;
+    }
+    // FDPVSS =0;
+    fdp_descr_size = sizeof_fdp_conf_descr(nruh, 0);
+    log_size = sizeof(NvmeFdpConfsHdr) + fdp_descr_size;
+
+    if (off >= log_size) {
+        printf("off >= log_size %u %u\n",off,log_size);
+        return NVME_INVALID_FIELD | NVME_DNR;
+    }
+
+    trans_len = MIN(log_size - off, buf_len);
+
+    buf = g_malloc0(log_size);
+    log = (NvmeFdpConfsHdr *)buf;
+    hdr = (NvmeFdpDescrHdr *)(log + 1);
+    ruhd = (NvmeRuhDescr *)(buf + sizeof(*log) + sizeof(*hdr));
+
+    log->num_confs = cpu_to_le16(0);
+    log->size = cpu_to_le32(log_size);
+
+    hdr->descr_size = cpu_to_le16(fdp_descr_size);
+    if (true) {
+        // endgrp->fdp.rgif 8
+        hdr->fdpa = FIELD_DP8(hdr->fdpa, FDPA, VALID_FDP, 1);
+        hdr->fdpa = FIELD_DP8(hdr->fdpa, FDPA, RGIF, 8);
+        hdr->nrg = cpu_to_le16(n->rg_number);
+        hdr->nruh = cpu_to_le16(n->stream_number*n->rg_number);
+        hdr->maxpids = cpu_to_le16(NVME_FDP_MAXPIDS - 1);
+        hdr->nnss = cpu_to_le32(n->num_namespaces);
+        // hdr->runs = cpu_to_le64(endgrp->fdp.runs);
+         hdr->runs = cpu_to_le64(spp->tt_blks);
+
+        for (i = 0; i < nruh; i++) {
+            ruhd->ruht = NVME_RUHT_PERSISTENTLY_ISOLATED;
+            ruhd++;
+        }
+    } else {
+        /* 1 bit for RUH in PIF -> 2 RUHs max. */
+        hdr->nrg = cpu_to_le16(1);
+        hdr->nruh = cpu_to_le16(1);
+        hdr->maxpids = cpu_to_le16(NVME_FDP_MAXPIDS - 1);
+        hdr->nnss = cpu_to_le32(1);
+        hdr->runs = cpu_to_le64(96 * MiB);
+
+        ruhd->ruht = NVME_RUHT_INITIALLY_ISOLATED;
+    }
+    dma_read_prp(n, (uint8_t *)buf, trans_len, prp1, prp2);
+    return NVME_SUCCESS;
+    // return nvme_c2h(n, (uint8_t *)buf + off, trans_len, req);
+}
+
 static uint16_t fdp_get_log(FemuCtrl* n, NvmeCmd* cmd){
     uint32_t dw10 = le32_to_cpu(cmd->cdw10);
     // uint32_t dw11 = le32_to_cpu(cmd->cdw11);
@@ -179,8 +295,8 @@ static uint16_t fdp_get_log(FemuCtrl* n, NvmeCmd* cmd){
 
     switch (lid) {
     case NVME_LOG_FDP_CONFS:
-        // return nvme_error_log_info(n, cmd, len);
-        return NVME_SUCCESS;
+        return fdp_confs(n, cmd);
+        // return NVME_SUCCESS;
     case NVME_LOG_FDP_RUH_USAGE:
         // return nvme_smart_info(n, cmd, len);
         return NVME_SUCCESS;
