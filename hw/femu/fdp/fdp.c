@@ -192,21 +192,22 @@ static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
     uint32_t dw11 = le32_to_cpu(cmd->cdw11);
     uint32_t dw12 = le32_to_cpu(cmd->cdw12);
     uint32_t dw13 = le32_to_cpu(cmd->cdw13);
-    uint8_t  lid = dw10 & 0xff;
-    uint8_t  lsp = (dw10 >> 8) & 0xf;
-    uint8_t  rae = (dw10 >> 15) & 0x1;
-    uint8_t  csi = le32_to_cpu(cmd->cdw14) >> 24;
-    uint32_t numdl, numdu, endgrpid;
+    // uint8_t  lid = dw10 & 0xff;
+    // uint8_t  lsp = (dw10 >> 8) & 0xf;
+    // uint8_t  rae = (dw10 >> 15) & 0x1;
+    // uint8_t  csi = le32_to_cpu(cmd->cdw14) >> 24;
+    uint32_t numdl, numdu;
+    //  endgrpid;
     uint64_t off, lpol, lpou;
     size_t   buf_len;
-    uint16_t status;
+    // uint16_t status;
     uint64_t prp1, prp2;
     prp1 = le64_to_cpu(cmd->dptr.prp1);
     prp2 = le64_to_cpu(cmd->dptr.prp2);
 
     numdl = (dw10 >> 16);
     numdu = (dw11 & 0xffff);
-    endgrpid = (dw11 >> 16);
+    // endgrpid = (dw11 >> 16);
     lpol = dw12;
     lpou = dw13;
 
@@ -220,7 +221,7 @@ static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
     g_autofree uint8_t *buf = NULL;
     NvmeFdpDescrHdr *hdr;
     NvmeRuhDescr *ruhd;
-    NvmeEnduranceGroup *endgrp;
+    // NvmeEnduranceGroup *endgrp;
     NvmeFdpConfsHdr *log;
     size_t nruh, fdp_descr_size;
     int i;
@@ -241,7 +242,7 @@ static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
     log_size = sizeof(NvmeFdpConfsHdr) + fdp_descr_size;
 
     if (off >= log_size) {
-        printf("off >= log_size %u %u\n",off,log_size);
+        printf("off >= log_size %lu %u\n",off,log_size);
         return NVME_INVALID_FIELD | NVME_DNR;
     }
 
@@ -258,9 +259,14 @@ static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
     hdr->descr_size = cpu_to_le16(fdp_descr_size);
     if (true) {
         // endgrp->fdp.rgif 8
-        hdr->fdpa = FIELD_DP8(hdr->fdpa, FDPA, VALID_FDP, 1);
-        hdr->fdpa = FIELD_DP8(hdr->fdpa, FDPA, RGIF, 8);
+        // hdr->fdpa = FIELD_DP8(hdr->fdpa, FDPA, VALID_FDP, 1);
+        // hdr->fdpa = FIELD_DP8(hdr->fdpa, FDPA, RGIF, 8);
+        hdr->fdpa = 0;
+        hdr->fdpa = 0;
+
         hdr->nrg = cpu_to_le16(n->rg_number);
+
+
         hdr->nruh = cpu_to_le16(n->stream_number*n->rg_number);
         hdr->maxpids = cpu_to_le16(NVME_FDP_MAXPIDS - 1);
         hdr->nnss = cpu_to_le32(n->num_namespaces);
