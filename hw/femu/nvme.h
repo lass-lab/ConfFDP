@@ -416,6 +416,9 @@ enum NvmeIoms2Mo {
     NVME_IOMS_MO_NOP = 0x0,
     NVME_IOMS_MO_RUH_UPDATE = 0x1,
     NVME_IOMS_MO_SUNGJIN=0x2,
+    NVME_F2DP_PID_ALLOC=0x3,
+    NVME_F2DP_PID_FREE=0x4,
+    NVME_F2DP_PID_RDONLY=0x5,
 };
 
 //////////////////////////////
@@ -513,6 +516,22 @@ typedef struct QEMU_PACKED NvmeFdpConfsHdr {
 
 ////////////////////////////////
 
+
+typedef struct QEMU_PACKED  NvmeF2DPRuhStatus {
+  uint8_t rsvd0[10];
+  uint16_t reclaim_group_nr;
+  uint16_t max_placement_id_nr;
+  uint16_t nruhsd;
+  struct nvme_F2DP_ruh_status_desc ruhss[];
+};
+
+typedef struct QEMU_PACKED NvmeF2DPRuhStatusDescr {
+  uint16_t pid;
+  uint16_t ruhid;
+  uint32_t earutr;
+  uint64_t ruamw;
+  uint8_t rg_mapped_bitmap[16];
+};
 
 
 typedef struct QEMU_PACKED NvmeRuhStatus {
@@ -1668,6 +1687,7 @@ enum {
     FEMU_KVSSD_MODE=5,
     FEMU_FDP_MODE=6,
     FEMU_MSSSD_MODE=7,
+    FEMU_F2DP_MODE=8,
 };
 
 enum {
@@ -1704,6 +1724,12 @@ static inline bool FDPSSD(FemuCtrl *n)
 {
     return (n->femu_mode == FEMU_FDP_MODE);
 }
+
+static inline bool F2DPSSD(FemuCtrl *n)
+{
+    return (n->femu_mode == FEMU_F2DP_MODE);
+}
+
 static inline bool MSSSD(FemuCtrl *n)
 {
     return (n->femu_mode == FEMU_MSSSD_MODE);
@@ -1773,6 +1799,7 @@ int nvme_register_znssd(FemuCtrl *n);
 
 int nvme_register_msssd(FemuCtrl *n);
 int nvme_register_fdpssd(FemuCtrl *n);
+int nvme_register_f2dpssd(FemuCtrl *n);
 static inline uint64_t ns_blks(NvmeNamespace *ns, uint8_t lba_idx)
 {
     FemuCtrl *n = ns->ctrl;
