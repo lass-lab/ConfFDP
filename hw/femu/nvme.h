@@ -523,7 +523,7 @@ typedef struct QEMU_PACKED  NvmeF2DPRuhStatus {
   uint16_t max_placement_id_nr;
   uint16_t nruhsd;
 //   struct NvmeF2DPRuhStatusDescr ruhss[];
-};
+} NvmeF2DPRuhStatus;
 
 typedef struct QEMU_PACKED NvmeF2DPRuhStatusDescr {
   uint16_t pid;
@@ -531,7 +531,7 @@ typedef struct QEMU_PACKED NvmeF2DPRuhStatusDescr {
   uint32_t earutr;
   uint64_t ruamw;
   uint8_t rg_mapped_bitmap[16];
-};
+} NvmeF2DPRuhStatusDescr;
 
 
 typedef struct QEMU_PACKED NvmeRuhStatus {
