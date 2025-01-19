@@ -8,6 +8,10 @@
 #define UNMAPPED_PPA    (~(0ULL))
 
 
+#define F2DP_RG_NUMBER 32
+#define F2DP_MAX_PID_NR 33
+#define F2DP_DEFAULT_STREAM (F2DP_MAX_PID_NR-1)
+
 #define RGIF 0
 #define VALID_FDP 0
 #define FDPA 0
@@ -94,6 +98,7 @@ struct nand_block {
     int vpc; /* valid page count */
     int erase_cnt;
     int wp; /* current write pointer */
+    int pid;
 };
 
 struct nand_plane {
@@ -186,12 +191,21 @@ typedef struct line {
 
 /* wp: record next write addr */
 struct write_pointer {
-    struct line *curline;
-    int ch;
-    int lun;
-    int pg;
-    int blk;
+    struct line ** curline;
+    // int ch;
+    
+    // int pg;
+    // int blk;
     int pl;
+
+    // int start_die;
+    // int end_die;
+    int lun_nr;
+    int logical_lun; // logical
+
+    int physical_lun_map[64]; //spp->tt_luns == 64
+    int physical_blk_map[64];
+    int physical_pg_map[64];
 };
 
 struct sungjin_stat{
@@ -224,7 +238,7 @@ struct ssd {
     struct ssd_channel *ch;
     struct ppa *maptbl; /* page level mapping table */
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
-    struct write_pointer** wp;
+    struct write_pointer* wp;
     struct line_mgmt* lm;
     uint8_t stream_number;
     uint8_t rg_number;
@@ -234,10 +248,13 @@ struct ssd {
     struct rte_ring **to_poller;
     bool *dataplane_started_ptr;
     QemuThread msftl_thread;
+    
+    bool f2dp_pid_map[(F2DP_MAX_PID_NR+1)];
     struct sungjin_stat sungjin_stat;
+
 };
 
-void fdpssd_init(FemuCtrl *n);
+void f2dpssd_init(FemuCtrl *n);
 
 
 static inline NvmeLBAF *ms_ns_lbaf(NvmeNamespace *ns)

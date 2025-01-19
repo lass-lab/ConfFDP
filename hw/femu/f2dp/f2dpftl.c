@@ -4,9 +4,9 @@
 
 static void *msftl_thread(void *arg);
 
-static inline bool should_gc(struct ssd *ssd,int rg_id)
+static inline bool should_gc(struct ssd *ssd,int lun_id)
 {
-    return (ssd->lm[rg_id].free_line_cnt <= ssd->sp.gc_thres_lines);
+    return (ssd->lm[lun_id].free_line_cnt <= ssd->sp.gc_thres_lines);
 }
 
 
@@ -148,7 +148,7 @@ static void fdpssd_init_lines(struct ssd *ssd,bool is_init, int rg)
             print_sungjin(line->stream_id);
         }
         line->stream_id=-1;
-        line->rg_id=rg;
+        line->rg_id=rg/ssd->sp.luns_per_rg;
         /* initialize all the lines as free lines */
         QTAILQ_INSERT_TAIL(&lm->free_line_list, line, entry);
         lm->free_line_cnt++;
@@ -198,24 +198,75 @@ static inline void rg2physical(struct ssdparams *spp ,
         // return -1;
 }
 
-static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
+static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned int rg_bitmap)
 {
+    
+    
+    ssd->stream_number++;
+
 
 
     struct ssdparams *spp = &ssd->sp;
-    struct write_pointer *wpp = &(ssd->wp[stream_id][rg_id]);
+    ssd->f2dp_pid_map[stream_id]=true;
+    struct write_pointer *wpp = &(ssd->wp[stream_id]);
 
 
-    struct line_mgmt *lm = &ssd->lm[rg_id];
-    struct line *curline = NULL;
+    struct line_mgmt *lm;
+    // struct line *curline = NULL;
+    // wpp->lun_nr=;
+    wpp->curline=g_malloc0(sizeof(struct line*)*wpp->lun_nr);
+    wpp->logical_lun=0;
+//////////////////////////////////
 
-    curline = QTAILQ_FIRST(&lm->free_line_list);
-    QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
-    lm->free_line_cnt--;
+    for (int rg = 0; rg < 32; rg++) {
+        if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
+            // perform_action(i); // Perform the action for the set bit
+            wpp->lun_nr++;
+        }
+    }
+    wpp->curline=g_malloc0(sizeof(struct line*)*
+                        (wpp->lun_nr*ssd->sp.luns_per_rg));
+
+    for (int rg = 0; rg < 32; rg++) {
+        if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
+            // perform_action(i); // Perform the action for the set bit
+            for(int pl =0;pl<ssd->sp.luns_per_rg;pl++){
+                int physical_lun = pl+ rg*ssd->sp.luns_per_rg;
+
+                wpp->physical_lun_map[wpp->logical_lun]=physical_lun;
+                
+                lm=&ssd->lm[physical_lun];
+                
+                wpp->curline[wpp->logical_lun]=QTAILQ_FIRST(&lm->free_line_list);
+                QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
+                lm->free_line_cnt--;
+                wpp->curline[wpp->logical_lun].stream_id=stream_id;
+                wpp->physical_blk_map[wpp->logical_lun]=wpp->curline[wpp->logical_lun].id;
+                wpp->physical_pg_map[wpp->logical_lun]=0;
+                
+
+                struct ppa ppa=get_new_page(ssd,stream_id);
+                get_blk(ssd,&ppa)->pid=stream_id;
+                wpp->logical_lun++;
+            }
+        }
+    }
+
+
+    if(wpp->logical_lun!=wpp->lun_nr){
+        print_sungjin(wpp->logical_lun);
+        print_sungjin(wpp->lun_nr);
+    }
+    wpp->logical_lun=0;
+
+/////////////////////////////////
+    // curline = QTAILQ_FIRST(&lm->free_line_list);
+    // QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
+    // lm->free_line_cnt--;
 
     /* wpp->curline is always our next-to-write super-block */
-    wpp->curline = curline;
-    curline->stream_id=stream_id;
+    // wpp->curline = curline;
+    // curline->stream_id=stream_id;
     // int rgs_per_chnl = ssd->rg_number/spp->nchs; // 4
     // fdp
     /*
@@ -235,15 +286,15 @@ static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
         .
         27~31 -> ch 7
     */
-   int tmp1,tmp2;
-    rg2physical(spp,rg_id,&wpp->ch,&wpp->lun,&tmp1,&tmp2);
+//    int tmp1,tmp2;
+    // rg2physical(spp,rg_id,&wpp->ch,&wpp->lun,&tmp1,&tmp2);
     // wpp->ch = rg/spp->rgs_per_chnl;
     // wpp->lun = (rg%spp->rgs_per_chnl)*spp->luns_per_rg;
 
-    wpp->pg = 0;
-    wpp->blk = curline->id;
+    // wpp->pg = 0;
+    // wpp->blk = curline->id;
     wpp->pl = 0;
-    // print_sungjin(fdpssd_init_write_pointer);
+    return true;
 }
 
 static inline void check_addr(int a, int max)
@@ -251,9 +302,9 @@ static inline void check_addr(int a, int max)
     ftl_assert(a >= 0 && a < max);
 }
 
-static struct line *get_next_free_line(struct ssd *ssd, int rg_id)
+static struct line *get_next_free_line(struct ssd *ssd, int lun_id)
 {
-    struct line_mgmt *lm = &ssd->lm[rg_id];
+    struct line_mgmt *lm = &ssd->lm[lun_id];
     struct line *curline = NULL;
 
     curline = QTAILQ_FIRST(&lm->free_line_list);
@@ -267,55 +318,93 @@ static struct line *get_next_free_line(struct ssd *ssd, int rg_id)
     return curline;
 }
 
-static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
+static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id)
 {
     struct ssdparams *spp = &ssd->sp;
-    struct write_pointer *wpp = &ssd->wp[stream_id][rg_id];
-    struct line_mgmt *lm = &ssd->lm[rg_id];
+    struct write_pointer *wpp = &ssd->wp[stream_id];
+    // struct line_mgmt *lm = &ssd->lm;
+    struct line_mgmt *lm;
+///////////////////////////////
+    // int physical_lun = wpp->lun_map[wpp->lun];
+    wpp->physical_pg_map[wpp->logical_lun]++;
+    
+    if (wpp->physical_pg_map[wpp->logical_lun] == spp->pgs_per_blk){
+        int physical_lun = wpp->physical_lun_map[wpp->logical_lun];
+        lm = &ssd->lm[physical_lun];
+        if(wpp->curline[wpp->logical_lun]->vpc == spp->pgs_per_blk){
+            QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
+            &wpp->curline[wpp->logical_lun], entry);
+            lm->full_line_cnt++;
+        }else{
+            pqueue_insert(lm->victim_line_pq, &wpp->curline[wpp->logical_lun]);
+                    lm->victim_line_cnt++;
+        }
+        wpp->curline[wpp->logical_lun] = NULL;
+        wpp->curline[wpp->logical_lun] = get_next_free_line(ssd,physical_lun);
+        wpp->curline[wpp->logical_lun]->stream_id=stream_id;
+        wpp->physical_blk_map[wpp->logical_lun] = wpp->curline[wpp->logical_lun]->id;
+    
+        struct ppa ppa;
+        ppa.g.blk=wpp->physical_blk_map[wpp->logical_lun];
+        ppa.g.ch = physical_lun / spp->luns_per_ch;
+        ppa.g.lun = physical_lun % spp->luns_per_ch;
+        ppa.g.pl = 0;
+        get_blk(ssd,&ppa)->pid=stream_id;
+    }
 
+    wpp->logical_lun++;
+    if(wpp->logical_lun > wpp->lun_nr){
+        wpp->logical_lun=0;
+    }
+
+
+
+///////////////////////////////
     // int ch_id;
     // int lun_id;
     // print_sungjin(ssd_advance_write_pointer);
     // print_sungjin(rg_id);
     // print_sungjin(stream_id);
-    int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
-    rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
-
-    // int end_ch_id=start_ch_id+spp->chnls_per_rg;
-    // int end_lun_id=start_lun_id+(spp->luns_per_rg%spp->luns_per_ch);
-
-    wpp->ch++;
-    if(wpp->ch > end_ch_id){ // sungjin
-        wpp->ch=start_ch_id;
-        wpp->lun++;
-        if(wpp->lun>end_lun_id){
-            wpp->lun=start_lun_id;
-            wpp->pg++;
-            if (wpp->pg == spp->pgs_per_blk) {
-                wpp->pg = 0;
 
 
-                if (wpp->curline->vpc == spp->pgs_per_line) {
-                    /* all pgs are still valid, move to full line list */
-                    ftl_assert(wpp->curline->ipc == 0);
-                    QTAILQ_INSERT_TAIL(&lm->full_line_list, wpp->curline, entry);
-                    lm->full_line_cnt++;
-                } else {
-                    ftl_assert(wpp->curline->vpc >= 0 && wpp->curline->vpc < spp->pgs_per_line);
-                    /* there must be some invalid pages in this line */
-                    ftl_assert(wpp->curline->ipc > 0);
-                    pqueue_insert(lm->victim_line_pq, wpp->curline);
-                    lm->victim_line_cnt++;
-                }
-                wpp->curline = NULL;
-                wpp->curline = get_next_free_line(ssd,rg_id);
-                wpp->curline->stream_id=stream_id;
-                wpp->blk = wpp->curline->id;
+    // int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
+    // rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
+
+    // // int end_ch_id=start_ch_id+spp->chnls_per_rg;
+    // // int end_lun_id=start_lun_id+(spp->luns_per_rg%spp->luns_per_ch);
+
+    // wpp->ch++;
+    // if(wpp->ch > end_ch_id){ // sungjin
+    //     wpp->ch=start_ch_id;
+    //     wpp->lun++;
+    //     if(wpp->lun>end_lun_id){
+    //         wpp->lun=start_lun_id;
+    //         wpp->pg++;
+    //         if (wpp->pg == spp->pgs_per_blk) {
+    //             wpp->pg = 0;
 
 
-            }
-        }
-    }
+    //             if (wpp->curline->vpc == spp->pgs_per_line) {
+    //                 /* all pgs are still valid, move to full line list */
+    //                 ftl_assert(wpp->curline->ipc == 0);
+    //                 QTAILQ_INSERT_TAIL(&lm->full_line_list, wpp->curline, entry);
+    //                 lm->full_line_cnt++;
+    //             } else {
+    //                 ftl_assert(wpp->curline->vpc >= 0 && wpp->curline->vpc < spp->pgs_per_line);
+    //                 /* there must be some invalid pages in this line */
+    //                 ftl_assert(wpp->curline->ipc > 0);
+    //                 pqueue_insert(lm->victim_line_pq, wpp->curline);
+    //                 lm->victim_line_cnt++;
+    //             }
+    //             wpp->curline = NULL;
+    //             wpp->curline = get_next_free_line(ssd,rg_id);
+    //             wpp->curline->stream_id=stream_id;
+    //             wpp->blk = wpp->curline->id;
+
+
+    //         }
+    //     }
+    // }
 
 
     //////////////////////////////
@@ -383,15 +472,22 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
     // }
 }
 
-static struct ppa get_new_page(struct ssd *ssd,int stream_id,int rg_id)
+static struct ppa get_new_page(struct ssd *ssd,int stream_id)
 {
-    struct write_pointer *wpp = &ssd->wp[stream_id][rg_id];
+    struct write_pointer *wpp = &ssd->wp[stream_id];
     struct ppa ppa;
     ppa.ppa = 0;
-    ppa.g.ch = wpp->ch;
-    ppa.g.lun = wpp->lun;
+    // ppa.g.ch = wpp->ch;
+    ppa.g.ch = wpp->physical_lun_map[wpp->logical_lun]/ssd->sp.nchs;
+
+
+    ppa.g.lun = wpp->physical_lun_map[wpp->logical_lun]%ssd->sp.nchs;
+    
     ppa.g.pg = wpp->pg;
-    ppa.g.blk = wpp->blk;
+
+    // ppa.g.blk = wpp->blk;
+    ppa.g.blk = wpp->physical_blk_map[wpp->logical_lun];
+
     ppa.g.pl = wpp->pl;
     ftl_assert(ppa.g.pl == 0);
 
@@ -652,7 +748,7 @@ static void ssd_init_rmap(struct ssd *ssd,bool is_init)
     }
 }
 
-void fdpssd_init(FemuCtrl *n)
+void f2dpssd_init(FemuCtrl *n)
 {
     struct ssd *ssd = n->ssd;
     struct ssdparams *spp = &ssd->sp;
@@ -660,8 +756,9 @@ void fdpssd_init(FemuCtrl *n)
 
     ftl_assert(ssd);
 
-    ssd->rg_number=n->rg_number;
-    ssd->stream_number = n->handle_number;
+    // ssd->rg_number=n->rg_number;
+    ssd->rg_number=F2DP_RG_NUMBER;
+    ssd->stream_number = 0;
     ssd_init_params(spp, n);
 
     
@@ -674,11 +771,11 @@ void fdpssd_init(FemuCtrl *n)
     /* initialize ssd internal layout architecture */
     ssd->ch = g_malloc0(sizeof(struct ssd_channel) * spp->nchs);
 
-    ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->rg_number);
-    ssd->wp=g_malloc(sizeof(struct write_pointer*)*ssd->stream_number);
-    for(i=0;i<ssd->stream_number;i++){
-        ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
-    }
+    ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->tt_luns);
+    ssd->wp=g_malloc(sizeof(struct write_pointer)*(F2DP_MAX_PID_NR+1));
+    // for(i=0;i<ssd->stream_number;i++){
+    //     ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
+    // }
     
     for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp,true);
@@ -692,18 +789,22 @@ void fdpssd_init(FemuCtrl *n)
 
     /* initialize all the lines */
     // ssd->lm=g_malloc0
-    for(i=0;i<ssd->rg_number;i++){
+    // for(i=0;i<ssd->rg_number;i++){
+    for(i=0;i<ssd->sp.tt_luns;i++){
         // printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,true,i);
         // printf("------------------------------------\n");
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
-    for(i=0;i<ssd->stream_number;i++){
-        for(j=0;j<ssd->rg_number;j++){
-            fdpssd_init_write_pointer(ssd,i,j);
-        }
-    }
+    // for(i=0;i<ssd->stream_number;i++){
+    //     for(j=0;j<ssd->rg_number;j++){
+    //         fdpssd_init_write_pointer(ssd,i,j);
+    //     }
+    // }
+    ssd->f2dp_pid_map[F2DP_DEFAULT_STREAM]=true;
+
+    f2dpssd_init_write_pointer(ssd,F2DP_DEFAULT_STREAM,4294967296);
     
 
     qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", msftl_thread, n,
@@ -819,9 +920,13 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
 
     struct ssdparams *spp = &ssd->sp;
     struct nand_lun *lun = get_lun(ssd, ppa);
-    // ssd_channel *get_ch
     struct ssd_channel* ch = get_ch(ssd,ppa);
     uint64_t lat = 0;
+///////////////
+    // int ch_id = ppa->g.lun
+
+////////////////
+
 
     uint64_t nand_stime;
     uint64_t chnl_stime =0;
@@ -1036,7 +1141,7 @@ static void gc_read_page(struct ssd *ssd, struct ppa *ppa)
 }
 
 /* move valid page data (already in DRAM) from victim line to a new page */
-static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id,int rg_id,bool to_other_rg)
+static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id,int lun_id,bool to_other_lun)
 {
     // int gc_i=0;
     // int rg_id;
@@ -1046,11 +1151,12 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     // print_sungjin(gc_write_page);
     // print_sungjin(stream_id);
     ftl_assert(valid_lpn(ssd, lpn));
-    int new_rg_id=rg_id;
-    if(to_other_rg){
-        new_rg_id=find_near_rg_id(ssd,rg_id);
-    }
-    new_ppa = get_new_page(ssd,stream_id,new_rg_id);
+    // int new_rg_id=rg_id;
+    // if(to_other_rg){
+    //     asdfsad
+    //     new_rg_id=find_near_rg_id(ssd,rg_id);
+    // }
+    new_ppa = get_new_page(ssd,stream_id);
     // print_sungjin(gc_i++);
     /* update maptbl */
     // rg_id=get_rg_id(ssd,&new_ppa);
@@ -1064,7 +1170,7 @@ static uint64_t gc_write_page(struct ssd *ssd, struct ppa *old_ppa,int stream_id
     mark_page_invalid(ssd,old_ppa);
     //  print_sungjin(gc_i++);
     /* need to advance the write pointer here */
-    ssd_advance_write_pointer(ssd,stream_id,new_rg_id);
+    ssd_advance_write_pointer(ssd,stream_id);
     //  print_sungjin(gc_i++);
     // if (ssd->sp.enable_gc_delay) {
         struct nand_cmd gcw;
@@ -1135,9 +1241,9 @@ static struct line *select_victim_line(struct ssd *ssd, bool force,int rg_id)
 //     ftl_assert(get_blk(ssd, ppa)->vpc == cnt);
 // }
 
-static void mark_line_free(struct ssd *ssd, struct ppa *ppa,int rg_id)
+static void mark_line_free(struct ssd *ssd, struct ppa *ppa,int lun_id)
 {
-    struct line_mgmt *lm = &ssd->lm[rg_id];
+    struct line_mgmt *lm = &ssd->lm[lun_id];
     struct line *line = get_line(ssd, ppa);
     line->stream_id=-1;
     line->ipc = 0;
@@ -1147,7 +1253,7 @@ static void mark_line_free(struct ssd *ssd, struct ppa *ppa,int rg_id)
     lm->free_line_cnt++;
 }
 
-static int do_gc(struct ssd *ssd, bool force,int rg_id)
+static int do_gc(struct ssd *ssd, bool force,int lun_id)
 {
     struct line *victim_line = NULL;
     struct ssdparams *spp = &ssd->sp;
@@ -1157,7 +1263,7 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     int ch, lun,cnt=0;
     int stream_id;
     uint16_t pg;
-    victim_line = select_victim_line(ssd, force,rg_id);
+    victim_line = select_victim_line(ssd, force,lun_id);
 
     struct nand_page *pg_iter = NULL;
 
@@ -1166,7 +1272,15 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
         return -1;
     }
 
-    stream_id=victim_line->stream_id;
+    // stream_id=victim_line->stream_id;
+
+    // struct ppa;
+
+    ppa.g.blk=victim_line->id;
+    ppa.g.ch=lun_id/ssd->sp.luns_per_ch;
+    ppa.g.lun=lun_id%ssd->sp.luns_per_ch;
+    ppa.g.pl=0;
+    stream_id=get_blk(ssd,&ppa)->pid;
 
     ppa.g.blk = victim_line->id;
 
@@ -1178,117 +1292,99 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     //////////////////////////////////
     // fdp
 
-    int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
-    rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
+    // int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
+    // rg2physical(spp,lun_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
     printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
                start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
-              victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
-              ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
+              victim_line->ipc, ssd->lm[lun_id].victim_line_cnt, ssd->lm[lun_id].full_line_cnt,
+              ssd->lm[lun_id].free_line_cnt,stream_id,lun_id,start_ch_id,end_ch_id,
               start_lun_id,end_lun_id);
     /////////////////////////////////
     to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
 
+
+
+/////////////////////////////////////////////////////
     for(pg=0;pg<spp->pgs_per_blk;pg++){
-        for(ch =start_ch_id ; ch<=end_ch_id; ch++){
-            for(lun=start_lun_id;lun<=end_lun_id;lun++){
-                ppa.g.ch=ch;
-                ppa.g.lun=lun;
-                ppa.g.pl=0;
-                ppa.g.pg=pg;
-                pg_iter = get_pg(ssd,&ppa);
-                if (pg_iter->status == PG_VALID) {
-                    gc_read_page(ssd, &ppa);
-                    /* delay the maptbl update until "write" happens */
-                    gc_write_page(ssd, &ppa, stream_id,rg_id,to_other_rg);
-                    cnt++;
-                }
-                pg_iter->status=PG_FREE;
-            }
+        pg_iter = get_pg(ssd,&ppa);
+        if (pg_iter->status == PG_VALID) {
+            gc_read_page(ssd, &ppa);
+            gc_write_page(ssd, &ppa, stream_id,lun_id,to_other_rg);
+            cnt++;
         }
+        pg_iter->status=PG_FREE;
     }
     ssd->sungjin_stat.copied+=cnt;
 
-     // erase
-    for(ch =start_ch_id ; ch<=end_ch_id; ch++){
-        for(lun=start_lun_id;lun<=end_lun_id;lun++){
-            ppa.g.ch = ch;
-            ppa.g.lun = lun;
-            ppa.g.pl = 0;
-            // mark_block_free(ssd, &ppa);
-            struct nand_block *blk = get_blk(ssd, &ppa);
-            blk->ipc = 0;
-            blk->vpc = 0;
-            blk->erase_cnt++;
-            ssd->sungjin_stat.block_erased++;
-            struct nand_cmd gce;
-            gce.type = GC_IO;
-            gce.cmd = NAND_ERASE;
-            gce.stime = 0;
-            ssd_advance_status(ssd, &ppa, &gce);
-        }
-    }
-    mark_line_free(ssd, &ppa,rg_id);
+    struct nand_block *blk = get_blk(ssd, &ppa);
+    blk->ipc = 0;
+    blk->vpc = 0;
+    blk->erase_cnt++;
+    blk->pid=-1;
+    ssd->sungjin_stat.block_erased++;
+    struct nand_cmd gce;
+    gce.type = GC_IO;
+    gce.cmd = NAND_ERASE;
+    gce.stime = 0;
+    ssd_advance_status(ssd, &ppa, &gce);
+    mark_line_free(ssd,&ppa,ppa.g.lun);
+
+
+
+
+    ///////////////////////////////////////////
+
+
+    // for(pg=0;pg<spp->pgs_per_blk;pg++){
+    //     for(ch =start_ch_id ; ch<=end_ch_id; ch++){
+    //         for(lun=start_lun_id;lun<=end_lun_id;lun++){
+    //             ppa.g.ch=ch;
+    //             ppa.g.lun=lun;
+    //             ppa.g.pl=0;
+    //             ppa.g.pg=pg;
+    //             pg_iter = get_pg(ssd,&ppa);
+    //             if (pg_iter->status == PG_VALID) {
+    //                 gc_read_page(ssd, &ppa);
+    //                 /* delay the maptbl update until "write" happens */
+    //                 gc_write_page(ssd, &ppa, stream_id,lun_id,to_other_rg);
+    //                 cnt++;
+    //             }
+    //             pg_iter->status=PG_FREE;
+    //         }
+    //     }
+    // }
+    
+
+
+    // ssd->sungjin_stat.copied+=cnt;
+
+    //  // erase
+    // for(ch =start_ch_id ; ch<=end_ch_id; ch++){
+    //     for(lun=start_lun_id;lun<=end_lun_id;lun++){
+    //         ppa.g.ch = ch;
+    //         ppa.g.lun = lun;
+    //         ppa.g.pl = 0;
+    //         // mark_block_free(ssd, &ppa);
+    //         struct nand_block *blk = get_blk(ssd, &ppa);
+    //         blk->ipc = 0;
+    //         blk->vpc = 0;
+    //         blk->erase_cnt++;
+    //         ssd->sungjin_stat.block_erased++;
+    //         struct nand_cmd gce;
+    //         gce.type = GC_IO;
+    //         gce.cmd = NAND_ERASE;
+    //         gce.stime = 0;
+    //         ssd_advance_status(ssd, &ppa, &gce);
+    //     }
+    // }
+    // mark_line_free(ssd, &ppa,rg_id);
 
 
 
 
     
     
-//     for(pg=0;pg<spp->pgs_per_blk;pg++){
-//         for(ch =0 ;ch<spp->nchs;ch++){
-//             for(lun=0;lun<spp->luns_per_ch;lun++){
-//                 ppa.g.ch=ch;
-//                 ppa.g.lun=lun;
-//                 ppa.g.pl=0;
-//                 ppa.g.pg=pg;
-                
-//                 pg_iter = get_pg(ssd,&ppa);
-//                 // ftl_assert(pg_iter->status != PG_FREE);
-//                 // print_sungjin(pg_iter);
-//                 if(pg_iter->status == PG_FREE){
-//                     // print_sungjin(pg_iter->status);
-//                 }
-//                 if (pg_iter->status == PG_VALID) {
-//                     gc_read_page(ssd, &ppa);
-//                     /* delay the maptbl update until "write" happens */
-//                     gc_write_page(ssd, &ppa, stream_id);
-//                     cnt++;
-//                 }
-//                 pg_iter->status=PG_FREE;
-//             }
-//         }
-//     }
-//     ssd->sungjin_stat.copied+=cnt;
-//     // printf("sungjin copy ok\n");
-
-// // erase
-//     for (ch = 0; ch < spp->nchs; ch++) {
-//         for (lun = 0; lun < spp->luns_per_ch; lun++) {
-//             ppa.g.ch = ch;
-//             ppa.g.lun = lun;
-//             ppa.g.pl = 0;
-//             // mark_block_free(ssd, &ppa);
-//             struct nand_block *blk = get_blk(ssd, &ppa);
-//             blk->ipc = 0;
-//             blk->vpc = 0;
-//             blk->erase_cnt++;
-//             ssd->sungjin_stat.block_erased++;
-//             if (spp->enable_gc_delay) {
-//                 struct nand_cmd gce;
-//                 gce.type = GC_IO;
-//                 gce.cmd = NAND_ERASE;
-//                 gce.stime = 0;
-//                 ssd_advance_status(ssd, &ppa, &gce);
-//             }
-//         }
-//     }
-//     ftl_assert(get_line(ssd, ppa)->vpc == cnt);
-    
-//     // printf("sungjin erase and advance status ok\n");
-//     /* update line status */
-//     mark_line_free(ssd, &ppa,rg_id);
-    // printf("sungjin mark line free status ok\n");
     return 0;
 }
 
@@ -1377,23 +1473,25 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     // unsigned int nruhsd= ssd->stream_number;
     uint8_t ph,rg;
-    unsigned int nruhsd= ssd->stream_number*ssd->rg_number;
+    unsigned int nruhsd= ssd->stream_number;
     print_sungjin(msssd_io_mgmt_recv_ruhs);
     print_sungjin(len);
-    NvmeRuhStatus *hdr;
-    NvmeRuhStatusDescr *ruhsd;
+    NvmeF2DPRuhStatus *hdr;
+    NvmeF2DPRuhStatusDescr *ruhsd;
     uint64_t prp1 = le64_to_cpu(req->cmd.dptr.prp1);
     uint64_t prp2 = le64_to_cpu(req->cmd.dptr.prp2);
 
-    size_t trans_len=sizeof(NvmeRuhStatus)+nruhsd*sizeof(NvmeRuhStatusDescr);
+    size_t trans_len=sizeof(NvmeF2DPRuhStatus)+nruhsd*sizeof(NvmeF2DPRuhStatusDescr);
     void *buf = NULL;
     buf = g_malloc0(trans_len);
 
     trans_len = MIN(trans_len, len);
 
-    hdr = (NvmeRuhStatus *)buf;
-    ruhsd = (NvmeRuhStatusDescr *)(buf + sizeof(NvmeRuhStatus));
+    hdr = (NvmeF2DPRuhStatus *)buf;
+    ruhsd = (NvmeF2DPRuhStatusDescr *)(buf + sizeof(NvmeF2DPRuhStatus));
 
+    hdr->reclaim_group_nr=cpu_to_le16(F2DP_RG_NUMBER);
+    hdr->max_placement_id_nr=cpu_to_le16(F2DP_MAX_PID_NR);
     hdr->nruhsd=cpu_to_le16(nruhsd);
     // return (ssd->lm.free_line_cnt <= ssd->sp.gc_thres_lines);
     int total_free_line=0;
@@ -1413,24 +1511,35 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     //     ruhsd->ruamw=0;
     // }
     
-    
-    for(ph=0;ph<ssd->stream_number;ph++){
-        for(rg=0;rg<ssd->rg_number;rg++,ruhsd++){
-            // NvmeCmdDWORD13 dword13;
-            // dword13.parsed.rg=cpu_to_le16(rg);
-            // dword13.parsed.ph=cpu_to_le16(ph);
-            //ruhsd->pid=cpu_to_le16(dword13.dspec); 
-            //ruhsd->ruhid=cpu_to_le16(dword13.dspec); 
+
+    for(ph=0;ph<F2DP_MAX_PID_NR;ph++){
+        if(ssd->f2dp_pid_map[ph]==true){
             ruhsd->earutr = 0;
             ruhsd->ruamw=0;
-            // ruhsd->pid = cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph));
-            // ruhsd->ruhid=cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph)); // how to do ? pid == ruhid?
-            ruhsd->pid = cpu_to_le16((uint16_t)(rg<<8 | ph));
-            ruhsd->ruhid=cpu_to_le16((uint16_t)(rg<<8 | ph)); // how to do ? pid == ruhid?
+            ruhsd->pid=cpu_to_le16(ph);
+            ruhsd->ruhid=cpu_to_le16(ph);
             printf("ruhsd->ruhid %u\b",ruhsd->ruhid);
-            // printf("dword13.dspec %u ruhsd->pid %u\n",dword13.parsed.dspec,ruhsd->pid);
+            ruhsd++;
         }
     }
+    
+    // for(ph=0;ph<ssd->stream_number;ph++){
+    //     for(rg=0;rg<ssd->rg_number;rg++,ruhsd++){
+    //         // NvmeCmdDWORD13 dword13;
+    //         // dword13.parsed.rg=cpu_to_le16(rg);
+    //         // dword13.parsed.ph=cpu_to_le16(ph);
+    //         //ruhsd->pid=cpu_to_le16(dword13.dspec); 
+    //         //ruhsd->ruhid=cpu_to_le16(dword13.dspec); 
+    //         ruhsd->earutr = 0;
+    //         ruhsd->ruamw=0;
+    //         // ruhsd->pid = cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph));
+    //         // ruhsd->ruhid=cpu_to_le16((uint16_t)(dword13.parsed.rg<<8 | dword13.parsed.ph)); // how to do ? pid == ruhid?
+    //         ruhsd->pid = cpu_to_le16((uint16_t)(rg<<8 | ph));
+    //         ruhsd->ruhid=cpu_to_le16((uint16_t)(rg<<8 | ph)); // how to do ? pid == ruhid?
+    //         printf("ruhsd->ruhid %u\b",ruhsd->ruhid);
+    //         // printf("dword13.dspec %u ruhsd->pid %u\n",dword13.parsed.dspec,ruhsd->pid);
+    //     }
+    // }
 
     // nvme_c2h(n, buf, trans_len, req)
     dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);
@@ -1478,56 +1587,117 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
-    // for(i=0;i<ssd->stream_number;i++){
-    //     fdpssd_init_write_pointer(ssd,i);
-    // }
+
     for(i=0;i<ssd->stream_number;i++){
         for(j=0;j<ssd->rg_number;j++){
             fdpssd_init_write_pointer(ssd,i,j);
         }
     }
     
-    // print_sungjin(lm->free_line_cnt);
-    // print_sungjin(lm->victim_line_cnt);
-    // print_sungjin(lm->full_line_cnt);
-
-
-    // for(slpn=0;;slpn++){
-    //     ppa=get_maptbl_ent(ssd,(slpn));
-    //     if ( !valid_ppa(ssd, &ppa)) {
-    //         // continue;
-    //         break;
-    //     }
-    //     if(!mapped_ppa(&ppa)){
-    //         continue;
-    //     }
-        
-    //     // get_line(ssd, &ppa)->vpc=ssd->sp.pgs_per_line;
-
-    //     mark_page_invalid(ssd, &ppa);
-    //     set_rmap_ent(ssd, INVALID_LPN, &ppa);
-        
-    // }
-    // printf("invalidate all ok\n");
-    // for (i = 0; i < spp->nchs; i++) {
-    //     ssd_init_ch(&ssd->ch[i], spp,false);
-    // }
-
-//     ssd->sp.enable_gc_delay=false;
-
-//     while(true){
-//         if(do_gc(ssd,true)==-1){
-//             break;
-//         }
-//     }   
-// printf("do gc ok\n");
-//     ssd->sp.enable_gc_delay=true;
-
-    // sungjin todo
-    // 
-    // mark line free, but do not touch stream id
 
     return 0;
+}
+
+static uint64_t f2dp_pid_alloc(struct ssd* ssd, NvmeRequest* req){
+    int pid;
+    size_t trans_len=sizeof(PidAllocReturn);
+    PidAllocReturn* ret;
+    void *buf = NULL;
+    buf = g_malloc0(trans_len);
+    uint64_t prp1 = le64_to_cpu(req->cmd.dptr.prp1);
+    uint64_t prp2 = le64_to_cpu(req->cmd.dptr.prp2);
+    ret=(PidAllocReturn*)buf;
+    
+    unsigned int rg_bitmap = le32_to_cpu(req->cmd.cdw11); // read rg_bitmap;
+    
+    print_sungjin(f2dp_pid_alloc);
+    print_sungjin(rg_bitmap);
+
+    // dma_write_prp(rg_bitmap);
+
+
+    for( pid=0;pid<F2DP_MAX_PID_NR;pid++){
+        if(ssd->f2dp_pid_map[pid]==false){
+            ssd->f2dp_pid_map[pid]=true;
+            break;
+        }
+    }
+    if(pid==F2DP_MAX_PID_NR){
+        printf("@@@ F2DP PID EXCEEDED!!\n");
+        return NVME_INVALID_FIELD | NVME_DNR;
+    }
+
+    f2dpssd_init_write_pointer(ssd,pid,rg_bitmap);
+    ret->pid =cpu_to_le32(pid);
+    // dma_read_prp(pid);
+    dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);
+    
+}
+
+static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req){
+    int pid;
+    // dma_write_prp(pid);
+    pid=le32_to_cpu(req->cmd.cdw11);
+    if(ssd->f2dp_pid_map[pid]==false){
+        return NVME_INVALID_FIELD | NVME_DNR;
+    }
+    ssd->f2dp_pid_map[pid]=true;
+    /* 
+    iterate whole blocks{
+        set stream id default stream.
+    }
+    QLIST_FOREACH()
+    */
+    struct line_mgmt* lm;
+    struct line * curline;
+    struct write_pointer* wpp= ssd->wp[pid];
+    for(int i = 0; i<wpp->lun_nr;i++){
+        int physical_lun = wpp->physical_lun_map[i]; 
+        // int physical_blk = wpp->physical_blk_map[i];
+        lm=&ssd->lm[physical_lun];
+
+        curline=&wpp->curline[i];
+        curline->ipc += spp->pgs_per_blk - 
+                    (curline->vpc+curline->ipc);
+        
+        if(curline->vpc == spp->pgs_per_blk){
+            QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
+            curline, entry);
+            lm->full_line_cnt++;
+        }else{
+            pqueue_insert(lm->victim_line_pq, &curline);
+            lm->victim_line_cnt++;
+        }
+        // QTAILQ_FOREACH(curline,(&lm->full_line_list),entry){
+        //     if(curline->stream_id==pid){
+        //         curline->stream_id=F2DP_DEFAULT_STREAM;
+        //     }
+        // }
+    }
+
+    for(int nch = 0 ; nch<ssd->sp.nchs;nch++){
+        struct ssd_channel * channel = &(ssd->ch[ppa->g.ch]);
+        for(int nlun = 0 ; nlun< ssd->sp.luns_per_ch;nlun++){
+            struct nand_lun* lun = channel->lun[nlun];
+            for(int nblocks=0;nblocks<ssd->sp.blks_per_lun;nblocks++){
+                struct nand_block* block = lun->pl[0].blk[nblocks];
+                if(block->pid==pid){
+                    block->pid=F2DP_DEFAULT_STREAM;
+                }
+            }
+        }
+    }
+    g_free(wpp->curline);
+
+
+}
+static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
+
+}
+
+
+static uint64_t f2dp_pid_rdonly(struct ssd* ssd, NvmeRequest* req){
+
 }
 
 static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
@@ -1544,11 +1714,14 @@ static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
     case NVME_IOMS_MO_SUNGJIN:
         return msssd_io_mgmt_send_sungjin(ssd,req);
     case NVME_F2DP_PID_ALLOC:
-        return NVME_SUCCESS;
+        return f2dp_pid_alloc(ssd,req);
+    case NVME_F2DP_PID_REALLOC:
+        return f2dp_pid_realloc(ssd,req);
     case NVME_F2DP_PID_FREE:
-        return NVME_SUCCESS;
+        return f2dp_pid_free(ssd,req);
     case NVME_F2DP_PID_RDONLY:
-        return NVME_SUCCESS;
+        return f2dp_pid_rdonly(ssd,req);
+        // return NVME_SUCCESS;
     default:
         return NVME_INVALID_FIELD | NVME_DNR;
     };
@@ -1642,7 +1815,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint64_t start_lpn = lba;
     uint64_t end_lpn = (start_lpn + len );
 
-
+    struct write_pointer *wpp;
     struct ppa ppa;
     uint64_t lpn;
     uint64_t curlat = 0, maxlat = 0;
@@ -1653,8 +1826,8 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 #if 1
     NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
     uint16_t pid = le16_to_cpu(rw->dspec);
-    uint8_t stream_id = pid & 0xff;
-    uint8_t rg_id =pid>>8;
+    // uint8_t stream_id = pid & 0xff;
+    // uint8_t rg_id =pid>>8;
 #else
     uint16_t rg_id=(req->cmd.nsid-1);
     uint16_t stream_id=0;
@@ -1664,17 +1837,22 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     // printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
-    if(stream_id>=ssd->stream_number){
-        // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
-        printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
-        stream_id=ssd->stream_number-1;
-        // return 0;
-    }
-    if(rg_id>=ssd->rg_number){
-        printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,stream_id,ssd->rg_number-1);
-        rg_id=ssd->rg_number-1;
-    }
+    // if(stream_id>=ssd->stream_number){
+    //     // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
+    //     printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
+    //     stream_id=ssd->stream_number-1;
+    //     // return 0;
+    // }
+    // if(rg_id>=ssd->rg_number){
+    //     printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,stream_id,ssd->rg_number-1);
+    //     rg_id=ssd->rg_number-1;
+    // }
 
+////////////////////
+    if(ssd->f2dp_pid_map[pid]==false){
+        pid=F2DP_DEFAULT_STREAM;
+    }
+    wpp=ssd->wp[pid];
 
 
     
@@ -1695,23 +1873,32 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         ftl_err("start_lpn=%"PRIu64",tt_pgs=%d\n", start_lpn, ssd->sp.tt_pgs);
     }
 
-    for (i=0;i<5&&should_gc_high(ssd,rg_id);i++) {
-        /* perform GC here until !should_gc(ssd) */
-        printf("doing gc? %d\n",rg_id);
-        // if(should_gc_high(ssd,rg_id)){
-            r = do_gc(ssd, true,rg_id);
+    for(i=0;i<wpp->lun_nr;i++){
+        if(should_gc_high(ssd,wpp->logical_lun[i])){
+            r = do_gc(ssd, true,i);
             if (r == -1)
                 break;
-        // }
+        }
+    }
 
-    }
-    if(should_gc_high(ssd,rg_id)){
-        // rg_id++;
-        // print_sungjin(should_gc_high);
-        rg_id=find_near_rg_id(ssd,rg_id);
-    }
-    // print_sungjin(rg_id);
-    // printf(:)
+    // for (i=0;i<5&&should_gc_high(ssd,rg_id);i++) {
+    //     /* perform GC here until !should_gc(ssd) */
+    //     printf("doing gc? %d\n",rg_id);
+    //         r = do_gc(ssd, true,rg_id);
+    //         if (r == -1)
+    //             break;
+
+
+    // }
+
+    
+    
+
+    // if(should_gc_high(ssd,rg_id)){
+    //     rg_id=find_near_rg_id(ssd,rg_id);
+    // }
+
+
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
         // printf("sungjin loop : lpn %lu\n",lpn);
         ppa = get_maptbl_ent(ssd, lpn);
@@ -1722,7 +1909,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         }
         // print_sungjin(lpn);
         /* new write */
-        ppa = get_new_page(ssd,stream_id,rg_id);
+        ppa = get_new_page(ssd,pid);
         /* update maptbl */
         set_maptbl_ent(ssd, lpn, &ppa);
         /* update rmap */
@@ -1731,7 +1918,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         mark_page_valid(ssd, &ppa);
 
         /* need to advance the write pointer here */
-        ssd_advance_write_pointer(ssd,stream_id,rg_id);
+        ssd_advance_write_pointer(ssd,pid);
 
         struct nand_cmd swr;
         swr.type = USER_IO;
@@ -1813,7 +2000,7 @@ static void *msftl_thread(void *arg)
 
             /* clean one line if needed (in the background) */
 
-            for(i=0;i<ssd->rg_number;i++){
+            for(i=0;i<ssd->sp.tt_luns;i++){
                 if (should_gc(ssd,i)) {
                     do_gc(ssd, false,i);
                     // if(r==-1){
@@ -1821,12 +2008,6 @@ static void *msftl_thread(void *arg)
                     // }
                 }
             }
-            // if (should_gc(ssd)) {
-            //     do_gc(ssd, false);
-            //     // if(r==-1){
-            //     //     continue;
-            //     // }
-            // }
         }
     }
     printf("msftl_thread end@@@@@@@@@\n");

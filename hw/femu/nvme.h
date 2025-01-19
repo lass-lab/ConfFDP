@@ -412,13 +412,19 @@ typedef struct NvmeCmd {
 #define NVME_CMD_FLAGS_FUSE(flags) (flags & 0x3)
 #define NVME_CMD_FLAGS_PSDT(flags) ((flags >> 6) & 0x3)
 
+typedef struct QEMU_PACKED PidAllocReturn{
+    int pid;
+    unsigned int rg_bitmap;
+}PidAllocReturn;
+
 enum NvmeIoms2Mo {
     NVME_IOMS_MO_NOP = 0x0,
     NVME_IOMS_MO_RUH_UPDATE = 0x1,
     NVME_IOMS_MO_SUNGJIN=0x2,
     NVME_F2DP_PID_ALLOC=0x3,
-    NVME_F2DP_PID_FREE=0x4,
-    NVME_F2DP_PID_RDONLY=0x5,
+    NVME_F2DP_PID_REALLOC=0x4,
+    NVME_F2DP_PID_FREE=0x5,
+    NVME_F2DP_PID_RDONLY=0x6,
 };
 
 //////////////////////////////

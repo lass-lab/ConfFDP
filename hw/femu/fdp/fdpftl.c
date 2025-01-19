@@ -661,7 +661,7 @@ void fdpssd_init(FemuCtrl *n)
     ftl_assert(ssd);
 
     ssd->rg_number=n->rg_number;
-    ssd->stream_number = n->handle_number;
+    ssd->stream_number = 0;
     ssd_init_params(spp, n);
 
     
