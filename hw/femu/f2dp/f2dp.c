@@ -55,7 +55,7 @@ static inline uint16_t nvme_pid2rg(NvmeNamespace *ns, uint16_t pid)
 
 
 #include "../nvme.h"
-#include "./fdpftl.h"
+#include "./f2dpftl.h"
 
 
 
