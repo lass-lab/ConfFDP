@@ -1694,6 +1694,7 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
                         ppa.g.ch=nch;
                         ppa.g.lun=nlun;
                         ppa.g.pl=0;
+                        ppa.g.blk=nblocks;
                         for(int pg = 0 ;pg<ssd->sp.pgs_per_blk;pg++){
                             // pg_iter=NULL;
                             ppa.g.pg=pg;
