@@ -4,6 +4,7 @@
 
 static void *msftl_thread(void *arg);
 static inline struct nand_block *get_blk(struct ssd *ssd, struct ppa *ppa);
+static struct ppa get_new_page(struct ssd *ssd,int stream_id);
 static inline bool should_gc(struct ssd *ssd,int lun_id)
 {
     return (ssd->lm[lun_id].free_line_cnt <= ssd->sp.gc_thres_lines);
@@ -206,7 +207,7 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
 
 
 
-    struct ssdparams *spp = &ssd->sp;
+    // struct ssdparams *spp = &ssd->sp;
     ssd->f2dp_pid_map[stream_id]=true;
     struct write_pointer *wpp = &(ssd->wp[stream_id]);
 
@@ -240,8 +241,8 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
                 wpp->curline[wpp->logical_lun]=QTAILQ_FIRST(&lm->free_line_list);
                 QTAILQ_REMOVE(&lm->free_line_list, wpp->curline[wpp->logical_lun], entry);
                 lm->free_line_cnt--;
-                wpp->curline[wpp->logical_lun].stream_id=stream_id;
-                wpp->physical_blk_map[wpp->logical_lun]=wpp->curline[wpp->logical_lun].id;
+                wpp->curline[wpp->logical_lun]->stream_id=stream_id;
+                wpp->physical_blk_map[wpp->logical_lun]=wpp->curline[wpp->logical_lun]->id;
                 wpp->physical_pg_map[wpp->logical_lun]=0;
                 
 
@@ -771,7 +772,7 @@ void f2dpssd_init(FemuCtrl *n)
     /* initialize ssd internal layout architecture */
     ssd->ch = g_malloc0(sizeof(struct ssd_channel) * spp->nchs);
 
-    ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->tt_luns);
+    ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->sp.tt_luns);
     ssd->wp=g_malloc(sizeof(struct write_pointer)*(F2DP_MAX_PID_NR+1));
     // for(i=0;i<ssd->stream_number;i++){
     //     ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
