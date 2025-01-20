@@ -484,7 +484,7 @@ static struct ppa get_new_page(struct ssd *ssd,int stream_id)
 
     ppa.g.lun = wpp->physical_lun_map[wpp->logical_lun]%ssd->sp.nchs;
     
-    ppa.g.pg = wpp->pg;
+    ppa.g.pg = wpp->physical_pg_map[wpp->logical_lun];
 
     // ppa.g.blk = wpp->blk;
     ppa.g.blk = wpp->physical_blk_map[wpp->logical_lun];
@@ -804,7 +804,8 @@ void f2dpssd_init(FemuCtrl *n)
     //     }
     // }
     ssd->f2dp_pid_map[F2DP_DEFAULT_STREAM]=true;
-    unsigned int rg_bitmap= 4294967296;
+    // 4,294,967,295
+    unsigned int rg_bitmap= 4294967295;
     f2dpssd_init_write_pointer(ssd,F2DP_DEFAULT_STREAM,(rg_bitmap));
     
 
@@ -1296,11 +1297,11 @@ static int do_gc(struct ssd *ssd, bool force,int lun_id)
     // int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
     // rg2physical(spp,lun_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
-    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
-               start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
-              victim_line->ipc, ssd->lm[lun_id].victim_line_cnt, ssd->lm[lun_id].full_line_cnt,
-              ssd->lm[lun_id].free_line_cnt,stream_id,lun_id,start_ch_id,end_ch_id,
-              start_lun_id,end_lun_id);
+    // printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
+    //            start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
+    //           victim_line->ipc, ssd->lm[lun_id].victim_line_cnt, ssd->lm[lun_id].full_line_cnt,
+    //           ssd->lm[lun_id].free_line_cnt,stream_id,lun_id,start_ch_id,end_ch_id,
+    //           start_lun_id,end_lun_id);
     /////////////////////////////////
     to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
 
