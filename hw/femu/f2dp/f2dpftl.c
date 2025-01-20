@@ -34,24 +34,24 @@ static inline int get_left_rg(struct ssd*ssd,int rg_id){
     return -1;
 }
 
-static int find_near_rg_id(struct ssd*ssd,int rg_id){
-    int right_rg=get_right_rg(ssd,rg_id+1);
-    int left_rg=get_left_rg(ssd,rg_id-1);
-    // if(right_rg==-1)
-    if(right_rg==-1&&left_rg==-1){
-        return rg_id;
-    }
-    if(right_rg!=-1&&left_rg!=-1){
-        return rg_id-left_rg > right_rg-rg_id ? right_rg :left_rg;
-    }
-    if(right_rg==-1&&left_rg!=-1){
-        return left_rg;
-    }
-    return right_rg;
-    // int ret=rg_id;
-    // bool flip=false;
+// static int find_near_rg_id(struct ssd*ssd,int rg_id){
+//     int right_rg=get_right_rg(ssd,rg_id+1);
+//     int left_rg=get_left_rg(ssd,rg_id-1);
+//     // if(right_rg==-1)
+//     if(right_rg==-1&&left_rg==-1){
+//         return rg_id;
+//     }
+//     if(right_rg!=-1&&left_rg!=-1){
+//         return rg_id-left_rg > right_rg-rg_id ? right_rg :left_rg;
+//     }
+//     if(right_rg==-1&&left_rg!=-1){
+//         return left_rg;
+//     }
+//     return right_rg;
+//     // int ret=rg_id;
+//     // bool flip=false;
 
-}
+// }
 
 
 static inline struct ppa get_maptbl_ent(struct ssd *ssd, uint64_t lpn)
@@ -1643,7 +1643,7 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
         return NVME_INVALID_FIELD | NVME_DNR;
     }
     struct ppa ppa;
-    struct nand_page *pg_iter = NULL;
+    // struct nand_page *pg_iter = NULL;
     ssd->f2dp_pid_map[pid]=false;
     print_sungjin(f2dp_pid_free);
     print_sungjin(pid);
@@ -1655,14 +1655,14 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
     */
     struct line_mgmt* lm;
     struct line * curline;
-    struct write_pointer* wpp= ssd->wp[pid];
+    struct write_pointer* wpp= &ssd->wp[pid];
     for(int i = 0; i<wpp->lun_nr;i++){
         int physical_lun = wpp->physical_lun_map[i]; 
         // int physical_blk = wpp->physical_blk_map[i];
         lm=&ssd->lm[physical_lun];
 
-        curline=&wpp->curline[i];
-        curline->ipc += spp->pgs_per_blk - 
+        curline=wpp->curline[i];
+        curline->ipc += ssd->sp.pgs_per_blk - 
                     (curline->vpc+curline->ipc);
         
         if(curline->vpc == spp->pgs_per_blk){
@@ -1708,7 +1708,7 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
     }
     g_free(wpp->curline);
 
-
+    return NVME_SUCCESS;
 }
 static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
 
@@ -1855,7 +1855,7 @@ static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
         return f2dp_pid_free(ssd,req,false);
     case NVME_F2DP_PID_RDONLY:
         // return f2dp_pid_rdonly(ssd,req);
-        return f2dp_pid_free(ssd,&req,true);
+        return f2dp_pid_free(ssd,req,true);
         // return NVME_SUCCESS;
     default:
         return NVME_INVALID_FIELD | NVME_DNR;
@@ -1987,7 +1987,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     if(ssd->f2dp_pid_map[pid]==false){
         pid=F2DP_DEFAULT_STREAM;
     }
-    wpp=ssd->wp[pid];
+    wpp=&ssd->wp[pid];
 
 
     
@@ -2009,7 +2009,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     }
 
     for(i=0;i<wpp->lun_nr;i++){
-        if(should_gc_high(ssd,wpp->logical_lun[i])){
+        if(should_gc_high(ssd,wpp->physical_lun_map[i])){
             r = do_gc(ssd, true,i);
             if (r == -1)
                 break;
