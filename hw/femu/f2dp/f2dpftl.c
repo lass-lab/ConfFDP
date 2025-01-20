@@ -1297,7 +1297,7 @@ static int do_gc(struct ssd *ssd, bool force,int lun_id)
     // int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
     // rg2physical(spp,lun_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
 
-    // printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
+    // printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d
     //            start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
     //           victim_line->ipc, ssd->lm[lun_id].victim_line_cnt, ssd->lm[lun_id].full_line_cnt,
     //           ssd->lm[lun_id].free_line_cnt,stream_id,lun_id,start_ch_id,end_ch_id,
@@ -1552,7 +1552,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
 static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // uint64_t slpn=0;
     // struct ppa ppa;
-    int i,j;
+    int i;
     struct ssdparams* spp= &ssd->sp;
     // struct line_mgmt *lm = &ssd->lm[];
     printf("msssd_io_mgmt_send_sungjin\n");
@@ -1681,7 +1681,7 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
     }
 
     for(int nch = 0 ; nch<ssd->sp.nchs;nch++){
-        struct ssd_channel * channel = &(ssd->ch[ppa->g.ch]);
+        struct ssd_channel * channel = &(ssd->ch[ppa.g.ch]);
         for(int nlun = 0 ; nlun< ssd->sp.luns_per_ch;nlun++){
             struct nand_lun* lun = channel->lun[nlun];
             for(int nblocks=0;nblocks<ssd->sp.blks_per_lun;nblocks++){
@@ -1804,9 +1804,9 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
                 new_physical_lun_map[new_lun_nr]=physical_lun;
                 lm=&ssd->lm[physical_lun];
                 new_curline[new_lun_nr]=QTAILQ_FIRST(&lm->free_line_list);
-                QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
+                QTAILQ_REMOVE(&lm->free_line_list, new_curline[new_lun_nr], entry);
                 lm->free_line_cnt--;
-                new_curline[new_lun_nr].stream_id=pid;
+                new_curline[new_lun_nr]->stream_id=pid;
                 new_physical_blk_map[new_lun_nr]=new_curline[new_lun_nr]->id;
                 new_physical_pg_map[new_lun_nr]=0;
 
