@@ -217,7 +217,7 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
     wpp->curline=g_malloc0(sizeof(struct line*)*wpp->lun_nr);
     wpp->logical_lun=0;
 //////////////////////////////////
-
+    wpp->rg_bitmap=rg_bitmap;
     for (int rg = 0; rg < 32; rg++) {
         if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
             // perform_action(i); // Perform the action for the set bit
@@ -336,7 +336,7 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id)
             &wpp->curline[wpp->logical_lun], entry);
             lm->full_line_cnt++;
         }else{
-            pqueue_insert(lm->victim_line_pq, &wpp->curline[wpp->logical_lun]);
+            pqueue_insert(lm->victim_line_pq, wpp->curline[wpp->logical_lun]);
                     lm->victim_line_cnt++;
         }
         wpp->curline[wpp->logical_lun] = NULL;
@@ -1630,18 +1630,21 @@ static uint64_t f2dp_pid_alloc(struct ssd* ssd, NvmeRequest* req){
     f2dpssd_init_write_pointer(ssd,pid,rg_bitmap);
     ret->pid =cpu_to_le32(pid);
     // dma_read_prp(pid);
-    dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);
-    
+    dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);  
 }
 
-static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req){
+static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
     int pid;
     // dma_write_prp(pid);
     pid=le32_to_cpu(req->cmd.cdw11);
     if(ssd->f2dp_pid_map[pid]==false){
         return NVME_INVALID_FIELD | NVME_DNR;
     }
-    ssd->f2dp_pid_map[pid]=true;
+    struct ppa ppa;
+    struct nand_page *pg_iter = NULL;
+    ssd->f2dp_pid_map[pid]=false;
+    print_sungjin(f2dp_pid_free);
+    print_sungjin(pid);
     /* 
     iterate whole blocks{
         set stream id default stream.
@@ -1665,7 +1668,7 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req){
             curline, entry);
             lm->full_line_cnt++;
         }else{
-            pqueue_insert(lm->victim_line_pq, &curline);
+            pqueue_insert(lm->victim_line_pq, curline);
             lm->victim_line_cnt++;
         }
         // QTAILQ_FOREACH(curline,(&lm->full_line_list),entry){
@@ -1683,7 +1686,21 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req){
                 struct nand_block* block = lun->pl[0].blk[nblocks];
                 if(block->pid==pid){
                     block->pid=F2DP_DEFAULT_STREAM;
+                    if(!rdonly){
+                        ppa.g.ch=nch;
+                        ppa.g.lun=nlun;
+                        ppa.g.pl=0;
+                        for(int pg = 0 ;pg<ssd->sp.pgs_per_blk;pg++){
+                            // pg_iter=NULL;
+                            ppa.g.pg=pg;
+                            get_pg(ssd,&ppa)->status=PG_INVALID;
+                            
+                        }
+                    }
+                
                 }
+
+
             }
         }
     }
@@ -1693,12 +1710,127 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req){
 }
 static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
 
+
+    int pid=le32_to_cpu(req->cmd.cdw11);
+    unsigned int new_rg_bitmap = le32_to_cpu(req->cmd.cdw12); // read rg_bitmap;
+    
+    print_sungjin(f2dp_pid_realloc);
+    print_sungjin(pid);
+    print_sungjin(rg_bitmap);
+
+    if(ssd->f2dp_pid_map[pid]==false){
+        printf("@@@ F2DP NOPID!!\n");
+        return NVME_INVALID_FIELD | NVME_DNR;
+    }
+
+    struct write_pointer* cur_wp = &(ssd->wp[pid]);
+    cur_wp->logical_lun=0;
+
+    unsigned int cur_rg_bitmap=cur_wp->rg_bitmap;
+
+
+
+
+    // f2dpssd_init_write_pointer(ssd,pid,rg_bitmap);
+
+    int new_lun_nr=0;
+    int new_physical_lun_map[64]; //spp->tt_luns == 64
+    int new_physical_blk_map[64];
+    int new_physical_pg_map[64];
+    for(int i = 0 ;i<64;i++){
+        new_physical_lun_map[i]=0;
+        new_physical_blk_map[i]=0;
+        new_physical_pg_map[i]=0;
+    }
+    
+    struct line** new_curline;
+
+    struct line_mgmt *lm;
+    
+
+    for (int rg = 0; rg < 32; rg++) {
+        if (new_rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
+            new_lun_nr++;
+        }
+    }
+    new_curline=g_malloc0(sizeof(struct line*)*
+                        (new_lun_nr*ssd->sp.luns_per_rg));
+    
+    new_lun_nr=0;
+
+    for (int rg = 0; rg < 32; rg++) {
+        bool new_rg = (new_rg_bitmap & (1U << rg));
+        bool cur_rg= (cur_rg_bitmap & (1U << rg));
+        // remain mapping
+        if(new_rg && cur_rg){
+            for(int l = 0; l<cur_wp->lun_nr;l++){
+                if((cur_wp->physical_lun_map[l]/ssd->sp.luns_per_rg )== rg ){
+                    new_physical_lun_map[new_lun_nr]=cur_wp->physical_lun_map[l];
+                    new_physical_blk_map[new_lun_nr]=cur_wp->physical_blk_map[l];
+                    new_physical_pg_map[new_lun_nr]=cur_wp->physical_pg_map[l];
+                    new_curline[new_lun_nr]=cur_wp->curline[l];
+                    new_lun_nr++;
+                }
+            }
+        // deallocate
+        }else if(new_rg==false && cur_rg==true){
+            for(int l = 0; l<cur_wp->lun_nr;l++){
+                if(cur_wp->physical_lun_map[l]/ssd->sp.luns_per_rg
+                    == rg ){
+                    int physical_lun=cur_wp->physical_lun_map[l];
+                    lm=&ssd->lm[physical_lun];
+                    
+                    // curline=&wpp->curline[i];
+                    cur_wp->curline[l]->ipc += spp->pgs_per_blk - 
+                                (cur_wp->curline[l]->vpc+cur_wp->curline[l]->ipc);
+                    if(cur_wp->curline[l]->vpc == spp->pgs_per_blk){
+                        QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
+                        cur_wp->curline[l], entry);
+                        lm->full_line_cnt++;
+                    }else{
+                        pqueue_insert(lm->victim_line_pq, cur_wp->curline[l]);
+                        lm->victim_line_cnt++;
+                    }
+                }
+            }
+
+        // newly allocate
+        }else if(new_rg==true && cur_rg==false){
+            for(int pl =0;pl<ssd->sp.luns_per_rg;pl++){
+                int physical_lun = pl+ rg*ssd->sp.luns_per_rg;
+
+                new_physical_lun_map[new_lun_nr]=physical_lun;
+                lm=&ssd->lm[physical_lun];
+                new_curline[new_lun_nr]=QTAILQ_FIRST(&lm->free_line_list);
+                QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
+                lm->free_line_cnt--;
+                new_curline[new_lun_nr].stream_id=pid;
+                new_physical_blk_map[new_lun_nr]=new_curline[new_lun_nr]->id;
+                new_physical_pg_map[new_lun_nr]=0;
+
+                struct ppa ppa;
+                ppa.g.ch=physical_lun/ssd->sp.luns_per_ch;
+                ppa.g.lun=physical_lun%ssd->sp.luns_per_ch;
+                ppa.g.pl=0;
+                ppa.g.blk=new_physical_blk_map[new_lun_nr];
+                get_blk(ssd,&ppa)->pid=pid;
+                new_lun_nr++;
+            }
+            
+        }
+    }
+
+
+    for(int i =0 ; i< new_lun_nr;i++){
+        cur_wp->physical_lun_map[i]=new_physical_lun_map[i];
+        cur_wp->physical_blk_map[i]=new_physical_blk_map[i];
+        cur_wp->physical_pg_map[i]=new_physical_pg_map[i];
+    }
+    g_free(cur_wp->curline);
+    cur_wp->curline=new_curline;
+    cur_wp->logical_lun=0;
 }
 
-
-static uint64_t f2dp_pid_rdonly(struct ssd* ssd, NvmeRequest* req){
-
-}
 
 static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
     NvmeCmd *cmd = &req->cmd;
@@ -1718,9 +1850,10 @@ static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
     case NVME_F2DP_PID_REALLOC:
         return f2dp_pid_realloc(ssd,req);
     case NVME_F2DP_PID_FREE:
-        return f2dp_pid_free(ssd,req);
+        return f2dp_pid_free(ssd,req,false);
     case NVME_F2DP_PID_RDONLY:
-        return f2dp_pid_rdonly(ssd,req);
+        // return f2dp_pid_rdonly(ssd,req);
+        return f2dp_pid_free(ssd,&req,true);
         // return NVME_SUCCESS;
     default:
         return NVME_INVALID_FIELD | NVME_DNR;

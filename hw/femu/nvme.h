@@ -415,6 +415,7 @@ typedef struct NvmeCmd {
 typedef struct QEMU_PACKED PidAllocReturn{
     int pid;
     unsigned int rg_bitmap;
+    uint8_t rsvd0[8];
 }PidAllocReturn;
 
 enum NvmeIoms2Mo {

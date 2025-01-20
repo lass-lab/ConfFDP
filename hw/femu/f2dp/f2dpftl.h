@@ -206,6 +206,7 @@ struct write_pointer {
     int physical_lun_map[64]; //spp->tt_luns == 64
     int physical_blk_map[64];
     int physical_pg_map[64];
+    unsigned int rg_bitmap;
 };
 
 struct sungjin_stat{
