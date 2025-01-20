@@ -78,7 +78,7 @@ static void fdp_init(FemuCtrl *n, Error **errp)
     ssd->dataplane_started_ptr = &n->dataplane_started;
     ssd->ssdname = (char *)n->devname;
     femu_debug("Starting FEMU in Blackbox-SSD mode ...\n");
-    fdpssd_init(n);
+    f2dpssd_init(n);
 }
 
 static void bb_flip(FemuCtrl *n, NvmeCmd *cmd)
