@@ -1682,7 +1682,8 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
     }
 
     for(int nch = 0 ; nch<ssd->sp.nchs;nch++){
-        struct ssd_channel * channel = &(ssd->ch[ppa.g.ch]);
+        // ppa.g.ch=nch;
+        struct ssd_channel * channel = &(ssd->ch[nch]);
         for(int nlun = 0 ; nlun< ssd->sp.luns_per_ch;nlun++){
             struct nand_lun* lun = &(channel->lun[nlun]);
             for(int nblocks=0;nblocks<ssd->sp.blks_per_lun;nblocks++){
