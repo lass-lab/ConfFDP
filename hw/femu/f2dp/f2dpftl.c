@@ -3,7 +3,7 @@
 //#define FEMU_DEBUG_FTL
 
 static void *msftl_thread(void *arg);
-
+static inline struct nand_block *get_blk(struct ssd *ssd, struct ppa *ppa);
 static inline bool should_gc(struct ssd *ssd,int lun_id)
 {
     return (ssd->lm[lun_id].free_line_cnt <= ssd->sp.gc_thres_lines);
@@ -238,7 +238,7 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
                 lm=&ssd->lm[physical_lun];
                 
                 wpp->curline[wpp->logical_lun]=QTAILQ_FIRST(&lm->free_line_list);
-                QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
+                QTAILQ_REMOVE(&lm->free_line_list, wpp->curline[wpp->logical_lun], entry);
                 lm->free_line_cnt--;
                 wpp->curline[wpp->logical_lun].stream_id=stream_id;
                 wpp->physical_blk_map[wpp->logical_lun]=wpp->curline[wpp->logical_lun].id;
@@ -803,8 +803,8 @@ void f2dpssd_init(FemuCtrl *n)
     //     }
     // }
     ssd->f2dp_pid_map[F2DP_DEFAULT_STREAM]=true;
-
-    f2dpssd_init_write_pointer(ssd,F2DP_DEFAULT_STREAM,4294967296);
+    unsigned int rg_bitmap= 4294967296;
+    f2dpssd_init_write_pointer(ssd,F2DP_DEFAULT_STREAM,(rg_bitmap));
     
 
     qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", msftl_thread, n,
@@ -1742,7 +1742,7 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
         new_physical_blk_map[i]=0;
         new_physical_pg_map[i]=0;
     }
-    
+
     struct line** new_curline;
 
     struct line_mgmt *lm;
