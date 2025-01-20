@@ -753,7 +753,7 @@ void f2dpssd_init(FemuCtrl *n)
 {
     struct ssd *ssd = n->ssd;
     struct ssdparams *spp = &ssd->sp;
-    int i,j;
+    int i;
 
     ftl_assert(ssd);
 
@@ -1683,9 +1683,9 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
     for(int nch = 0 ; nch<ssd->sp.nchs;nch++){
         struct ssd_channel * channel = &(ssd->ch[ppa.g.ch]);
         for(int nlun = 0 ; nlun< ssd->sp.luns_per_ch;nlun++){
-            struct nand_lun* lun = channel->lun[nlun];
+            struct nand_lun* lun = &(channel->lun[nlun]);
             for(int nblocks=0;nblocks<ssd->sp.blks_per_lun;nblocks++){
-                struct nand_block* block = lun->pl[0].blk[nblocks];
+                struct nand_block* block = &(lun->pl[0].blk[nblocks]);
                 if(block->pid==pid){
                     block->pid=F2DP_DEFAULT_STREAM;
                     if(!rdonly){
@@ -1783,7 +1783,7 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
                     lm=&ssd->lm[physical_lun];
                     
                     // curline=&wpp->curline[i];
-                    cur_wp->curline[l]->ipc += spp->pgs_per_blk - 
+                    cur_wp->curline[l]->ipc += ssd->sp.pgs_per_blk - 
                                 (cur_wp->curline[l]->vpc+cur_wp->curline[l]->ipc);
                     if(cur_wp->curline[l]->vpc == spp->pgs_per_blk){
                         QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
@@ -1831,6 +1831,7 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
     g_free(cur_wp->curline);
     cur_wp->curline=new_curline;
     cur_wp->logical_lun=0;
+    return NVME_SUCCESS;
 }
 
 
