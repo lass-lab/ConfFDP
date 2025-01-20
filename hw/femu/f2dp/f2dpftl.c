@@ -1633,6 +1633,7 @@ static uint64_t f2dp_pid_alloc(struct ssd* ssd, NvmeRequest* req){
     ret->pid =cpu_to_le32(pid);
     // dma_read_prp(pid);
     dma_read_prp((FemuCtrl*)ssd->femuctrl, (uint8_t *)buf, trans_len, prp1, prp2);  
+    return NVME_SUCCESS;
 }
 
 static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
@@ -1785,7 +1786,7 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
                     // curline=&wpp->curline[i];
                     cur_wp->curline[l]->ipc += ssd->sp.pgs_per_blk - 
                                 (cur_wp->curline[l]->vpc+cur_wp->curline[l]->ipc);
-                    if(cur_wp->curline[l]->vpc == spp->pgs_per_blk){
+                    if(cur_wp->curline[l]->vpc == ssd->sp.pgs_per_blk){
                         QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
                         cur_wp->curline[l], entry);
                         lm->full_line_cnt++;
