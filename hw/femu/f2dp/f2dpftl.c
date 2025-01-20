@@ -334,7 +334,7 @@ static void ssd_advance_write_pointer(struct ssd *ssd,int stream_id)
         lm = &ssd->lm[physical_lun];
         if(wpp->curline[wpp->logical_lun]->vpc == spp->pgs_per_blk){
             QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
-            &wpp->curline[wpp->logical_lun], entry);
+            wpp->curline[wpp->logical_lun], entry);
             lm->full_line_cnt++;
         }else{
             pqueue_insert(lm->victim_line_pq, wpp->curline[wpp->logical_lun]);
@@ -1262,7 +1262,7 @@ static int do_gc(struct ssd *ssd, bool force,int lun_id)
     // struct nand_lun *lunp;
     bool to_other_rg=false;
     struct ppa ppa;
-    int ch, lun,cnt=0;
+    int cnt=0;
     int stream_id;
     uint16_t pg;
     victim_line = select_victim_line(ssd, force,lun_id);
@@ -1582,19 +1582,19 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
         printf("------------------------------------\n");
     }
 
-    for(i=0;i<ssd->rg_number;i++){
-        int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
-        rg2physical(spp,i,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
-        printf("RG %d channel %d-%d / lun %d-%d\n",i,start_ch_id,end_ch_id,start_lun_id,end_lun_id);
-    }
+    // for(i=0;i<ssd->rg_number;i++){
+    //     int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
+    //     rg2physical(spp,i,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
+    //     printf("RG %d channel %d-%d / lun %d-%d\n",i,start_ch_id,end_ch_id,start_lun_id,end_lun_id);
+    // }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
 
-    for(i=0;i<ssd->stream_number;i++){
-        for(j=0;j<ssd->rg_number;j++){
-            fdpssd_init_write_pointer(ssd,i,j);
-        }
-    }
+    // for(i=0;i<ssd->stream_number;i++){
+    //     for(j=0;j<ssd->rg_number;j++){
+    //         fdpssd_init_write_pointer(ssd,i,j);
+    //     }
+    // }
     
 
     return 0;
@@ -1665,7 +1665,7 @@ static uint64_t f2dp_pid_free(struct ssd* ssd, NvmeRequest* req, bool rdonly){
         curline->ipc += ssd->sp.pgs_per_blk - 
                     (curline->vpc+curline->ipc);
         
-        if(curline->vpc == spp->pgs_per_blk){
+        if(curline->vpc == ssd->sp.pgs_per_blk){
             QTAILQ_INSERT_TAIL(&(lm->full_line_list), 
             curline, entry);
             lm->full_line_cnt++;
@@ -1718,7 +1718,7 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
     
     print_sungjin(f2dp_pid_realloc);
     print_sungjin(pid);
-    print_sungjin(rg_bitmap);
+    print_sungjin(new_rg_bitmap);
 
     if(ssd->f2dp_pid_map[pid]==false){
         printf("@@@ F2DP NOPID!!\n");
