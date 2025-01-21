@@ -1,3 +1,4 @@
+
 #include <libxnvme.h>
 #include <queue>
 #include <stdio.h>
@@ -26,24 +27,12 @@ struct nvme_fdp_ruh_status_desc {
   uint16_t ruhid;
   uint32_t earutr;
   uint64_t ruamw;
-  uint8_t rg_mapped_bitmap[16];
+  uint8_t rsvd16[16];
 };
 struct nvme_fdp_ruh_status {
-  //  union{ 
-  //   struct{
-  //       uint8_t free_space_ratio;
-  //       uint32_t copied_page;
-  //       uint32_t block_erased;
-  //       uint8_t rsvd0_tmp[5];
-  //   };
-  //   uint8_t  rsvd0[14];
-  //  };
-  // uint16_t nruhsd;
-  uint8_t rsvd0[10];
-  uint16_t reclaim_group_nr;
-  uint16_t max_placement_id_nr;
+  uint8_t rsvd0[14];
   uint16_t nruhsd;
-  struct nvme_fdp_ruh_status_desc ruhss[256];
+  struct nvme_fdp_ruh_status_desc ruhss[16];
 };
 
 
@@ -87,8 +76,8 @@ int main(int argc,char**argv){
     struct xnvme_cmd_ctx* xnvme_ctx;
     struct xnvme_queue* xqueue;
 
-    opts.async="thrpool";
-    opts.direct=0;
+    opts.async="io_uring";
+    opts.direct=1;
     int err;
     
     dev_ = xnvme_dev_open(DEVICE, &opts);
@@ -103,7 +92,7 @@ int main(int argc,char**argv){
     for(int i=0;i<MAX_NR_QUEUE;i++){
         queues_[i] = nullptr;
         err=xnvme_queue_init(dev_,qdepth,0,&queues_[i]);
-        //  print_sungjin(xnvme_queue_init);
+         print_sungjin(xnvme_queue_init);
         if(err){
             printf("Error 2 :%d\n",i);
             return 0;
@@ -136,15 +125,8 @@ int main(int argc,char**argv){
     // xnvme_ctx->cmd.nvm.cdw13.dspec = 1;
     struct nvme_fdp_ruh_status ruh_status;
     uint16_t mos = 1;
-// int
-// xnvme_nvm_mgmt_recv(struct xnvme_cmd_ctx *ctx, uint32_t nsid, uint8_t mo, uint16_t mos, void *dbuf,
-// 		    uint32_t dbuf_nbytes);
-
-    err=xnvme_nvm_mgmt_recv(xnvme_ctx,nsid,NVME_IOMR_MO_RUH_STATUS,mos,&ruh_status,sizeof(nvme_fdp_ruh_status));
-      if (err) {
-      printf("Failed to perform xnvme_nvm_mgmt_recv\n");
-      return err;
-    }
+    // err = xnvme_cmd_pass(xnvme_ctx, buf, BUF_SIZE, nullptr, 0);
+    xnvme_nvm_mgmt_recv(xnvme_ctx,1,NVME_IOMR_MO_RUH_STATUS,mos,&ruh_status,sizeof(nvme_fdp_ruh_status));
     if (err) {
       printf("Failed to perform xNVMe IO command\n");
       return err;
@@ -156,26 +138,13 @@ int main(int argc,char**argv){
 
 
 /////////////////
-    // printf("ruh_status.nruhsd %d /// fr ratio %u copied page %u block erase %u\n",
-    // ruh_status.nruhsd,ruh_status.free_space_ratio
-    // ,ruh_status.copied_page,ruh_status.block_erased)
-  
-    // printf("")
-    print_sungjin(ruh_status.nruhsd);
-    print_sungjin(ruh_status.max_placement_id_nr);
-
-    print_sungjin(ruh_status.reclaim_group_nr);
+    printf("ruh_status.nruhsd %d\n",ruh_status.nruhsd);
     for(int i=0;i<ruh_status.nruhsd;i++){
         /*
           uint16_t pid;
         uint16_t ruhid;
         uint32_t earutr;
         uint64_t ruamw;
-        0 0 0 0
-        1 1 0 0
-        2 2 0 0
-        3 3 0 0
-
         */
         printf("%d %d %d %ld\n",
         ruh_status.ruhss[i].pid,

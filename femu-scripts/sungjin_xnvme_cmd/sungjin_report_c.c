@@ -1,9 +1,9 @@
 #include <libxnvme.h>
-#include <queue>
+// #include <queue>
 #include <stdio.h>
 #define DEVICE "/dev/nvme0n1"
 #define BUF_SIZE (1<<20)
-#define MAX_NR_QUEUE 128
+#define MAX_NR_QUEUE 1
 
 #define print_sungjin(member) printf("%s %lu\n",(#member),(uint64_t)(member));
 /*
@@ -77,13 +77,13 @@ int main(int argc,char**argv){
     uint64_t nlb;
     uint64_t nsid;
     struct xnvme_opts opts = xnvme_opts_default();
-    struct xnvme_dev* dev_ = nullptr;
-    const struct xnvme_geo* geo_ = nullptr;
+    struct xnvme_dev* dev_ = NULL;
+    const struct xnvme_geo* geo_ = NULL;
 
     struct xnvme_queue* queues_[MAX_NR_QUEUE];
     const unsigned int qdepth = MAX_NR_QUEUE;
-    std::queue<struct xnvme_queue*> xnvme_queues_;
-    
+    // std::queue<struct xnvme_queue*> xnvme_queues_;
+    struct xnvme_queue* xnvme_queues_;
     struct xnvme_cmd_ctx* xnvme_ctx;
     struct xnvme_queue* xqueue;
 
@@ -101,14 +101,15 @@ int main(int argc,char**argv){
     print_sungjin(xnvme_dev_get_geo);
 
     for(int i=0;i<MAX_NR_QUEUE;i++){
-        queues_[i] = nullptr;
+        queues_[i] = NULL;
         err=xnvme_queue_init(dev_,qdepth,0,&queues_[i]);
         //  print_sungjin(xnvme_queue_init);
         if(err){
             printf("Error 2 :%d\n",i);
             return 0;
         }
-        xnvme_queues_.push(queues_[i]);
+        // xnvme_queues_.push(queues_[i]);
+        xnvme_queues_=queues_[i];
     }
 
     void* buf = xnvme_buf_alloc(dev_, BUF_SIZE);
@@ -117,12 +118,12 @@ int main(int argc,char**argv){
         return 0;
     }
     print_sungjin(xnvme_buf_alloc);
-    xqueue=xnvme_queues_.front();
-    xnvme_queues_.pop();
+    xqueue=xnvme_queues_;
+    // xnvme_queues_.pop();
     xnvme_ctx = xnvme_queue_get_cmd_ctx(xqueue);
      print_sungjin(xnvme_queue_get_cmd_ctx);
     xnvme_ctx->async.cb = async_cb;
-    xnvme_ctx->async.cb_arg = reinterpret_cast<void*>(xqueue);
+    xnvme_ctx->async.cb_arg = xqueue;
     xnvme_ctx->dev = dev_;
 
     nlb=(BUF_SIZE>>geo_->ssw)-1;
@@ -140,7 +141,7 @@ int main(int argc,char**argv){
 // xnvme_nvm_mgmt_recv(struct xnvme_cmd_ctx *ctx, uint32_t nsid, uint8_t mo, uint16_t mos, void *dbuf,
 // 		    uint32_t dbuf_nbytes);
 
-    err=xnvme_nvm_mgmt_recv(xnvme_ctx,nsid,NVME_IOMR_MO_RUH_STATUS,mos,&ruh_status,sizeof(nvme_fdp_ruh_status));
+    err=xnvme_nvm_mgmt_recv(xnvme_ctx,nsid,NVME_IOMR_MO_RUH_STATUS,mos,&ruh_status,sizeof(struct nvme_fdp_ruh_status));
       if (err) {
       printf("Failed to perform xnvme_nvm_mgmt_recv\n");
       return err;

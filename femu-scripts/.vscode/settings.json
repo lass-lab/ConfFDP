@@ -2,6 +2,12 @@
     "files.associations": {
         "filesystem": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "array": "c",
+        "deque": "c",
+        "vector": "c",
+        "string_view": "c",
+        "__split_buffer": "c",
+        "string": "c"
     }
 }

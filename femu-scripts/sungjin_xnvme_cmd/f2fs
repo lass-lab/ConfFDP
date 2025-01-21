@@ -1,0 +1,3 @@
+sudo /home/femu/f2fs-tools-fdp/mkfs/mkfs.f2fs -O lost_found /dev/nvme0n1
+
+su
