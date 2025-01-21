@@ -224,6 +224,7 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
         if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
             // perform_action(i); // Perform the action for the set bit
             wpp->lun_nr++;
+            print_sungjin(wpp->lun_nr);
         }
     }
     wpp->curline=g_malloc0(sizeof(struct line*)*
@@ -232,6 +233,7 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
     for (int rg = 0; rg < 32; rg++) {
         if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
             // perform_action(i); // Perform the action for the set bit
+            print_sungjin(rg);
             for(int pl =0;pl<ssd->sp.luns_per_rg;pl++){
                 int physical_lun = pl+ rg*ssd->sp.luns_per_rg;
 
