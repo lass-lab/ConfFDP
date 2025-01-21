@@ -215,10 +215,11 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
     struct line_mgmt *lm;
     // struct line *curline = NULL;
     // wpp->lun_nr=;
-    wpp->curline=g_malloc0(sizeof(struct line*)*wpp->lun_nr);
+    // wpp->curline=g_malloc0(sizeof(struct line*)*wpp->lun_nr);
     wpp->logical_lun=0;
 //////////////////////////////////
     wpp->rg_bitmap=rg_bitmap;
+    print_sungjin(rg_bitmap);
     for (int rg = 0; rg < 32; rg++) {
         if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
             // perform_action(i); // Perform the action for the set bit
