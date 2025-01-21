@@ -227,10 +227,12 @@ static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned in
             print_sungjin(wpp->lun_nr);
         }
     }
+    wpp->lun_nr= wpp->lun_nr * ssd->sp.luns_per_rg;
+
     wpp->curline=g_malloc0(sizeof(struct line*)*
                         (wpp->lun_nr*ssd->sp.luns_per_rg));
     wpp->pl = 0;
-    for (int rg = 0; rg < 32; rg++) {
+    for (int rg = 0; rg < ssd->rg_number; rg++) {
         if (rg_bitmap & (1U << rg)) { // Check if the i-th bit is set
             // perform_action(i); // Perform the action for the set bit
             // print_sungjin(rg);
@@ -763,6 +765,7 @@ void f2dpssd_init(FemuCtrl *n)
     ftl_assert(ssd);
 
     // ssd->rg_number=n->rg_number;
+    n->rg_number=F2DP_RG_NUMBER;
     ssd->rg_number=F2DP_RG_NUMBER;
     ssd->stream_number = 0;
     ssd_init_params(spp, n);
