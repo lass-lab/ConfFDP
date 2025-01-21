@@ -1967,7 +1967,7 @@ static uint64_t f2dpssd_write(struct ssd *ssd, NvmeRequest *req)
     // uint64_t start_lpn = lba / spp->secs_per_pg;
     // uint64_t end_lpn = (lba + len - 1) / spp->secs_per_pg;
     // uint64_t start_lpn = lba + req->ns->start_block;
-    print_sungjin(f2dpssd_write);
+    // print_sungjin(f2dpssd_write);
     uint64_t start_lpn = lba;
     uint64_t end_lpn = (start_lpn + len );
 
