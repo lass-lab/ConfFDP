@@ -39,6 +39,20 @@ NAND_BLOCK_SIZE_MB=64
 rg_number=2 # 1~64
 handle_number=2 # should be power of 2, smaller than luns_per_ch*nchs
 
+# sudo gdb /home/sungjin/ConfFDP/build-femu/qemu-system-x86_64
+#  run   -name "FEMU-MSSSD-VM" \
+#     -enable-kvm \
+#     -cpu host \
+#     -smp 64 \
+#     -m 32G \
+#     -device virtio-scsi-pci,id=scsi0 \
+#     -device scsi-hd,drive=hd0 \
+#     -drive file=/home/sungjin/images/fdp.qcow2,if=none,aio=io_uring,cache=none,format=qcow2,id=hd0 \
+#    -device femu,devsz_mb=65536,namespaces=1,femu_mode=8,secsz=4096,nand_page_size_kb=4,nand_block_size_mb=64,pls_per_lun=1,luns_per_ch=8,nchs=8,pg_rd_lat=40000,pg_wr_lat=200000,blk_er_lat=2000000,ch_xfer_lat=25000,gc_thres_pcent=75,gc_thres_pcent_high=95,handle_number=2,rg_number=2,multipoller_enabled=1 \
+#     -net user,hostfwd=tcp::8095-:22 \
+#     -net nic,model=virtio \
+#     -nographic \
+#     -qmp unix:./qmp-sock,server,nowait 2>&1 | tee log
 
 # if [ $NAND_BLOCK_SIZE -eq 64 ]; then
 #     pgs_per_blk=4096 # number of pages per flash block
@@ -102,7 +116,7 @@ sudo $QEMU \
     -device scsi-hd,drive=hd0 \
     -drive file=$OSIMGF,if=none,aio=io_uring,cache=none,format=qcow2,id=hd0 \
     ${FEMU_OPTIONS} \
-    -net user,hostfwd=tcp::8095-:23 \
+    -net user,hostfwd=tcp::8085-:23 \
     -net nic,model=virtio \
     -nographic \
     -qmp unix:./qmp-sock,server,nowait 2>&1 | tee log
