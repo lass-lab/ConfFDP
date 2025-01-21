@@ -1267,6 +1267,7 @@ static void mark_line_free(struct ssd *ssd, struct ppa *ppa,int lun_id)
 
 static int do_gc(struct ssd *ssd, bool force,int lun_id)
 {
+    print_sungjin(do_gc);
     struct line *victim_line = NULL;
     struct ssdparams *spp = &ssd->sp;
     // struct nand_lun *lunp;
@@ -2151,6 +2152,8 @@ static void *msftl_thread(void *arg)
 
             for(i=0;i<ssd->sp.tt_luns;i++){
                 if (should_gc(ssd,i)) {
+                    print_sungjin(ssd->lm[i].free_line_cnt);
+                    print_sungjin(ssd->sp.gc_thres_lines);
                     do_gc(ssd, false,i);
                     // if(r==-1){
                     //     continue;
