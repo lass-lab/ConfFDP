@@ -1959,7 +1959,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     return 0;
 }
 
-static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
+static uint64_t f2dpssd_write(struct ssd *ssd, NvmeRequest *req)
 {
     uint64_t lba = req->slba;
     struct ssdparams *spp = &ssd->sp;
@@ -1967,7 +1967,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // uint64_t start_lpn = lba / spp->secs_per_pg;
     // uint64_t end_lpn = (lba + len - 1) / spp->secs_per_pg;
     // uint64_t start_lpn = lba + req->ns->start_block;
-
+    print_sungjin(f2dpssd_write);
     uint64_t start_lpn = lba;
     uint64_t end_lpn = (start_lpn + len );
 
@@ -2013,7 +2013,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 
     
     int r;
-    // print_sungjin(fdpssd_write);
+    // print_sungjin(f2dpssd_write);
     // print_sungjin(req->ns->start_block);
     // print_sungjin(req->slba);
     // print_sungjin(lba);
@@ -2031,6 +2031,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 
     for(i=0;i<wpp->lun_nr;i++){
         if(should_gc_high(ssd,wpp->physical_lun_map[i])){
+            print_sungjin(should_gc_high);
             r = do_gc(ssd, true,i);
             if (r == -1)
                 break;
@@ -2125,7 +2126,7 @@ static void *f2dpftl_thread(void *arg)
             ftl_assert(req);
             switch (req->cmd.opcode) {
             case NVME_CMD_WRITE:
-                lat = fdpssd_write(ssd, req);
+                lat = f2dpssd_write(ssd, req);
                 break;
             case NVME_CMD_READ:
                 lat = ssd_read(ssd, req);
