@@ -2154,7 +2154,7 @@ static void *msftl_thread(void *arg)
                 if (should_gc(ssd,i)) {
                     print_sungjin(ssd->lm[i].free_line_cnt);
                     print_sungjin(ssd->sp.gc_thres_lines);
-                    do_gc(ssd, false,i);
+                    // do_gc(ssd, false,i);
                     // if(r==-1){
                     //     continue;
                     // }
