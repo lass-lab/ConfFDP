@@ -238,7 +238,7 @@ static uint16_t f2dp_confs(FemuCtrl* n, NvmeCmd* cmd)
         nruh = 1;
     }
     // FDPVSS =0;
-    fdp_descr_size = sizeof_fdp_conf_descr(nruh, 0);
+    fdp_descr_size = sizeof_f2dp_conf_descr(nruh, 0);
     log_size = sizeof(NvmeFdpConfsHdr) + fdp_descr_size;
 
     if (off >= log_size) {
