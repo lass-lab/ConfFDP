@@ -1483,11 +1483,11 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 
 
 // static uint64_t msssd_io_mgmt_send()
-static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
+static uint64_t f2dpssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     // unsigned int nruhsd= ssd->stream_number;
     uint8_t ph,rg;
     unsigned int nruhsd= ssd->stream_number;
-    print_sungjin(msssd_io_mgmt_recv_ruhs);
+    print_sungjin(f2dpssd_io_mgmt_recv_ruhs);
     print_sungjin(len);
     NvmeF2DPRuhStatus *hdr;
     NvmeF2DPRuhStatusDescr *ruhsd;
@@ -1566,13 +1566,13 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     return 0;
 }
 
-static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
+static uint64_t f2dpssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // uint64_t slpn=0;
     // struct ppa ppa;
     int i;
     struct ssdparams* spp= &ssd->sp;
     // struct line_mgmt *lm = &ssd->lm[];
-    printf("msssd_io_mgmt_send_sungjin\n");
+    printf("f2dpssd_io_mgmt_send_sungjin\n");
     print_sungjin(spp->blks_per_line);
     print_sungjin(spp->pgs_per_line);
 
@@ -1867,7 +1867,7 @@ static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
         // return nvme_io_mgmt_send_ruh_update(n, req);
         return NVME_SUCCESS;
     case NVME_IOMS_MO_SUNGJIN:
-        return msssd_io_mgmt_send_sungjin(ssd,req);
+        return f2dpssd_io_mgmt_send_sungjin(ssd,req);
     case NVME_F2DP_PID_ALLOC:
         return f2dp_pid_alloc(ssd,req);
     case NVME_F2DP_PID_REALLOC:
@@ -1883,18 +1883,18 @@ static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
     };
 }
 
-static uint64_t msssd_io_mgmt_recv(struct ssd* ssd, NvmeRequest* req){
+static uint64_t f2dpssd_io_mgmt_recv(struct ssd* ssd, NvmeRequest* req){
     NvmeCmd *cmd = &req->cmd;
     uint32_t cdw10 = le32_to_cpu(cmd->cdw10);
     uint32_t numd = le32_to_cpu(cmd->cdw11);
     uint8_t mo = (cdw10 & 0xff);
     size_t len = (numd + 1) << 2;
-    print_sungjin(msssd_io_mgmt_recv);
+    print_sungjin(f2dpssd_io_mgmt_recv);
     switch (mo) {
     case NVME_IOMR_MO_NOP:
         return 0;
     case NVME_IOMR_MO_RUH_STATUS:
-        return msssd_io_mgmt_recv_ruhs(ssd, req, len);
+        return f2dpssd_io_mgmt_recv_ruhs(ssd, req, len);
     default:
         return NVME_INVALID_FIELD | NVME_DNR;
     };
@@ -2134,7 +2134,7 @@ static void *f2dpftl_thread(void *arg)
                 lat = msssd_trim(ssd,req);
                 break;
             case NVME_CMD_IO_MGMT_RECV:
-                lat = msssd_io_mgmt_recv(ssd,req);
+                lat = f2dpssd_io_mgmt_recv(ssd,req);
                 break;
             case NVME_CMD_IO_MGMT_SEND:
 
