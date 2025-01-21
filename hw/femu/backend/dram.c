@@ -59,7 +59,8 @@ int backend_rw(SsdDramBackend *b, QEMUSGList *qsg, uint64_t *lbal, bool is_write
                    b->femu_mode == FEMU_NOSSD_MODE ||
                    b->femu_mode == FEMU_ZNSSD_MODE ||
                    b->femu_mode == FEMU_MSSSD_MODE ||
-                    b->femu_mode == FEMU_FDP_MODE) {
+                    b->femu_mode == FEMU_FDP_MODE||
+                    b->femu_mode == FEMU_F2DP_MODE) {
             mb_oft += cur_len;
         } else {
             assert(0);
