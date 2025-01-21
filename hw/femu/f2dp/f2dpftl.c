@@ -1482,7 +1482,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 // }
 
 
-// static uint64_t msssd_io_mgmt_send()
+// static uint64_t f2dpssd_io_mgmt_send()
 static uint64_t f2dpssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     // unsigned int nruhsd= ssd->stream_number;
     uint8_t ph,rg;
@@ -1583,20 +1583,20 @@ static uint64_t f2dpssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     ssd->sungjin_stat.copied=0;
 
     for (i = 0; i < spp->nchs; i++) {
-        ssd_init_ch(&ssd->ch[i], spp,false);
+        // ssd_init_ch(&ssd->ch[i], spp,false);
     }
 
     /* initialize maptbl */
-    ssd_init_maptbl(ssd,false);
+    // ssd_init_maptbl(ssd,false);
 
     /* initialize rmap */
-    ssd_init_rmap(ssd,false);
+    // ssd_init_rmap(ssd,false);
 
     /* initialize all the lines */
     for(i=0;i<ssd->sp.tt_luns;i++){
         printf("\nRG %u-----------------------------\n",i);
-        fdpssd_init_lines(ssd,false,i);
-        printf("------------------------------------\n");
+        // fdpssd_init_lines(ssd,false,i);
+        // printf("------------------------------------\n");
     }
 
     // for(i=0;i<ssd->rg_number;i++){
@@ -1855,7 +1855,7 @@ static uint64_t f2dp_pid_realloc(struct ssd* ssd, NvmeRequest* req){
 }
 
 
-static uint64_t msssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
+static uint64_t f2dpssd_io_mgmt_send(struct ssd* ssd, NvmeRequest*req){
     NvmeCmd *cmd = &req->cmd;
     uint32_t cdw10 = le32_to_cpu(cmd->cdw10);
     uint8_t mo = (cdw10 & 0xff);
@@ -2140,7 +2140,7 @@ static void *f2dpftl_thread(void *arg)
             case NVME_CMD_IO_MGMT_SEND:
 
                 // if fdp ssd, handle update
-                lat =msssd_io_mgmt_send(ssd,req);
+                lat =f2dpssd_io_mgmt_send(ssd,req);
                 break;
             default:
                 //ftl_err("FTL received unkown request type, ERROR\n");
