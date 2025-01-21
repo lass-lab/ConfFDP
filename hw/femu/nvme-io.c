@@ -137,7 +137,7 @@ static void nvme_process_cq_cpl(void *arg, int index_poller)
     int rc;
     int i;
 
-    if (BBSSD(n) || ZNSSD(n) || MSSSD(n) || FDPSSD(n) ) {
+    if ( F2DPSSD(n) || FDPSSD(n) || BBSSD(n) || ZNSSD(n) || MSSSD(n)) {
         rp = n->to_poller[index_poller];
     }
 
@@ -202,6 +202,7 @@ void *nvme_poller(void *arg)
     int i;
     // print_sungjin(nvme_poller);
     printf("nvme_poller start@@@@@@@@@@@@\n");
+    print_sungjin(n->multipoller_enabled);
     switch (n->multipoller_enabled) {
     case 1:
         while (1) {

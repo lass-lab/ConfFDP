@@ -131,7 +131,10 @@ static void bb_flip(FemuCtrl *n, NvmeCmd *cmd)
 static uint16_t f2dp_nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                            NvmeRequest *req)
 {
-    return nvme_rw(n, ns, cmd, req);
+    print_sungjin(f2dp_nvme_rw);
+    int ret= nvme_rw(n, ns, cmd, req);
+    print_sungjin(ret);
+    return ret;
 }
 
 static uint16_t f2dp_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
