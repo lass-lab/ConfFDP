@@ -201,7 +201,7 @@ static inline void rg2physical(struct ssdparams *spp ,
 
 static bool f2dpssd_init_write_pointer(struct ssd *ssd,int stream_id,unsigned int rg_bitmap)
 {
-    
+    print_sungjin(f2dpssd_init_write_pointer);
     
     ssd->stream_number++;
 
@@ -497,6 +497,7 @@ static struct ppa get_new_page(struct ssd *ssd,int stream_id)
 
 static void check_params(struct ssdparams *spp)
 {
+    print_sungjin(check_params);
     /*
      * we are using a general write pointer increment method now, no need to
      * force luns_per_ch and nchs to be power of 2
@@ -657,6 +658,7 @@ static void ssd_init_params(struct ssdparams *spp, FemuCtrl *n)
     spp->chnls_per_rg = spp->luns_per_rg/spp->luns_per_ch;
     
     check_params(spp);
+    print_sungjin(ssd_init_params);
 }
 
 static void ssd_init_nand_page(struct nand_page *pg, struct ssdparams *spp,bool is_init)
@@ -777,7 +779,7 @@ void f2dpssd_init(FemuCtrl *n)
     // for(i=0;i<ssd->stream_number;i++){
     //     ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
     // }
-    
+    print_sungjin(ssd_init_ch);
     for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp,true);
     }
@@ -791,6 +793,8 @@ void f2dpssd_init(FemuCtrl *n)
     /* initialize all the lines */
     // ssd->lm=g_malloc0
     // for(i=0;i<ssd->rg_number;i++){
+
+    print_sungjin(fdpssd_init_lines);
     for(i=0;i<ssd->sp.tt_luns;i++){
         // printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,true,i);

@@ -4,6 +4,8 @@
         "msftl.h": "c",
         "*.code": "c",
         "random": "c",
-        "cstdint": "c"
+        "cstdint": "c",
+        "*.idef": "c",
+        "*.def": "c"
     }
 }
