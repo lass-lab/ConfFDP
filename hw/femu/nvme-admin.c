@@ -684,7 +684,7 @@ static uint16_t nvme_get_feature(FemuCtrl *n, NvmeCmd *cmd, NvmeCqe *cqe)
         printf("sungjin nvme_get_feature FDP_MODE\n");
 
         // femu_get_feature_fdp()
-        if(MSSSD(n)||FDPSSD(n)){
+        if(MSSSD(n)||FDPSSD(n) || F2DPSSD(n)){
             return NVME_SUCCESS;
         }else{  
             return NVME_INVALID_FIELD | NVME_DNR;
@@ -692,7 +692,7 @@ static uint16_t nvme_get_feature(FemuCtrl *n, NvmeCmd *cmd, NvmeCqe *cqe)
         break;
     case NVME_FDP_EVENTS:
         printf("sungjin nvme_get_feature FDP_EVENTS\n");
-        if(MSSSD(n)||FDPSSD(n)){
+        if(MSSSD(n)||FDPSSD(n) || F2DPSSD(n)){
             return NVME_SUCCESS;
         }else{  
             return NVME_INVALID_FIELD | NVME_DNR;
@@ -772,7 +772,7 @@ static uint16_t nvme_set_feature(FemuCtrl *n, NvmeCmd *cmd, NvmeCqe *cqe)
         printf("sungjin nvme_get_feature FDP_MODE\n");
 
         // femu_get_feature_fdp()
-        if(MSSSD(n)||FDPSSD(n)){
+        if(MSSSD(n)||FDPSSD(n) || F2DPSSD(n)){
             return NVME_SUCCESS;
         }else{  
             return NVME_INVALID_FIELD | NVME_DNR;
@@ -780,7 +780,7 @@ static uint16_t nvme_set_feature(FemuCtrl *n, NvmeCmd *cmd, NvmeCqe *cqe)
         break;
     case NVME_FDP_EVENTS:
         printf("sungjin nvme_get_feature FDP_EVENTS\n");
-        if(MSSSD(n)||FDPSSD(n)){
+        if(MSSSD(n)||FDPSSD(n) || F2DPSSD(n)){
             return NVME_SUCCESS;
         }else{  
             return NVME_INVALID_FIELD | NVME_DNR;
