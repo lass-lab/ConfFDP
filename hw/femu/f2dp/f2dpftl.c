@@ -2,7 +2,7 @@
 
 //#define FEMU_DEBUG_FTL
 
-static void *msftl_thread(void *arg);
+static void *f2dpftl_thread(void *arg);
 static inline struct nand_block *get_blk(struct ssd *ssd, struct ppa *ppa);
 static struct ppa get_new_page(struct ssd *ssd,int stream_id);
 static inline bool should_gc(struct ssd *ssd,int lun_id)
@@ -819,7 +819,7 @@ void f2dpssd_init(FemuCtrl *n)
     f2dpssd_init_write_pointer(ssd,F2DP_DEFAULT_STREAM,(rg_bitmap));
     
 
-    qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", msftl_thread, n,
+    qemu_thread_create(&ssd->msftl_thread, "FEMU-MSFTL-Thread", f2dpftl_thread, n,
                        QEMU_THREAD_JOINABLE);
     //  print_sungjin(msssd_init);
 }
@@ -1587,7 +1587,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     ssd_init_rmap(ssd,false);
 
     /* initialize all the lines */
-    for(i=0;i<ssd->rg_number;i++){
+    for(i=0;i<ssd->sp.tt_luns;i++){
         printf("\nRG %u-----------------------------\n",i);
         fdpssd_init_lines(ssd,false,i);
         printf("------------------------------------\n");
@@ -2085,7 +2085,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     return maxlat;
 }
 
-static void *msftl_thread(void *arg)
+static void *f2dpftl_thread(void *arg)
 {
     FemuCtrl *n = (FemuCtrl *)arg;
     struct ssd *ssd = n->ssd;
@@ -2095,7 +2095,7 @@ static void *msftl_thread(void *arg)
     int rc;
     int i;
     // int r;
-    print_sungjin(msftl_thread);
+    print_sungjin(f2dpftl_thread);
     printf("msftl_thread start@@@@@@@@@\n");
     while (!*(ssd->dataplane_started_ptr)) {
         usleep(100000);
@@ -2154,7 +2154,7 @@ static void *msftl_thread(void *arg)
                 if (should_gc(ssd,i)) {
                     print_sungjin(ssd->lm[i].free_line_cnt);
                     print_sungjin(ssd->sp.gc_thres_lines);
-                    // do_gc(ssd, false,i);
+                    do_gc(ssd, false,i);
                     // if(r==-1){
                     //     continue;
                     // }

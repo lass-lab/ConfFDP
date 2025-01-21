@@ -59,21 +59,21 @@ static inline uint16_t nvme_pid2rg(NvmeNamespace *ns, uint16_t pid)
 
 
 
-static void fdp_init_ctrl_str(FemuCtrl *n)
+static void f2dp_init_ctrl_str(FemuCtrl *n)
 {
     static int fsid_vbb = 0;
     const char *vbbssd_mn = "FEMU BlackBox-SSD Controller";
     const char *vbbssd_sn = "vSSD";
-    print_sungjin(fdp_init_ctrl_str);
+    print_sungjin(f2dp_init_ctrl_str);
     nvme_set_ctrl_name(n, vbbssd_mn, vbbssd_sn, &fsid_vbb);
 }
 
 /* bb <=> black-box */
-static void fdp_init(FemuCtrl *n, Error **errp)
+static void f2dp_init(FemuCtrl *n, Error **errp)
 {
     struct ssd *ssd = n->ssd = g_malloc0(sizeof(struct ssd));
     // print_sungjin(fdp_init);
-    fdp_init_ctrl_str(n);
+    f2dp_init_ctrl_str(n);
 
     ssd->dataplane_started_ptr = &n->dataplane_started;
     ssd->ssdname = (char *)n->devname;
@@ -128,13 +128,13 @@ static void bb_flip(FemuCtrl *n, NvmeCmd *cmd)
     }
 }
 
-static uint16_t ms_nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
+static uint16_t f2dp_nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                            NvmeRequest *req)
 {
     return nvme_rw(n, ns, cmd, req);
 }
 
-static uint16_t fdp_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
+static uint16_t f2dp_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                           NvmeRequest *req)
 {
     // print_sungjin(fdp_io_cmd);
@@ -144,24 +144,24 @@ static uint16_t fdp_io_cmd(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         // print_sungjin(req->cmd.cdw13);
         /*fall through*/
     case NVME_CMD_READ:
-        return ms_nvme_rw(n, ns, cmd, req);
+        return f2dp_nvme_rw(n, ns, cmd, req);
     case NVME_CMD_DSM:
     //     // sungjin
         return NVME_SUCCESS;
 
     case NVME_CMD_IO_MGMT_RECV:
         // print_sungjin()
-        printf("fdp_io_cmd NVME_CMD_IO_MGMT_RECV");
+        printf("f2dp_io_cmd NVME_CMD_IO_MGMT_RECV");
         return NVME_SUCCESS;
     case NVME_CMD_IO_MGMT_SEND:
-        printf("fdp_io_cmd NVME_CMD_IO_MGMT_SEND");
+        printf("f2dp_io_cmd NVME_CMD_IO_MGMT_SEND");
         return NVME_SUCCESS;
     default:
         return NVME_INVALID_OPCODE | NVME_DNR;
     }
 }
 
-static uint16_t fdp_admin_cmd(FemuCtrl *n, NvmeCmd *cmd)
+static uint16_t f2dp_admin_cmd(FemuCtrl *n, NvmeCmd *cmd)
 {
     switch (cmd->opcode) {
     case NVME_ADM_CMD_FEMU_FLIP:
@@ -173,7 +173,7 @@ static uint16_t fdp_admin_cmd(FemuCtrl *n, NvmeCmd *cmd)
 }
 
 
-static size_t sizeof_fdp_conf_descr(size_t nruh, size_t vss)
+static size_t sizeof_f2dp_conf_descr(size_t nruh, size_t vss)
 {
     size_t entry_siz = sizeof(NvmeFdpDescrHdr) + nruh * sizeof(NvmeRuhDescr)
                        + vss;
@@ -183,7 +183,7 @@ static size_t sizeof_fdp_conf_descr(size_t nruh, size_t vss)
 
 // static uint16_t fdp_confs(NvmeCtrl *n, uint32_t endgrpid, uint32_t buf_len,
 //                                uint64_t off, NvmeRequest *req)
-static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
+static uint16_t f2dp_confs(FemuCtrl* n, NvmeCmd* cmd)
 {
     printf("FDP CONFFS@@@@@@@@@@@@@@@22\n");
     struct ssd *ssd = n->ssd;
@@ -292,7 +292,7 @@ static uint16_t fdp_confs(FemuCtrl* n, NvmeCmd* cmd)
     // return nvme_c2h(n, (uint8_t *)buf + off, trans_len, req);
 }
 
-static uint16_t fdp_get_log(FemuCtrl* n, NvmeCmd* cmd){
+static uint16_t f2dp_get_log(FemuCtrl* n, NvmeCmd* cmd){
     uint32_t dw10 = le32_to_cpu(cmd->cdw10);
     // uint32_t dw11 = le32_to_cpu(cmd->cdw11);
     // uint32_t dw12 = le32_to_cpu(cmd->cdw12);
@@ -301,7 +301,7 @@ static uint16_t fdp_get_log(FemuCtrl* n, NvmeCmd* cmd){
 
     switch (lid) {
     case NVME_LOG_FDP_CONFS:
-        return fdp_confs(n, cmd);
+        return f2dp_confs(n, cmd);
         // return NVME_SUCCESS;
     case NVME_LOG_FDP_RUH_USAGE:
         // return nvme_smart_info(n, cmd, len);
@@ -324,12 +324,12 @@ int nvme_register_f2dpssd(FemuCtrl *n)
 {
     n->ext_ops = (FemuExtCtrlOps) {
         .state            = NULL,
-        .init             = fdp_init,
+        .init             = f2dp_init,
         .exit             = NULL,
         .rw_check_req     = NULL,
-        .admin_cmd        = fdp_admin_cmd,
-        .io_cmd           = fdp_io_cmd,
-        .get_log          = fdp_get_log,
+        .admin_cmd        = f2dp_admin_cmd,
+        .io_cmd           = f2dp_io_cmd,
+        .get_log          = f2dp_get_log,
     };
 
     return 0;
