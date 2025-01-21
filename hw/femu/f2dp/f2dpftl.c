@@ -1503,6 +1503,12 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     hdr = (NvmeF2DPRuhStatus *)buf;
     ruhsd = (NvmeF2DPRuhStatusDescr *)(buf + sizeof(NvmeF2DPRuhStatus));
 
+    print_sungjin(sizeof(NvmeF2DPRuhStatus));
+    print_sungjin(sizeof(NvmeF2DPRuhStatusDescr));
+
+    print_sungjin(sizeof(NvmeRuhStatus));
+    print_sungjin(sizeof(NvmeRuhStatusDescr));
+
     hdr->reclaim_group_nr=cpu_to_le16(F2DP_RG_NUMBER);
     hdr->max_placement_id_nr=cpu_to_le16(F2DP_MAX_PID_NR);
     hdr->nruhsd=cpu_to_le16(nruhsd);
