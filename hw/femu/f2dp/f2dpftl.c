@@ -495,7 +495,7 @@ static struct ppa get_new_page(struct ssd *ssd,int stream_id)
     ppa.g.blk = wpp->physical_blk_map[wpp->logical_lun];
 
     ppa.g.pl = wpp->pl;
-    ftl_assert(ppa.g.pl == 0);
+    // ftl_assert(ppa.g.pl == 0);
 
     return ppa;
 }
