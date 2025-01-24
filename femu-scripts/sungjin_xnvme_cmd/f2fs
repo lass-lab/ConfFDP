@@ -1,3 +1,32 @@
-sudo /home/femu/f2fs-tools-fdp/mkfs/mkfs.f2fs -O lost_found /dev/nvme0n1
+sudo umount /dev/nvme0n1
 
-su
+sudo /home/femu/f2fs-tools-fdp/mkfs/mkfs.f2fs -f -O lost_found /dev/nvme0n1
+
+
+
+sudo mount /dev/nvme0n1 /home/femu/f2fs_fdp_mount/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sudo make -j$(nproc) && sudo make install -j && sudo make modules_install -j && sudo make install -j && sudo make modules_install 

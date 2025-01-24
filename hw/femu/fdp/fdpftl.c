@@ -1649,12 +1649,18 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t pid = le16_to_cpu(rw->dspec);
     uint8_t stream_id = pid & 0xff;
     uint8_t rg_id =pid>>8;
+    
+    uint8_t     dsmgmt=le8_to_cpu(rw->dsmgmt);;
+    uint8_t     rsvd=le8_to_cpu(rw->rsvd)
 #else
     uint16_t rg_id=(req->cmd.nsid-1);
     uint16_t stream_id=0;
 #endif
     // print_sungjin(rg_id);
+    print_sungjin(dsmgmt);
+    print_sungjin(rsvd);
     print_sungjin(pid);
+
     // print_sungjin(req->cmd.nsid);
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
