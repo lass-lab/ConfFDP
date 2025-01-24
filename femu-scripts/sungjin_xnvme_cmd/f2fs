@@ -29,4 +29,4 @@ sudo mount /dev/nvme0n1 /home/femu/f2fs_fdp_mount/
 
 
 
-sudo make -j$(nproc) && sudo make install -j && sudo make modules_install -j && sudo make install -j && sudo make modules_install 
+sudo make -j$(nproc) && sudo make install -j && sudo make modules_install -j && sudo make install -j && sudo make modules_install -j
