@@ -226,7 +226,10 @@ struct ssd {
     uint64_t *rmap;     /* reverse mapptbl, assume it's stored in OOB */
     struct write_pointer** wp;
     struct line_mgmt* lm;
-    uint8_t stream_number;
+    // union{
+        uint8_t stream_number;
+        uint8_t handle_number;
+    // };
     uint8_t rg_number;
     void* femuctrl;
     /* lockless ring for communication with NVMe IO thread */

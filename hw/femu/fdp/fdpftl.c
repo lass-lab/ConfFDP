@@ -661,7 +661,7 @@ void fdpssd_init(FemuCtrl *n)
     ftl_assert(ssd);
 
     ssd->rg_number=n->rg_number;
-    ssd->stream_number = n->stream_number;
+    ssd->handle_number = n->handle_number;
     ssd_init_params(spp, n);
 
     
@@ -675,8 +675,8 @@ void fdpssd_init(FemuCtrl *n)
     ssd->ch = g_malloc0(sizeof(struct ssd_channel) * spp->nchs);
 
     ssd->lm=g_malloc0(sizeof(struct line_mgmt)*ssd->rg_number);
-    ssd->wp=g_malloc(sizeof(struct write_pointer*)*ssd->stream_number);
-    for(i=0;i<ssd->stream_number;i++){
+    ssd->wp=g_malloc(sizeof(struct write_pointer*)*ssd->handle_number);
+    for(i=0;i<ssd->handle_number;i++){
         ssd->wp[i]=g_malloc(sizeof(struct write_pointer)*n->rg_number);
     }
     
@@ -699,7 +699,7 @@ void fdpssd_init(FemuCtrl *n)
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
 
-    for(i=0;i<ssd->stream_number;i++){
+    for(i=0;i<ssd->handle_number;i++){
         for(j=0;j<ssd->rg_number;j++){
             fdpssd_init_write_pointer(ssd,i,j);
         }
@@ -1377,9 +1377,11 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t len){
     // unsigned int nruhsd= ssd->stream_number;
     uint8_t ph,rg;
-    unsigned int nruhsd= ssd->stream_number*ssd->rg_number;
+    unsigned int nruhsd= ssd->handle_number*ssd->rg_number;
     print_sungjin(msssd_io_mgmt_recv_ruhs);
     print_sungjin(len);
+    print_sungjin(ssd->rg_number);
+    print_sungjin(ssd->handle_number);
     NvmeRuhStatus *hdr;
     NvmeRuhStatusDescr *ruhsd;
     uint64_t prp1 = le64_to_cpu(req->cmd.dptr.prp1);
@@ -1414,7 +1416,7 @@ static uint64_t msssd_io_mgmt_recv_ruhs(struct ssd* ssd, NvmeRequest* req,size_t
     // }
     
     
-    for(ph=0;ph<ssd->stream_number;ph++){
+    for(ph=0;ph<ssd->handle_number;ph++){
         for(rg=0;rg<ssd->rg_number;rg++,ruhsd++){
             // NvmeCmdDWORD13 dword13;
             // dword13.parsed.rg=cpu_to_le16(rg);
@@ -1481,7 +1483,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // for(i=0;i<ssd->stream_number;i++){
     //     fdpssd_init_write_pointer(ssd,i);
     // }
-    for(i=0;i<ssd->stream_number;i++){
+    for(i=0;i<ssd->handle_number;i++){
         for(j=0;j<ssd->rg_number;j++){
             fdpssd_init_write_pointer(ssd,i,j);
         }
@@ -1665,10 +1667,10 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     // printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
-    if(stream_id>=ssd->stream_number){
+    if(stream_id>=ssd->handle_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
-        printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->stream_number-1,rg_id);
-        stream_id=ssd->stream_number-1;
+        printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->handle_number-1,rg_id);
+        stream_id=ssd->handle_number-1;
         // return 0;
     }
     if(rg_id>=ssd->rg_number){
