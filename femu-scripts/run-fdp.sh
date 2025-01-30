@@ -36,8 +36,8 @@ NAND_BLOCK_SIZE_MB=64
 
 # FDP
 # luns_per_rg=32
-rg_number=2 # 1~64
-handle_number=2 # should be power of 2, smaller than luns_per_ch*nchs
+rg_number=1 # 1~64
+handle_number=8 # should be power of 2, smaller than luns_per_ch*nchs
 
 # sudo gdb /home/sungjin/ConfFDP/build-femu/qemu-system-x86_64
 #  run   -name "FEMU-MSSSD-VM" \
