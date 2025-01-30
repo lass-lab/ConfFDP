@@ -32,7 +32,7 @@ gc_thres_pcent_high=95
 
 #-----------------------------------------------------------------------
 NAND_PAGE_SIZE_KB=4
-NAND_BLOCK_SIZE_MB=64
+NAND_BLOCK_SIZE_MB=16
 
 # FDP
 # luns_per_rg=32
