@@ -1595,10 +1595,10 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
             slpn=dmr->slba/spp->secs_per_pg;
-            nlp=dmr->nlb/spp->secs_per_pg;
-            if(dmr->nlb==0){
-                printf(" 0 occurs\n");
-            }
+            nlp=(dmr->nlb+1)/spp->secs_per_pg;
+            // if(dmr->nlb==0){
+            //     printf(" 0 occurs\n");
+            // }
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
