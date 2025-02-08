@@ -192,6 +192,7 @@ struct write_pointer {
     int pg;
     int blk;
     int pl;
+    uint64_t written;
 };
 
 struct sungjin_stat{

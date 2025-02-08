@@ -212,7 +212,7 @@ static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
     curline = QTAILQ_FIRST(&lm->free_line_list);
     QTAILQ_REMOVE(&lm->free_line_list, curline, entry);
     lm->free_line_cnt--;
-
+ print_sungjin(wpp->written);
     /* wpp->curline is always our next-to-write super-block */
     wpp->curline = curline;
     curline->stream_id=stream_id;
@@ -243,6 +243,9 @@ static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
     wpp->pg = 0;
     wpp->blk = curline->id;
     wpp->pl = 0;
+    wpp->written=0;
+    // printf("")
+   
     // print_sungjin(fdpssd_init_write_pointer);
 }
 
@@ -1180,12 +1183,13 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 
     int start_ch_id,start_lun_id,end_ch_id,end_lun_id;
     rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
-
+    // print_sungjin(ssd->sungjin_stat.block_erased);
+    // print_sungjin(ssd->sungjin_stat.copied);
     printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
-               start_lun_id=%d,end_lun_id=%d \n", ppa.g.blk,
+               start_lun_id=%d,end_lun_id=%d block_erased %lu copied %lu\n", ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
-              start_lun_id,end_lun_id);
+              start_lun_id,end_lun_id, ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
     /////////////////////////////////
     to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
 
@@ -1637,7 +1641,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
 
     uint64_t start_lpn = lba;
     uint64_t end_lpn = (start_lpn + len );
-
+    // struct line_mgmt *lm;
 
     struct ppa ppa;
     uint64_t lpn;
@@ -1677,9 +1681,9 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,stream_id,ssd->rg_number-1);
         rg_id=ssd->rg_number-1;
     }
+    struct write_pointer *wpp = &(ssd->wp[stream_id][rg_id]);
 
-
-
+    wpp->written+=(nlb+1);
     
     int r;
     // print_sungjin(fdpssd_write);
