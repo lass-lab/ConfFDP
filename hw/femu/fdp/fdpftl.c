@@ -1683,7 +1683,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     }
     struct write_pointer *wpp = &(ssd->wp[stream_id][rg_id]);
 
-    wpp->written+=(nlb+1);
+    wpp->written+=(len+1);
     
     int r;
     // print_sungjin(fdpssd_write);
