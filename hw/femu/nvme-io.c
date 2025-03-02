@@ -360,6 +360,8 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
             nlb = le32_to_cpu(range[i].nlb);
             print_sungjin(range[i].slba);
             print_sungjin(slba);
+
+            printf("%llu %llu\n",range[i].slba,slba);
             print_sungjin(range[i].nlb);
             print_sungjin(nlb);
 
