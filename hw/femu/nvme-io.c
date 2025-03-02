@@ -343,8 +343,8 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
     if (dw11 & NVME_DSMGMT_AD) {
         uint16_t nr = (dw10 & 0xff) + 1;
 
-        // uint64_t slba;
-        uint32_t slba;
+        uint64_t slba;
+        // uint32_t slba;
         uint32_t nlb;
         NvmeDsmRange *range = g_malloc0(sizeof(NvmeDsmRange) * nr);
 
@@ -357,13 +357,13 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
 
         req->status = NVME_SUCCESS;
         for (i = 0; i < nr; i++) {
-            // slba = le64_to_cpu(range[i].slba);
-            slba = le32_to_cpu(range[i].slba);
+            slba = le64_to_cpu(range[i].slba);
+            // slba = le32_to_cpu(range[i].slba);
             nlb = le32_to_cpu(range[i].nlb);
             print_sungjin(range[i].slba);
             print_sungjin(slba);
 
-            printf("%u %u\n",range[i].slba,slba);
+            // printf("%lu %lu\n",range[i].slba,slba);
             print_sungjin(range[i].nlb);
             print_sungjin(nlb);
 

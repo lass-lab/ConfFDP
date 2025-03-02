@@ -1580,8 +1580,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint32_t nr = (le32_to_cpu(dsm->nr) & 0xff) + 1;
     // uint64_t slba;
     uint32_t nlp;
-    // uint64_t slpn;
-    uint32_t slpn;
+    uint64_t slpn;
+    // uint32_t slpn;
     struct ppa ppa;
     // struct nand_page* pg_iter;
     // uint64_t plp1 = req->cmd->plp1;
@@ -1599,8 +1599,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         // print_sungjin(range);
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
-            // slpn=le64_to_cpu(dmr->slba)/spp->secs_per_pg;
-            slpn=le32_to_cpu(dmr->slba)/spp->secs_per_pg;
+            slpn=le64_to_cpu(dmr->slba)/spp->secs_per_pg;
+            // slpn=le32_to_cpu(dmr->slba)/spp->secs_per_pg;
             nlp=le32_to_cpu(dmr->nlb+1)/spp->secs_per_pg;
             // print_sungjin(spp->secs_per_pg);
             // print_sungjin(dmr->slba);
