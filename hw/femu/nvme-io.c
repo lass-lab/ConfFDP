@@ -358,6 +358,8 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
         for (i = 0; i < nr; i++) {
             slba = le64_to_cpu(range[i].slba);
             nlb = le32_to_cpu(range[i].nlb);
+            print_sungjin(slba);
+            print_sungjin(nlb);
             if (slba + nlb > le64_to_cpu(ns->id_ns.nsze)) {
                 nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_LBA_RANGE,
                                     offsetof(NvmeCmd, cdw10), slba + nlb, ns->id);
