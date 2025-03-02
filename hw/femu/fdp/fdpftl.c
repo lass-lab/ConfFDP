@@ -1456,10 +1456,10 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
 
     print_sungjin(ssd->sungjin_stat.block_erased);
     print_sungjin(ssd->sungjin_stat.copied);
-
+    print_sungjin(ssd->sungjin_stat.discard);
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
-
+    ssd->sungjin_stat.discard=0;
     for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp,false);
     }
@@ -1600,6 +1600,10 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             NvmeDsmRange* dmr = &range[i];
             slpn=dmr->slba/spp->secs_per_pg;
             nlp=(dmr->nlb+1)/spp->secs_per_pg;
+            print_sungjin(spp->secs_per_pg);
+            print_sungjin(dmr->slba);
+            print_sungjin(dmr->nlb+1);
+            ssd->sungjin_stat.discard+=(dmr->nlb+1);
             // if(dmr->nlb==0){
             //     printf(" 0 occurs\n");
             // }

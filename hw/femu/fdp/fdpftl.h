@@ -198,6 +198,7 @@ struct write_pointer {
 struct sungjin_stat{
     uint64_t copied;
     uint64_t block_erased;
+    uint64_t discard;
 };
 
 struct line_mgmt {
