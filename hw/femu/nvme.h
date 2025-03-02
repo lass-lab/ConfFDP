@@ -770,7 +770,9 @@ enum {
 typedef struct NvmeDsmRange {
     uint32_t    cattr;
     uint32_t    nlb;
-    uint64_t    slba;
+    // uint64_t    slba;
+    uint32_t    slba;
+    uint32_t    rsvd;
 } NvmeDsmRange;
 
 enum NvmeAsyncEventRequest {
