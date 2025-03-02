@@ -1598,8 +1598,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
         // print_sungjin(range);
         for(i = 0; i<nr;i++){
             NvmeDsmRange* dmr = &range[i];
-            slpn=dmr->slba/spp->secs_per_pg;
-            nlp=(dmr->nlb+1)/spp->secs_per_pg;
+            slpn=le64_to_cpu(dmr->slba)/spp->secs_per_pg;
+            nlp=le32_to_cpu(dmr->nlb+1)/spp->secs_per_pg;
             print_sungjin(spp->secs_per_pg);
             print_sungjin(dmr->slba);
             print_sungjin(dmr->nlb+1);
