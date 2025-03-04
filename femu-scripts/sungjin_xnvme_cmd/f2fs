@@ -1,26 +1,21 @@
+
+sudo ./fdp_send_sungjin /dev/nvme0n1
 sudo umount /dev/nvme0n1
 
 sudo /home/femu/f2fs-tools-fdp/mkfs/mkfs.f2fs -f -O lost_found /dev/nvme0n1
 
 
-
-sudo mount /dev/nvme0n1 /home/femu/f2fs_fdp_mount/
-
+sudo mount -o discard  -o discard_unit=segment /dev/nvme0n1 /home/femu/f2fs_fdp_mount/
 
 
 
 
+ sudo /home/femu/FDP_ROCKSDB_F2FS/db_bench --benchmarks="fillrandom,stats" --histogram   -num=25165824 -max_background_compactions=4 -subcompactions=8 -max_background_flushes=4 -value_size=1024 -db=/home/femu/f2fs_fdp_mount
 
 
 
 
-
-
-
-
-
-
-
+sudo /home/femu/FDP_ROCKSDB_TORFS/db_bench --benchmarks="fillrandom,stats" --histogram -subcompactions=8 -max_background_flushes=4 -max_background_compactions=4 -subcompactions=8 -value_size=1024 -num=25165824 -stream_option=2 --fs_uri=torfs:xnvme:/dev/nvme0n1?be=thrpool
 
 
 
