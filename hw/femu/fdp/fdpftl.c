@@ -1609,7 +1609,11 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             // print_sungjin(spp->secs_per_pg);
             // print_sungjin(slpn);
             // print_sungjin(nlp);
-            ssd->sungjin_stat.discard+=(dmr->nlb+1);
+            
+            
+            // ssd->sungjin_stat.discard+=(dmr->nlb+1);
+            
+            
             // if(dmr->nlb==0){
             //     printf(" 0 occurs\n");
             // }
@@ -1629,14 +1633,15 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 }
                 // if(ppa.ppa==PG_VALID)
                 if(mapped_ppa(&ppa)){
+                    ssd->sungjin_stat.discard++;
                     mark_page_invalid(ssd, &ppa);
                     set_rmap_ent(ssd, INVALID_LPN, &ppa);
 
-                    set_maptbl_ent(ssd,(slpn+j),UNMAPPED_PPA);
+                    // set_maptbl_ent(ssd,(slpn+j),UNMAPPED_PPA);
                 }
-                // else{
-                //     nomappedppa=true;
-                // }
+                else{
+                    nomappedppa=true;
+                }
                 
                 // pg_iter = get_pg(ssd, &ppa);
                 // if(pg_iter->status==PG_VALID){
