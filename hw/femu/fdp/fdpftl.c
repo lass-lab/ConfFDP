@@ -1673,11 +1673,11 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 
             }
             if(!yesvalidppa&& ssd->debug==true){
-                printf("not valid ppa trim? slpn %lu nlp %lu tmp1 %lu ",slpn,nlp,tmp1);
+                printf("not valid ppa trim? slpn %lu nlp %u tmp1 %u ",slpn,nlp,tmp1);
                 // print_sungjin(slpn);
             }
             if(!yesmappedppa&&ssd->debug==true){
-                printf("not mapped ppa trim?slpn %lu nlp %lu tmp1 %lu",slpn,nlp,tmp2);
+                printf("not mapped ppa trim?slpn %lu nlp %u tmp1 %u",slpn,nlp,tmp2);
                 // print_sungjin(slpn);
             }
         }
