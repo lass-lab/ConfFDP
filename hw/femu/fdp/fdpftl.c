@@ -1634,15 +1634,17 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             //     printf(" 0 occurs\n");
             // }
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
-                bool novalidppa= false;
-                bool nomappedppa = false;
+                bool yesvalidppa= true;
+                int tmp1=0,tmp2=0;
+                bool yesmappedppa = true;
 
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!valid_ppa(ssd, &ppa)) {
                     // printf("not valid ppa trim?");
                     // print_sungjin(slpn);
-                    novalidppa=true;
+                    tmp1++;
+                    yesvalidppa=false;
                     print_ppa(ssd,&ppa);
                     // print_sungjin(slpn+j);
                     continue;
@@ -1659,7 +1661,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     set_maptbl_ent(ssd,(slpn+j),&ppa);
                 }
                 else{
-                    nomappedppa=true;
+                    tmp2++;
+                    yesmappedppa=false;
                 }
                 
                 // pg_iter = get_pg(ssd, &ppa);
@@ -1669,13 +1672,13 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 // set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 
             }
-            if(novalidppa&& ssd->debug==true){
-                printf("not valid ppa trim?");
-                print_sungjin(slpn);
+            if(!yesvalidppa&& ssd->debug==true){
+                printf("not valid ppa trim? slpn %lu nlp %lu tmp1 %lu ",slpn,nlp,tmp1);
+                // print_sungjin(slpn);
             }
-            if(nomappedppa&&ssd->debug==true){
-                printf("not mapped ppa trim?");
-                print_sungjin(slpn);
+            if(!yesmappedppa&&ssd->debug==true){
+                printf("not mapped ppa trim?slpn %lu nlp %lu tmp1 %lu",slpn,nlp,tmp2);
+                // print_sungjin(slpn);
             }
         }
 
