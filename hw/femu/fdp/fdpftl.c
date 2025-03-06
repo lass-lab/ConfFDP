@@ -1637,7 +1637,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     ssd->sungjin_stat.discard++;
                     int ret = mark_page_invalid(ssd, &ppa);
                     if(ret){
-                        printf("mark page invalid from trim??\n");
+                        printf("mark page invalid from trim?? slpn+j %u\n",slpn+j);
                     }
                     set_rmap_ent(ssd, INVALID_LPN, &ppa);
 
@@ -1767,7 +1767,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
             /* update old page information first */
             int ret =mark_page_invalid(ssd, &ppa);
             if(ret){
-                printf("mark_page_invalid from ssdwrite?\n");
+                printf("mark_page_invalid from ssdwrite? lpn %u\n",lpn);
             }
             set_rmap_ent(ssd, INVALID_LPN, &ppa);
         }
