@@ -924,7 +924,7 @@ static uint64_t ssd_advance_status(struct ssd *ssd, struct ppa *ppa, struct
 }
 
 /* update SSD status about one page from PG_VALID -> PG_VALID */
-static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
+static int mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
 {
     // struct line_mgmt *lm = &ssd->lm;
     struct line_mgmt *lm;
@@ -938,9 +938,9 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_VALID);
     if(pg->status==PG_INVALID){
-        printf("mark_page_invalid to invalid\n");
+        // printf("mark_page_invalid to invalid\n");
         // dump_stack();
-        return;
+        return 1;
     }
     pg->status = PG_INVALID;
     rg_id=(get_rg_id(ssd,ppa));
@@ -980,6 +980,7 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
         pqueue_insert(lm->victim_line_pq, line);
         lm->victim_line_cnt++;
     }
+    return 0;
 }
 
 static void mark_page_valid(struct ssd *ssd, struct ppa *ppa)
@@ -1634,7 +1635,10 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 // if(ppa.ppa==PG_VALID)
                 if(mapped_ppa(&ppa)){
                     ssd->sungjin_stat.discard++;
-                    mark_page_invalid(ssd, &ppa);
+                    int ret = mark_page_invalid(ssd, &ppa);
+                    if(ret){
+                        printf("mark page invalid from trim??\n");
+                    }
                     set_rmap_ent(ssd, INVALID_LPN, &ppa);
 
                     // set_maptbl_ent(ssd,(slpn+j),UNMAPPED_PPA);
@@ -1761,7 +1765,10 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
         ppa = get_maptbl_ent(ssd, lpn);
         if (mapped_ppa(&ppa)) {
             /* update old page information first */
-            mark_page_invalid(ssd, &ppa);
+            int ret =mark_page_invalid(ssd, &ppa);
+            if(ret){
+                printf("mark_page_invalid from ssdwrite?\n");
+            }
             set_rmap_ent(ssd, INVALID_LPN, &ppa);
         }
         // print_sungjin(lpn);
