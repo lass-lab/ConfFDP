@@ -1603,8 +1603,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             // slpn=le32_to_cpu(dmr->slba)/spp->secs_per_pg;
             nlp=le32_to_cpu(dmr->nlb+1)/spp->secs_per_pg;
             // print_sungjin(spp->secs_per_pg);
-            print_sungjin(slpn);
-            print_sungjin(nlp);
+            // print_sungjin(slpn);
+            // print_sungjin(nlp);
             ssd->sungjin_stat.discard+=(dmr->nlb+1);
             // if(dmr->nlb==0){
             //     printf(" 0 occurs\n");
