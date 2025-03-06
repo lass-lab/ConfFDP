@@ -666,7 +666,7 @@ void fdpssd_init(FemuCtrl *n)
     ssd->rg_number=n->rg_number;
     ssd->handle_number = n->handle_number;
     ssd_init_params(spp, n);
-
+    ssd->debug=false;
     
     // if(spp->luns_per_rg>spp->nchs*spp->luns_per_ch){
     //     spp->luns_per_rg=spp->nchs*spp->luns_per_ch;
@@ -1635,7 +1635,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 // set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 
             }
-            if(novalidppa&& ssd->debug){
+            if(novalidppa&& ssd->debug==true){
                 printf("not valid ppa trim?");
                 print_sungjin(slpn);
             }
