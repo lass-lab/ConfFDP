@@ -234,6 +234,7 @@ struct ssd {
     // };
     uint8_t rg_number;
     void* femuctrl;
+    bool debug;
     /* lockless ring for communication with NVMe IO thread */
     struct rte_ring **to_ftl;
     struct rte_ring **to_poller;

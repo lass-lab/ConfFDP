@@ -1449,6 +1449,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // struct ppa ppa;
     int i,j;
     struct ssdparams* spp= &ssd->sp;
+    ssd->debug =true;
     // struct line_mgmt *lm = &ssd->lm[];
     printf("msssd_io_mgmt_send_sungjin\n");
     print_sungjin(spp->blks_per_line);
@@ -1634,7 +1635,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 // set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 
             }
-            if(novalidppa){
+            if(novalidppa&& ssd->debug){
                 printf("not valid ppa trim?");
                 print_sungjin(slpn);
             }
@@ -1793,6 +1794,7 @@ static void *msftl_thread(void *arg)
     ssd->to_poller = n->to_poller;
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
+    ssd->debug=false;
     while (1) {
         for (i = 1; i <= n->nr_pollers; i++) {
             if (!ssd->to_ftl[i] || !femu_ring_count(ssd->to_ftl[i]))
