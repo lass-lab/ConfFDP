@@ -1613,6 +1613,9 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!valid_ppa(ssd, &ppa)) {
+                    printf("not valid ppa trim?");
+                    print_sungjin(slpn);
+                    print_sungjin(nlp);
                     continue;
                 }
                 // if(ppa.ppa==PG_VALID)
