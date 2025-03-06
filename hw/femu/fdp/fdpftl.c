@@ -722,8 +722,8 @@ static inline void print_ppa(struct ssd *ssd, struct ppa *ppa){
     int blk = ppa->g.blk;
     int pg = ppa->g.pg;
     int sec = ppa->g.sec;
-    printf("ch %d lun %d pl %d blk %d pg %d sec %d\n",
-        ch,lun,pl,blk,pg,sec);
+    printf("ch %d lun %d pl %d blk %d pg %d sec %d ppa %u\n",
+        ch,lun,pl,blk,pg,sec,ppa->ppa);
     printf("nchs %d luns_per_ch %d pls_per_lun %d blks_per_pl %d pgs_per_blk %d secs_per_pg %d\n",
         spp->nchs,spp->luns_per_ch,spp->pls_per_lun,spp->blks_per_pl,
         spp->pgs_per_blk,spp->secs_per_pg);
@@ -1643,7 +1643,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     // printf("not valid ppa trim?");
                     // print_sungjin(slpn);
                     novalidppa=true;
-
+                    print_ppa(ssd,&ppa);
                     // print_sungjin(slpn+j);
                     continue;
                 }
