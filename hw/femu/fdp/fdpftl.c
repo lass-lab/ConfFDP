@@ -1620,7 +1620,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     // print_sungjin(slpn);
                     novalidppa=true;
 
-                    print_sungjin(slpn+j);
+                    // print_sungjin(slpn+j);
                     continue;
                 }
                 // if(ppa.ppa==PG_VALID)
