@@ -938,6 +938,8 @@ static void mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_VALID);
     if(pg->status==PG_INVALID){
+        printf("mark_page_invalid to invalid\n");
+        // dump_stack();
         return;
     }
     pg->status = PG_INVALID;
@@ -1584,7 +1586,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint64_t slpn;
     // uint32_t slpn;
     struct ppa ppa;
-
+    struct nand_page *pg_iter = NULL;
     // struct nand_page* pg_iter;
     // uint64_t plp1 = req->cmd->plp1;
 
@@ -1629,9 +1631,13 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 if(mapped_ppa(&ppa)){
                     mark_page_invalid(ssd, &ppa);
                     set_rmap_ent(ssd, INVALID_LPN, &ppa);
-                }else{
-                    nomappedppa=true;
+
+                    set_maptbl_ent(ssd,(slpn+j),UNMAPPED_PPA);
                 }
+                // else{
+                //     nomappedppa=true;
+                // }
+                
                 // pg_iter = get_pg(ssd, &ppa);
                 // if(pg_iter->status==PG_VALID){
                 //     mark_page_invalid(ssd, &ppa);
