@@ -1640,8 +1640,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                         printf("mark page invalid from trim?? slpn+j %lu\n",slpn+j);
                     }
                     set_rmap_ent(ssd, INVALID_LPN, &ppa);
-
-                    // set_maptbl_ent(ssd,(slpn+j),UNMAPPED_PPA);
+                    ppa.ppa=UNMAPPED_PPA;
+                    set_maptbl_ent(ssd,(slpn+j),&ppa);
                 }
                 else{
                     nomappedppa=true;
