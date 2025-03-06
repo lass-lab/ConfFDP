@@ -1613,6 +1613,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             // }
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
                 bool novalidppa= false;
+                bool nomappedppa = false;
+
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!valid_ppa(ssd, &ppa)) {
@@ -1627,6 +1629,8 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 if(mapped_ppa(&ppa)){
                     mark_page_invalid(ssd, &ppa);
                     set_rmap_ent(ssd, INVALID_LPN, &ppa);
+                }else{
+                    nomappedppa=true;
                 }
                 // pg_iter = get_pg(ssd, &ppa);
                 // if(pg_iter->status==PG_VALID){
@@ -1637,6 +1641,10 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             }
             if(novalidppa&& ssd->debug==true){
                 printf("not valid ppa trim?");
+                print_sungjin(slpn);
+            }
+            if(nomappedppa&&ssd->debug==true){
+                printf("not mapped ppa trim?");
                 print_sungjin(slpn);
             }
         }
