@@ -371,7 +371,10 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
                 nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_LBA_RANGE,
                                     offsetof(NvmeCmd, cdw10), slba + nlb, ns->id);
                 g_free(range);
-                // printf()
+                // print_sungjin(slba) : {7813572098802581516}
+                // print_sungjin(nlb) : {4}
+                // print_sungjin(ns->id_ns.nsze) : {16777216}
+
                 print_sungjin(slba);
                 print_sungjin(nlb);
                 print_sungjin(ns->id_ns.nsze);

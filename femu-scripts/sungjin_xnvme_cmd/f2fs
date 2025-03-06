@@ -1,8 +1,13 @@
 
-sudo ./fdp_send_sungjin /dev/nvme0n1
+sudo /home/femu/fdp_send_sungjin /dev/nvme0n1
 sudo umount /dev/nvme0n1
 
 sudo /home/femu/f2fs-tools-fdp/mkfs/mkfs.f2fs -f -O lost_found /dev/nvme0n1
+
+
+
+
+sudo /home/femu/f2fs-tools-fdp/fdp_f2fs_mount 8
 
 
 sudo mount -o discard  -o discard_unit=segment /dev/nvme0n1 /home/femu/f2fs_fdp_mount/
