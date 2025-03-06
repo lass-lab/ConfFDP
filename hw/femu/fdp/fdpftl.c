@@ -714,6 +714,21 @@ void fdpssd_init(FemuCtrl *n)
     //  print_sungjin(msssd_init);
 }
 
+static inline void print_ppa(struct ssd *ssd, struct ppa *ppa){
+    struct ssdparams *spp = &ssd->sp;
+    int ch = ppa->g.ch;
+    int lun = ppa->g.lun;
+    int pl = ppa->g.pl;
+    int blk = ppa->g.blk;
+    int pg = ppa->g.pg;
+    int sec = ppa->g.sec;
+    printf("ch %d lun %d pl %d blk %d pg %d sec %d\n",
+        ch,lun,pl,blk,pg,sec);
+    printf("nchs %d luns_per_ch %d pls_per_lun %d blks_per_pl %d pgs_per_blk %d secs_per_pg %d\n",
+        spp->nchs,spp->luns_per_ch,spp->pls_per_lun,spp->blks_per_pl,
+        spp->pgs_per_blk,spp->secs_per_pg);
+}
+
 static inline bool valid_ppa(struct ssd *ssd, struct ppa *ppa)
 {
     struct ssdparams *spp = &ssd->sp;
