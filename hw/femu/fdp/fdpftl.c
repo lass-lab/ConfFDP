@@ -1586,7 +1586,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint64_t slpn;
     // uint32_t slpn;
     struct ppa ppa;
-    struct nand_page *pg_iter = NULL;
+    // struct nand_page *pg_iter = NULL;
     // struct nand_page* pg_iter;
     // uint64_t plp1 = req->cmd->plp1;
 
