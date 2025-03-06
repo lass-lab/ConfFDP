@@ -1583,6 +1583,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint64_t slpn;
     // uint32_t slpn;
     struct ppa ppa;
+
     // struct nand_page* pg_iter;
     // uint64_t plp1 = req->cmd->plp1;
 
@@ -1610,11 +1611,14 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             //     printf(" 0 occurs\n");
             // }
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
+                bool novalidppa= false;
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!valid_ppa(ssd, &ppa)) {
-                    printf("not valid ppa trim?");
+                    // printf("not valid ppa trim?");
                     // print_sungjin(slpn);
+                    novalidppa=true;
+
                     print_sungjin(slpn+j);
                     continue;
                 }
@@ -1630,8 +1634,12 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 // set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 
             }
-
+            if(novalidppa){
+                printf("not valid ppa trim?");
+                print_sungjin(slpn);
+            }
         }
+
         // print_sungjin(msssd_trim);
         g_free(range);
     }
