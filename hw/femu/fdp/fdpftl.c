@@ -1634,21 +1634,23 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
             //     printf(" 0 occurs\n");
             // }
             // msssd_trim2(req->ns->ctrl,slpn,nlp);
-                bool yesvalidppa= true;
-                int tmp1=0,tmp2=0;
-                bool yesmappedppa = true;
+                // bool yesvalidppa= true;
+                // int tmp1=0,tmp2=0;
+                // bool yesmappedppa = true;
 
             for(j=0;j<nlp ;j++){
                 ppa=get_maptbl_ent(ssd,(slpn+j));
                 if (!valid_ppa(ssd, &ppa)) {
                     // printf("not valid ppa trim?");
                     // print_sungjin(slpn);
-                    tmp1++;
-                    yesvalidppa=false;
+                    // tmp1++;
+                    // yesvalidppa=false;
                     // print_ppa(ssd,&ppa);
                     // print_sungjin(slpn+j);
                     continue;
                 }
+
+
                 // if(ppa.ppa==PG_VALID)
                 if(mapped_ppa(&ppa)){
                     ssd->sungjin_stat.discard++;
@@ -1660,10 +1662,10 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     ppa.ppa=UNMAPPED_PPA;
                     set_maptbl_ent(ssd,(slpn+j),&ppa);
                 }
-                else{
-                    tmp2++;
-                    yesmappedppa=false;
-                }
+                // else{
+                //     tmp2++;
+                //     yesmappedppa=false;
+                // }
                 
                 // pg_iter = get_pg(ssd, &ppa);
                 // if(pg_iter->status==PG_VALID){
@@ -1672,15 +1674,17 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                 // set_rmap_ent(ssd, INVALID_LPN, &ppa);
                 
             }
-            if(!yesvalidppa&& ssd->debug==true){
-                // not valid ppa trim? slpn 0 nlp 1048576 tmp1 1048576
-                printf("not valid ppa trim? slpn %lu nlp %u tmp1 %u\n",slpn,nlp,tmp1);
-                // print_sungjin(slpn);
-            }
-            if(!yesmappedppa&&ssd->debug==true){
-                printf("not mapped ppa trim?slpn %lu nlp %u tmp1 %u\n",slpn,nlp,tmp2);
-                // print_sungjin(slpn);
-            }
+
+
+            // if(!yesvalidppa&& ssd->debug==true){
+            //     // not valid ppa trim? slpn 0 nlp 1048576 tmp1 1048576
+            //     printf("not valid ppa trim? slpn %lu nlp %u tmp1 %u\n",slpn,nlp,tmp1);
+            //     // print_sungjin(slpn);
+            // }
+            // if(!yesmappedppa&&ssd->debug==true){
+            //     printf("not mapped ppa trim?slpn %lu nlp %u tmp1 %u\n",slpn,nlp,tmp2);
+            //     // print_sungjin(slpn);
+            // }
         }
 
         // print_sungjin(msssd_trim);
