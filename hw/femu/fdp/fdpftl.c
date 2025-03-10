@@ -1611,7 +1611,13 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     // NvmeNamespace *ns = req->ns;
     NvmeDsmCmd *dsm = (NvmeDsmCmd *) &req->cmd;
     uint32_t attr = le32_to_cpu(dsm->attributes);
-    uint32_t nr = (le32_to_cpu(dsm->nr) & 0xff) + 1;
+    uint32_t nr_org = (le32_to_cpu(dsm->nr) & 0xff) + 1;
+    uint32_t dw10 = le32_to_cpu(req->cmd->cdw10);
+    uint16_t nr = (dw10 & 0xff) + 1;
+    if(nr!=nr_org){
+        // print_sungjin
+        printf("why ? %u, %u",nr,nr_org);
+    }
     // uint64_t slba;
     uint32_t nlp;
     uint64_t slpn;
