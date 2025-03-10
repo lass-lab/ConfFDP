@@ -1,5 +1,5 @@
 #include "fdpftl.h"
-
+#include <time.h>
 //#define FEMU_DEBUG_FTL
 
 static void *msftl_thread(void *arg);
@@ -1203,8 +1203,16 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     rg2physical(spp,rg_id,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
     // print_sungjin(ssd->sungjin_stat.block_erased);
     // print_sungjin(ssd->sungjin_stat.copied);
-    printf("GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
-               start_lun_id=%d,end_lun_id=%d block_erased %lu copied %lu\n", ppa.g.blk,
+    time_t t;
+    struct tm *tm_info;
+
+    time(&t);
+    tm_info = localtime(&t);
+
+    // printf("Current time: %s", asctime(tm_info));
+
+    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
+               start_lun_id=%d,end_lun_id=%d block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
               start_lun_id,end_lun_id, ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
@@ -1501,6 +1509,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
         rg2physical(spp,i,&start_ch_id,&start_lun_id,&end_ch_id,&end_lun_id);
         printf("RG %d channel %d-%d / lun %d-%d\n",i,start_ch_id,end_ch_id,start_lun_id,end_lun_id);
     }
+
     /* initialize write pointer, this is how we allocate new pages for writes */
 
     // for(i=0;i<ssd->stream_number;i++){
@@ -1511,7 +1520,13 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
             fdpssd_init_write_pointer(ssd,i,j);
         }
     }
-    
+    time_t t;
+    struct tm *tm_info;
+
+    time(&t);
+    tm_info = localtime(&t);
+
+    printf("INITIALIZED current time: %s", asctime(tm_info));
     // print_sungjin(lm->free_line_cnt);
     // print_sungjin(lm->victim_line_cnt);
     // print_sungjin(lm->full_line_cnt);
@@ -1735,6 +1750,10 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // printf("sizeof(NvmeCmd) %lu sizeof(NvmeRwCmd) %lu\n",sizeof(NvmeCmd),sizeof(NvmeRwCmd));
     // xnvme_ctx->cmd.nvm.cdw13.dspec = geo.dspec_;  // place_id_
     // printf("sungjin test %d %d dtype %u pid %u, sizeofdword13 %lu req->slba %lu\n",stream_id,rg_id,dtype,pid,sizeof(NvmeCmdDWORD13),req->slba);
+ 
+//  sungjin 164/92 -> 7/92
+// sungjin 7/92 -> 7/0
+
     if(stream_id>=ssd->handle_number){
         // printf("sungjin : stream id %u -> %u sizeof %lu\n",stream_id,ssd->stream_number-1,sizeof(NvmeCmdDWORD13));
         printf("sungjin %u/%u -> %u/%u\n",stream_id,rg_id,ssd->handle_number-1,rg_id);
