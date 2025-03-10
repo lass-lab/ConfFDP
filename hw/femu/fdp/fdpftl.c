@@ -1616,7 +1616,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint16_t nr = (dw10 & 0xff) + 1;
     if(nr!=nr_org){
         // print_sungjin
-        printf("why ? %u, %u",nr,nr_org);
+        printf("why ? %u, %u\n",nr,nr_org);
     }
     // uint64_t slba;
     uint32_t nlp;
