@@ -953,7 +953,7 @@ static int mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_VALID);
     if(pg->status==PG_INVALID){
-        printf("mark_page_invalid to invalid?? lpn %u\n",
+        printf("mark_page_invalid to invalid?? lpn %lu\n",
         get_rmap_ent(ssd, ppa));
         // dump_stack();
         return 1;
