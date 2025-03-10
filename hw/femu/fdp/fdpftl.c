@@ -953,7 +953,8 @@ static int mark_page_invalid(struct ssd *ssd, struct ppa *ppa)
     pg = get_pg(ssd, ppa);
     ftl_assert(pg->status == PG_VALID);
     if(pg->status==PG_INVALID){
-        // printf("mark_page_invalid to invalid\n");
+        printf("mark_page_invalid to invalid?? lpn %u\n",
+        get_rmap_ent(ssd, ppa));
         // dump_stack();
         return 1;
     }
@@ -1616,7 +1617,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
     uint16_t nr = (dw10 & 0xff) + 1;
     if(nr!=nr_org){
         // print_sungjin
-        printf("why ? %u, %u\n",nr,nr_org);
+        printf("msssd_trim why ? %u, %u\n",nr,nr_org);
     }
     // uint64_t slba;
     uint32_t nlp;
