@@ -199,6 +199,7 @@ struct sungjin_stat{
     uint64_t copied;
     uint64_t block_erased;
     uint64_t discard;
+    uint64_t discard_ignored;
 };
 
 struct line_mgmt {

@@ -1213,10 +1213,10 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
     // printf("Current time: %s", asctime(tm_info));
 
     printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,start_ch_id=%d,end_ch_id=%d\
-               start_lun_id=%d,end_lun_id=%d ssd->sungjin_stat.copied %lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
+               start_lun_id=%d,end_lun_id=%d discard %lu ignored block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,start_ch_id,end_ch_id,
-              start_lun_id,end_lun_id,ssd->sungjin_stat.discard ,ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
+              start_lun_id,end_lun_id,ssd->sungjin_stat.discard,ssd->sungjin_stat.discard_ignored ,ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
     /////////////////////////////////
     to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
 
@@ -1488,6 +1488,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
     ssd->sungjin_stat.discard=0;
+    ssd->sungjin_stat.discard_ignored=0;
     for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp,false);
     }
@@ -1669,6 +1670,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     // yesvalidppa=false;
                     // print_ppa(ssd,&ppa);
                     // print_sungjin(slpn+j);
+                     ssd->sungjin_stat.ignored++;
                     continue;
                 }
 
