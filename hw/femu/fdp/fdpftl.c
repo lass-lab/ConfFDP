@@ -1670,7 +1670,7 @@ static uint64_t msssd_trim(struct ssd* ssd,NvmeRequest* req){
                     // yesvalidppa=false;
                     // print_ppa(ssd,&ppa);
                     // print_sungjin(slpn+j);
-                     ssd->sungjin_stat.ignored++;
+                     ssd->sungjin_stat.discard_ignored++;
                     continue;
                 }
 
