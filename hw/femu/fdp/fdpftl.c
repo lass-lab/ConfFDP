@@ -1485,6 +1485,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     print_sungjin(ssd->sungjin_stat.block_erased);
     print_sungjin(ssd->sungjin_stat.copied);
     print_sungjin(ssd->sungjin_stat.discard);
+    print_sungjin(ssd->sungjin_stat.discard_ignored);
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
     ssd->sungjin_stat.discard=0;
