@@ -1212,8 +1212,7 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 
     // printf("Current time: %s", asctime(tm_info));
 
-    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d,\\
-               discard %lu ignored %lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
+    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d, discard %lu ignored %lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,
               ssd->sungjin_stat.discard,ssd->sungjin_stat.discard_ignored ,ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
