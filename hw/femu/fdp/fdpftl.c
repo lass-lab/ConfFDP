@@ -198,7 +198,7 @@ static inline void rg2physical(struct ssdparams *spp ,
         // return -1;
 }
 
-static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
+static uint64_t fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
 {
 
 
@@ -247,6 +247,7 @@ static void fdpssd_init_write_pointer(struct ssd *ssd,int stream_id,int rg_id)
     // printf("")
    
     // print_sungjin(fdpssd_init_write_pointer);
+    return wpp->written;
 }
 
 static inline void check_addr(int a, int max)
@@ -701,7 +702,7 @@ void fdpssd_init(FemuCtrl *n)
         // printf("------------------------------------\n");
     }
     /* initialize write pointer, this is how we allocate new pages for writes */
-
+    // int sum_written = 0;
     for(i=0;i<ssd->handle_number;i++){
         for(j=0;j<ssd->rg_number;j++){
             fdpssd_init_write_pointer(ssd,i,j);
@@ -1481,14 +1482,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     print_sungjin(spp->blks_per_line);
     print_sungjin(spp->pgs_per_line);
 
-    print_sungjin(ssd->sungjin_stat.block_erased);
-    print_sungjin(ssd->sungjin_stat.copied);
-    print_sungjin(ssd->sungjin_stat.discard);
-    print_sungjin(ssd->sungjin_stat.discard_ignored);
-    ssd->sungjin_stat.block_erased=0;
-    ssd->sungjin_stat.copied=0;
-    ssd->sungjin_stat.discard=0;
-    ssd->sungjin_stat.discard_ignored=0;
+
     for (i = 0; i < spp->nchs; i++) {
         ssd_init_ch(&ssd->ch[i], spp,false);
     }
@@ -1517,11 +1511,25 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     // for(i=0;i<ssd->stream_number;i++){
     //     fdpssd_init_write_pointer(ssd,i);
     // }
+    uint64_t sum_written=0;
     for(i=0;i<ssd->handle_number;i++){
         for(j=0;j<ssd->rg_number;j++){
-            fdpssd_init_write_pointer(ssd,i,j);
+            sum_written=fdpssd_init_write_pointer(ssd,i,j);
         }
     }
+    print_sungjin(ssd->sungjin_stat.block_erased);
+    print_sungjin(ssd->sungjin_stat.copied);
+    print_sungjin(ssd->sungjin_stat.discard);
+    print_sungjin(ssd->sungjin_stat.discard_ignored);
+
+    print_sungjin(sum_written);
+    if(sum_written){
+        print_sungjin(((sum_written+ssd->sungjin_stat.copied)*100)/sum_written);
+    }
+    ssd->sungjin_stat.block_erased=0;
+    ssd->sungjin_stat.copied=0;
+    ssd->sungjin_stat.discard=0;
+    ssd->sungjin_stat.discard_ignored=0;
     time_t t;
     struct tm *tm_info;
 
