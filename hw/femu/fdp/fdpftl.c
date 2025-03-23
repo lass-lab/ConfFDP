@@ -142,7 +142,7 @@ static void fdpssd_init_lines(struct ssd *ssd,bool is_init, int rg)
         line = &lm->lines[i];
         if(!is_init){
             // print_sungjin(line->stream_id);
-            printf("[%d] stream id=%d ipc=%d vpc=%d pos=%lu",i,
+            printf("[%d] stream id=%d ipc=%d vpc=%d pos=%lu\n",i,
                 line->stream_id,
                 line->ipc,
                 line->vpc,
