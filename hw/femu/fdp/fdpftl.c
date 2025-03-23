@@ -140,13 +140,20 @@ static void fdpssd_init_lines(struct ssd *ssd,bool is_init, int rg)
     lm->free_line_cnt = 0;
     for (int i = 0; i < lm->tt_lines; i++) {
         line = &lm->lines[i];
+        if(!is_init){
+            // print_sungjin(line->stream_id);
+            printf("[%d] stream id=%d ipc=%d vpc=%d pos=%lu",i,
+                line->stream_id,
+                line->ipc,
+                line->vpc,
+                line->pos
+                );
+        }
         line->id = i;
         line->ipc = 0;
         line->vpc = 0;
         line->pos = 0;
-        if(!is_init){
-            print_sungjin(line->stream_id);
-        }
+
         line->stream_id=-1;
         line->rg_id=rg;
         /* initialize all the lines as free lines */
@@ -1213,10 +1220,10 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 
     // printf("Current time: %s", asctime(tm_info));
 
-    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d, discard %lu ignored %lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
+    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d, discard %lu invalidated %lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,
-              ssd->sungjin_stat.discard,ssd->sungjin_stat.discard_ignored ,ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
+              ssd->sungjin_stat.discard,ssd->sungjin_stat.invalidated ,ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
     /////////////////////////////////
     to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
 
@@ -1521,7 +1528,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     print_sungjin(ssd->sungjin_stat.copied);
     print_sungjin(ssd->sungjin_stat.discard);
     print_sungjin(ssd->sungjin_stat.discard_ignored);
-
+    print_sungjin(ssd->sungjin_stat.invalidated);
     print_sungjin(sum_written);
     if(sum_written){
         print_sungjin(((sum_written+ssd->sungjin_stat.copied)*100)/sum_written);
@@ -1530,6 +1537,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     ssd->sungjin_stat.copied=0;
     ssd->sungjin_stat.discard=0;
     ssd->sungjin_stat.discard_ignored=0;
+    ssd->sungjin_stat.invalidated=0;
     time_t t;
     struct tm *tm_info;
 
@@ -1828,6 +1836,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
             if(ret){
                 printf("mark_page_invalid from ssdwrite? lpn %lu\n",lpn);
             }
+            ssd->sungjin_stat.invalidated++;
             set_rmap_ent(ssd, INVALID_LPN, &ppa);
         }
         // print_sungjin(lpn);

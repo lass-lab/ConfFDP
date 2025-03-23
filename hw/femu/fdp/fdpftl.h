@@ -200,6 +200,7 @@ struct sungjin_stat{
     uint64_t block_erased;
     uint64_t discard;
     uint64_t discard_ignored;
+    uint64_t invalidated;
 };
 
 struct line_mgmt {
