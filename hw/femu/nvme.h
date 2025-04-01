@@ -706,19 +706,26 @@ typedef struct NvmeRwCmd {
     uint8_t     opcode;
     uint8_t     flags;
     uint16_t    cid;
+    // 0
     uint32_t    nsid;
+    // 1
     uint64_t    rsvd2;
+    // 2 3
     uint64_t    mptr;
+    // 4 5
     uint64_t    prp1;
+    // 6 7
     uint64_t    prp2;
+    // 8 9
     uint64_t    slba;
+    // 10 11
     uint16_t    nlb;
     uint16_t    control;
-    // uint32_t    dsmgmt;
+    // 12
     uint8_t     dsmgmt;
     uint8_t     rsvd;
     uint16_t    dspec;
-    
+    // 13
     uint32_t    reftag;
     uint16_t    apptag;
     uint16_t    appmask;
