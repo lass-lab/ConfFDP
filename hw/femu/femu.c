@@ -659,7 +659,7 @@ static Property femu_props[] = {
     DEFINE_PROP_UINT8("aerl", FemuCtrl, aerl, 3),
     DEFINE_PROP_UINT8("acl", FemuCtrl, acl, 3),
     DEFINE_PROP_UINT8("elpe", FemuCtrl, elpe, 3),
-    DEFINE_PROP_UINT8("mdts", FemuCtrl, mdts, 25),
+    DEFINE_PROP_UINT8("mdts", FemuCtrl, mdts, 10),
     DEFINE_PROP_UINT8("cqr", FemuCtrl, cqr, 1),
     DEFINE_PROP_UINT8("vwc", FemuCtrl, vwc, 0),
     DEFINE_PROP_UINT8("intc", FemuCtrl, intc, 0),
