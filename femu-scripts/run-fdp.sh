@@ -73,7 +73,7 @@ ssd_size=$G64
 #Compose the entire FEMU BBSSD command line options
 FEMU_OPTIONS="-device femu"
 
-# FEMU_OPTIONS=${FEMU_OPTIONS}",mdts=18"
+FEMU_OPTIONS=${FEMU_OPTIONS}",mdts=26"
 FEMU_OPTIONS=${FEMU_OPTIONS}",devsz_mb=${ssd_size}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",namespaces=1"
 FEMU_OPTIONS=${FEMU_OPTIONS}",femu_mode=6"
