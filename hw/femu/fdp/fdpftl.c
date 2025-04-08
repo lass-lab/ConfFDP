@@ -1899,7 +1899,7 @@ static void *msftl_thread(void *arg)
     
     ssd->sungjin_stat.write_io_n=0;
     ssd->sungjin_stat.read_io_n=0;
-
+ssd->sungjin_stat.read_io_n=0;
     ssd->debug=false;
     while (1) {
         for (i = 1; i <= n->nr_pollers; i++) {
