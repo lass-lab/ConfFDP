@@ -1220,10 +1220,11 @@ static int do_gc(struct ssd *ssd, bool force,int rg_id)
 
     // printf("Current time: %s", asctime(tm_info));
 
-    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d, discard %lu invalidated %lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
+    printf("[%s]GC-ing line:%d,ipc=%d,victim=%d,full=%d,free=%d,stream_id=%d,rg_id=%d, discard %lu read/write %lu/%lu block_erased %lu copied %lu\n",asctime(tm_info), ppa.g.blk,
               victim_line->ipc, ssd->lm[rg_id].victim_line_cnt, ssd->lm[rg_id].full_line_cnt,
               ssd->lm[rg_id].free_line_cnt,stream_id,rg_id,
-              ssd->sungjin_stat.discard,ssd->sungjin_stat.invalidated ,ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
+              ssd->sungjin_stat.discard,ssd->sungjin_stat.read_io_n, ssd->sungjin_stat.write_io_n,
+              ssd->sungjin_stat.block_erased,ssd->sungjin_stat.copied);
     /////////////////////////////////
     to_other_rg=(victim_line->ipc < (ssd->sp.pgs_per_line/10)) ;
 
@@ -1350,7 +1351,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
 
     uint64_t lpn;
     uint64_t sublat, maxlat = 0;
-    
+    ssd->sungjin_stat.read_io_n++;
     // uint64_t debug_id = req->cmd.cdw11;
 
     // if(debug_id==1998){
@@ -1530,6 +1531,8 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     print_sungjin(ssd->sungjin_stat.discard_ignored);
     print_sungjin(ssd->sungjin_stat.invalidated);
     print_sungjin(sum_written);
+    print_sungjin(ssd->sungjin_stat.write_io_n);
+    print_sungjin(ssd->sungjin_stat.read_io_n);
     if(sum_written){
         print_sungjin(((sum_written+ssd->sungjin_stat.copied)*100)/sum_written);
     }
@@ -1538,6 +1541,8 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     ssd->sungjin_stat.discard=0;
     ssd->sungjin_stat.discard_ignored=0;
     ssd->sungjin_stat.invalidated=0;
+    ssd->sungjin_stat.write_io_n=0;
+    ssd->sungjin_stat.read_io_n=0;
     time_t t;
     struct tm *tm_info;
 
@@ -1742,7 +1747,7 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     // uint64_t start_lpn = lba / spp->secs_per_pg;
     // uint64_t end_lpn = (lba + len - 1) / spp->secs_per_pg;
     // uint64_t start_lpn = lba + req->ns->start_block;
-
+    ssd->sungjin_stat.write_io_n++;
     uint64_t start_lpn = lba;
     uint64_t end_lpn = (start_lpn + len );
     // struct line_mgmt *lm;
@@ -1888,6 +1893,10 @@ static void *msftl_thread(void *arg)
     ssd->to_poller = n->to_poller;
     ssd->sungjin_stat.block_erased=0;
     ssd->sungjin_stat.copied=0;
+    
+    ssd->sungjin_stat.write_io_n=0;
+    ssd->sungjin_stat.read_io_n=0;
+
     ssd->debug=false;
     while (1) {
         for (i = 1; i <= n->nr_pollers; i++) {

@@ -201,6 +201,9 @@ struct sungjin_stat{
     uint64_t discard;
     uint64_t discard_ignored;
     uint64_t invalidated;
+
+    uint64_t write_io_n;
+    uint64_t read_io_n;
 };
 
 struct line_mgmt {
