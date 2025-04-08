@@ -1375,6 +1375,7 @@ static uint64_t ssd_read(struct ssd *ssd, NvmeRequest *req)
     // print_sungjin(ssd_read);
     /* normal IO read path */
     for (lpn = start_lpn; lpn <= end_lpn; lpn++) {
+        ssd->sungjin_stat.read_sum++;
         ppa = get_maptbl_ent(ssd, lpn);
         if (!mapped_ppa(&ppa) || !valid_ppa(ssd, &ppa)) {
             //printf("%s,lpn(%" PRId64 ") not mapped to valid ppa\n", ssd->ssdname, lpn);
@@ -1533,6 +1534,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     print_sungjin(sum_written);
     print_sungjin(ssd->sungjin_stat.write_io_n);
     print_sungjin(ssd->sungjin_stat.read_io_n);
+    print_sungjin(ssd->sungjin_stat.read_sum);
     if(sum_written){
         print_sungjin(((sum_written+ssd->sungjin_stat.copied)*100)/sum_written);
     }
@@ -1543,6 +1545,7 @@ static uint64_t msssd_io_mgmt_send_sungjin(struct ssd* ssd, NvmeRequest* req){
     ssd->sungjin_stat.invalidated=0;
     ssd->sungjin_stat.write_io_n=0;
     ssd->sungjin_stat.read_io_n=0;
+    ssd->sungjin_stat.read_sum=0;
     time_t t;
     struct tm *tm_info;
 

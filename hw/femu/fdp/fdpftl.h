@@ -204,6 +204,7 @@ struct sungjin_stat{
 
     uint64_t write_io_n;
     uint64_t read_io_n;
+    uint64_t read_sum;
 };
 
 struct line_mgmt {
