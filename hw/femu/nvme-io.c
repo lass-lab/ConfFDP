@@ -89,6 +89,11 @@ static void nvme_process_sq_io(void *opaque, int index_poller)
             /* Normal I/Os that don't need delay emulation */
             req->status = status;
         } else {
+            req->status = status;
+            int rc = femu_ring_enqueue(n->to_ftl[index_poller], (void *)&req, 1);
+            if (rc != 1) {
+                femu_err("enqueue failed, ret=%d\n", rc);
+            }
             femu_err("Error IO processed! %d\n",req->cmd_opcode);
         }
 
@@ -110,6 +115,19 @@ static void nvme_post_cqe(NvmeCQueue *cq, NvmeRequest *req)
     if (n->print_log) {
         femu_debug("%s,req,lba:%lu,lat:%lu\n", n->devname, req->slba, req->reqlat);
     }
+
+    NvmeRwCmd *rw = (NvmeRwCmd *)&req->cmd;
+    uint16_t pid = le16_to_cpu(rw->dspec);
+    
+    if(req->is_write && pid != 0){
+        time_t t;
+        struct tm *tm_info;
+        time(&t);
+        tm_info = localtime(&t);
+        uint64_t etime = qemu_clock_get_ns(QEMU_CLOCK_REALTIME);
+        printf("solesie[%s], cqid: %u, pid: %u, slba: %lu, nlb: %u, etime(%lu)-stime(%lu)=Latency:%.2fms\n", asctime(tm_info), req->sq->sqid, pid, req->slba, req->nlb, etime, req->stime, (etime-req->stime) / 1000000.0);
+    }
+
     cqe->status = cpu_to_le16((req->status << 1) | phase);
     cqe->sq_id = cpu_to_le16(sq->sqid);
     cqe->sq_head = cpu_to_le16(sq->head);
@@ -271,7 +289,7 @@ uint16_t nvme_rw(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd, NvmeRequest *req)
         print_sungjin(slba);
         print_sungjin(elba);
         printf("sungjin error 1\n");
-        return err;
+        return NVME_DNR;
     }
     if (nvme_map_prp(&req->qsg, &req->iov, prp1, prp2, data_size, n)) {
         nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_INVALID_FIELD,
@@ -367,6 +385,8 @@ static uint16_t nvme_dsm(FemuCtrl *n, NvmeNamespace *ns, NvmeCmd *cmd,
             // printf("%lu %lu\n",range[i].slba,slba);
             // print_sungjin(range[i].nlb);
             // print_sungjin(nlb);
+            print_sungjin(slba);
+            print_sungjin(nlb);
 
             if (slba + nlb > le64_to_cpu(ns->id_ns.nsze)) {
                 nvme_set_error_page(n, req->sq->sqid, cmd->cid, NVME_LBA_RANGE,
@@ -518,7 +538,13 @@ static uint16_t nvme_io_cmd(FemuCtrl *n, NvmeCmd *cmd, NvmeRequest *req)
         return nvme_flush(n, ns, cmd, req);
     case NVME_CMD_DSM:
         if (NVME_ONCS_DSM & n->oncs) {
-            return nvme_dsm(n, ns, cmd, req);
+            uint16_t res = nvme_dsm(n, ns, cmd, req);
+            if(res == NVME_SUCCESS){
+                printf("solesie: nvme dsm success\n");
+            } else{
+                printf("solesie: nvme dsm fail\n");
+            }
+            return res;
         }
         return NVME_INVALID_OPCODE | NVME_DNR;
     case NVME_CMD_IO_MGMT_SEND:

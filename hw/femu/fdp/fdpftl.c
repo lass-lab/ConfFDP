@@ -1767,6 +1767,9 @@ static uint64_t fdpssd_write(struct ssd *ssd, NvmeRequest *req)
     uint16_t pid = le16_to_cpu(rw->dspec);
     uint8_t stream_id = pid & 0xff;
     uint8_t rg_id =pid>>8;
+
+    // solesie: time breakdown 용
+    stream_id = 0;
     
     // uint8_t     dsmgmt=(rw->dsmgmt);;
     // uint8_t     rsvd=(rw->rsvd);
@@ -1912,27 +1915,29 @@ ssd->sungjin_stat.read_io_n=0;
             }
             // printf("sungjin : msftl_thread : femu_ring_dequeue\n");
             ftl_assert(req);
-            switch (req->cmd.opcode) {
-            case NVME_CMD_WRITE:
-                lat = fdpssd_write(ssd, req);
-                break;
-            case NVME_CMD_READ:
-                lat = ssd_read(ssd, req);
-                break;
-            case NVME_CMD_DSM:
-                lat = msssd_trim(ssd,req);
-                break;
-            case NVME_CMD_IO_MGMT_RECV:
-                lat = msssd_io_mgmt_recv(ssd,req);
-                break;
-            case NVME_CMD_IO_MGMT_SEND:
+            if(req->status == NVME_SUCCESS){
+                switch (req->cmd.opcode) {
+                case NVME_CMD_WRITE:
+                    lat = fdpssd_write(ssd, req);
+                    break;
+                case NVME_CMD_READ:
+                    lat = ssd_read(ssd, req);
+                    break;
+                case NVME_CMD_DSM:
+                    lat = msssd_trim(ssd,req);
+                    break;
+                case NVME_CMD_IO_MGMT_RECV:
+                    lat = msssd_io_mgmt_recv(ssd,req);
+                    break;
+                case NVME_CMD_IO_MGMT_SEND:
 
-                // if fdp ssd, handle update
-                lat =msssd_io_mgmt_send(ssd,req);
-                break;
-            default:
-                //ftl_err("FTL received unkown request type, ERROR\n");
-                ;
+                    // if fdp ssd, handle update
+                    lat =msssd_io_mgmt_send(ssd,req);
+                    break;
+                default:
+                    //ftl_err("FTL received unkown request type, ERROR\n");
+                    ;
+                }
             }
 
             req->reqlat = lat;

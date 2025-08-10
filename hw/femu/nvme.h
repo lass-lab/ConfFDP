@@ -1677,6 +1677,8 @@ typedef struct FemuCtrl {
 
     /* Nand Flash Type: SLC/MLC/TLC/QLC/PLC */
     uint8_t         flash_type;
+
+    
 } FemuCtrl;
 
 typedef struct NvmePollerThreadArgument {

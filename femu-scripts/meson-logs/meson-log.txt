@@ -1,0 +1,5207 @@
+Build started at 2025-07-25T19:04:37.113374
+Main binary: /home/sangyun/ConfFDP/femu-scripts/pyvenv/bin/python3
+Build Options: -Dkvm=enabled -Dslirp=enabled -Ddocs=disabled -Dplugins=true --native-file=config-meson.cross
+Python system: Linux
+The Meson build system
+Version: 1.0.1
+Source dir: /home/sangyun/ConfFDP
+Build dir: /home/sangyun/ConfFDP/femu-scripts
+Build type: native build
+Project name: qemu
+Project version: 9.0.1
+-----
+Detecting compiler via: cc -m64 -mcx16 --version
+compiler returned <subprocess.Popen object at 0x7f549f9af190>
+compiler stdout:
+cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+compiler stderr:
+
+Running command: cc -m64 -mcx16 -E -dM -
+-----
+Detecting linker via: cc -m64 -mcx16 -Wl,--version
+linker returned <subprocess.Popen object at 0x7f549f9a1a30>
+linker stdout:
+GNU ld (GNU Binutils for Ubuntu) 2.34
+Copyright (C) 2020 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) a later version.
+This program has absolutely no warranty.
+
+linker stderr:
+collect2 version 9.4.0
+/usr/bin/ld -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccW7pQ6W.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. --version -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o
+
+Sanity testing C compiler: cc -m64 -mcx16
+Is cross compiler: False.
+Sanity check compiler command line: cc -m64 -mcx16 sanitycheckc.c -o sanitycheckc.exe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command:  /home/sangyun/ConfFDP/femu-scripts/meson-private/sanitycheckc.exe
+C compiler for the host machine: cc -m64 -mcx16 (gcc 9.4.0 "cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0")
+C linker for the host machine: cc -m64 -mcx16 ld.bfd 2.34
+-----
+Detecting compiler via: cc -m64 -mcx16 --version
+compiler returned <subprocess.Popen object at 0x7f549f9af040>
+compiler stdout:
+cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+compiler stderr:
+
+Running command: cc -m64 -mcx16 -E -dM -
+-----
+Detecting linker via: cc -m64 -mcx16 -Wl,--version
+linker returned <subprocess.Popen object at 0x7f549f950820>
+linker stdout:
+GNU ld (GNU Binutils for Ubuntu) 2.34
+Copyright (C) 2020 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) a later version.
+This program has absolutely no warranty.
+
+linker stderr:
+collect2 version 9.4.0
+/usr/bin/ld -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccIYoedX.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. --version -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o
+
+Sanity testing C compiler: cc -m64 -mcx16
+Is cross compiler: False.
+Sanity check compiler command line: cc -m64 -mcx16 sanitycheckc.c -o sanitycheckc.exe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command:  /home/sangyun/ConfFDP/femu-scripts/meson-private/sanitycheckc.exe
+C compiler for the build machine: cc -m64 -mcx16 (gcc 9.4.0 "cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0")
+C linker for the build machine: cc -m64 -mcx16 ld.bfd 2.34
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Program scripts/symlink-install-tree.py found: YES (/home/sangyun/ConfFDP/femu-scripts/pyvenv/bin/python3 /home/sangyun/ConfFDP/scripts/symlink-install-tree.py)
+Program sh found: YES (/usr/bin/sh)
+Program python3 found: YES (/home/sangyun/ConfFDP/femu-scripts/pyvenv/bin/python3)
+Program iasl found: NO
+Program bzip2 found: YES (/usr/bin/bzip2)
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpotf9xp84
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpotf9xp84/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpotf9xp84/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Werror -fstack-protector-strong 
+
+Code:
+ 
+    int main(int argc, char *argv[])
+    {
+      char arr[64], *p = arr, *c = argv[argc - 1];
+      while (*c) {
+          *p++ = *c++;
+      }
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1awsxeg7
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1awsxeg7/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1awsxeg7/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Werror -fstack-protector-strong 
+
+Code:
+ 
+    int main(int argc, char *argv[])
+    {
+      char arr[64], *p = arr, *c = argv[argc - 1];
+      while (*c) {
+          *p++ = *c++;
+      }
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyfcli26b
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyfcli26b/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyfcli26b/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <ucontext.h>
+  #ifdef __stub_makecontext
+  #error Ignoring glibc stub makecontext which will always fail
+  #endif
+  int main(void) { makecontext(0, 0, 0); return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjfqh16d_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjfqh16d_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjfqh16d_/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  int main(void)
+  {
+  #if defined(__has_feature)
+  #if __has_feature(safe_stack)
+  #error SafeStack Enabled
+  #endif
+  #endif
+      return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpevihnsvm
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpevihnsvm/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpevihnsvm/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--fatal-warnings -Wl,-z,relro 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports link arguments -Wl,-z,relro: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp87qn8gpc
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp87qn8gpc/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp87qn8gpc/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--fatal-warnings -Wl,-z,now 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports link arguments -Wl,-z,now: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp7bol7xb1
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp7bol7xb1/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp7bol7xb1/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -O2 -fzero-call-used-regs=used-gpr 
+
+Code:
+ extern struct { void (*cb)(void); } s; void f(void) { s.cb(); }
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-fzero-call-used-regs=used-gpr'
+
+Checking if "-fzero-call-used-regs=used-gpr" compiles: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplpqm3gx5
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplpqm3gx5/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplpqm3gx5/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -ftrivial-auto-var-init=zero 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-ftrivial-auto-var-init=zero'
+
+Compiler for C supports arguments -ftrivial-auto-var-init=zero: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwhzygnwy
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwhzygnwy/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwhzygnwy/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wempty-body 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wempty-body: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8ej06v37
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8ej06v37/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8ej06v37/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wendif-labels 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wendif-labels: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaozqfzfl
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaozqfzfl/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaozqfzfl/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wexpansion-to-defined 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wexpansion-to-defined: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkgki6tv0
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkgki6tv0/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkgki6tv0/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wformat-security 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wformat-security: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1ooi6u24
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1ooi6u24/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1ooi6u24/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wformat-y2k 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wformat-y2k: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpv6_v5ql0
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpv6_v5ql0/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpv6_v5ql0/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wignored-qualifiers 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wignored-qualifiers: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw6jhfu8a
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw6jhfu8a/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw6jhfu8a/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wimplicit-fallthrough=2 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wimplicit-fallthrough=2: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5u5zi9_7
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5u5zi9_7/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5u5zi9_7/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Winit-self 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Winit-self: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp75nmumyz
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp75nmumyz/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp75nmumyz/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wmissing-format-attribute 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wmissing-format-attribute: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9jxix4sm
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9jxix4sm/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9jxix4sm/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wmissing-prototypes 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wmissing-prototypes: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpctvhwq8c
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpctvhwq8c/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpctvhwq8c/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wnested-externs 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wnested-externs: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpm5b4qx7_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpm5b4qx7_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpm5b4qx7_/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wold-style-declaration 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wold-style-declaration: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpj5i2ho7w
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpj5i2ho7w/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpj5i2ho7w/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wold-style-definition 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wold-style-definition: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5mml4mhe
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5mml4mhe/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5mml4mhe/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wredundant-decls 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wredundant-decls: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi6eph4im
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi6eph4im/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi6eph4im/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wshadow=local 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wshadow=local: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpq41gw4p_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpq41gw4p_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpq41gw4p_/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wstrict-prototypes 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wstrict-prototypes: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppwnzue0j
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppwnzue0j/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppwnzue0j/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wtype-limits 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wtype-limits: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpe6_608jm
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpe6_608jm/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpe6_608jm/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wundef 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wundef: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp47pocmg3
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp47pocmg3/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp47pocmg3/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wvla 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wvla: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3hq9z060
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3hq9z060/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3hq9z060/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wwrite-strings 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wwrite-strings: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpts1b9kjf
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpts1b9kjf/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpts1b9kjf/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wgnu-variable-sized-type-not-at-end -Wno-gnu-variable-sized-type-not-at-end 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-Wgnu-variable-sized-type-not-at-end'
+
+Compiler for C supports arguments -Wno-gnu-variable-sized-type-not-at-end: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsq7wecx2
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsq7wecx2/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsq7wecx2/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Winitializer-overrides -Wno-initializer-overrides 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-Winitializer-overrides'
+
+Compiler for C supports arguments -Wno-initializer-overrides: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1j0iqet3
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1j0iqet3/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1j0iqet3/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wmissing-include-dirs -Wno-missing-include-dirs 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wno-missing-include-dirs: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpz9r0aufn
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpz9r0aufn/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpz9r0aufn/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wpsabi -Wno-psabi 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wno-psabi: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpogma2vn8
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpogma2vn8/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpogma2vn8/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wshift-negative-value -Wno-shift-negative-value 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler for C supports arguments -Wno-shift-negative-value: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppk98q0og
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppk98q0og/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppk98q0og/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wstring-plus-int -Wno-string-plus-int 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-Wstring-plus-int'
+
+Compiler for C supports arguments -Wno-string-plus-int: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzaumdv_1
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzaumdv_1/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzaumdv_1/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wtautological-type-limit-compare -Wno-tautological-type-limit-compare 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-Wtautological-type-limit-compare'; did you mean '-Wtautological-compare'?
+
+Compiler for C supports arguments -Wno-tautological-type-limit-compare: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtfv2p9t
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtfv2p9t/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtfv2p9t/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wtypedef-redefinition -Wno-typedef-redefinition 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-Wtypedef-redefinition'
+
+Compiler for C supports arguments -Wno-typedef-redefinition: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2xqr0_5_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2xqr0_5_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2xqr0_5_/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -Wthread-safety 
+
+Code:
+ extern int i;
+int i;
+
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: unrecognized command line option '-Wthread-safety'
+
+Compiler for C supports arguments -Wthread-safety: NO 
+Program cgcc found: NO
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbssjq3s0
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbssjq3s0/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbssjq3s0/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lm -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library m found: YES
+Run-time dependency threads found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqht9lisx
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqht9lisx/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqht9lisx/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lutil -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library util found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfp27fkqv
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfp27fkqv/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfp27fkqv/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework Hypervisor 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: Hypervisor: No such file or directory
+cc: error: unrecognized command line option '-framework'
+
+Run-time dependency appleframeworks found: NO (tried framework)
+Pkg-config binary for 1 is not cached.
+Pkg-config binary for 1 specified from cross file, native file, or env var as ['pkg-config']
+Found pkg-config: /usr/bin/pkg-config (0.29.1)
+Determining dependency 'xencontrol' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xencontrol` -> 0
+stdout:
+4.11.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xencontrol` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xencontrol` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxenctrl
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xencontrol` -> 0
+stdout:
+-lxenctrl
+-----------
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzynqme0y
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzynqme0y/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzynqme0y/output.exe -D_FILE_OFFSET_BITS=64 -O0 
+
+Code:
+ #include<stdio.h>
+        
+        int main(void) {
+            printf("%ld\n", (long)(sizeof(void *)));
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Program stdout:
+
+8
+
+Program stderr:
+
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw5aaq6gu
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw5aaq6gu/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw5aaq6gu/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/9/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/9/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/9/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Run-time dependency xencontrol found: YES 4.11.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'xenstore' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xenstore` -> 0
+stdout:
+3.0.3
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xenstore` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xenstore` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxenstore
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xenstore` -> 0
+stdout:
+-lxenstore
+-----------
+Run-time dependency xenstore found: YES 3.0.3
+Pkg-config binary for 1 is cached.
+Determining dependency 'xenforeignmemory' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xenforeignmemory` -> 0
+stdout:
+1.3
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xenforeignmemory` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xenforeignmemory` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxenforeignmemory
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xenforeignmemory` -> 0
+stdout:
+-lxenforeignmemory
+-----------
+Run-time dependency xenforeignmemory found: YES 1.3
+Pkg-config binary for 1 is cached.
+Determining dependency 'xengnttab' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xengnttab` -> 0
+stdout:
+1.1
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xengnttab` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xengnttab` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxengnttab
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xengnttab` -> 0
+stdout:
+-lxengnttab
+-----------
+Run-time dependency xengnttab found: YES 1.1
+Pkg-config binary for 1 is cached.
+Determining dependency 'xenevtchn' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xenevtchn` -> 0
+stdout:
+1.1
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xenevtchn` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xenevtchn` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxenevtchn
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xenevtchn` -> 0
+stdout:
+-lxenevtchn
+-----------
+Run-time dependency xenevtchn found: YES 1.1
+Pkg-config binary for 1 is cached.
+Determining dependency 'xendevicemodel' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xendevicemodel` -> 0
+stdout:
+1.2
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xendevicemodel` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xendevicemodel` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxendevicemodel
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xendevicemodel` -> 0
+stdout:
+-lxendevicemodel
+-----------
+Run-time dependency xendevicemodel found: YES 1.2
+Pkg-config binary for 1 is cached.
+Determining dependency 'xentoolcore' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xentoolcore` -> 0
+stdout:
+1.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xentoolcore` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xentoolcore` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxentoolcore
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xentoolcore` -> 0
+stdout:
+-lxentoolcore
+-----------
+Run-time dependency xentoolcore found: YES 1.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'glib-2.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion glib-2.0` -> 0
+stdout:
+2.64.6
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags glib-2.0` -> 0
+stdout:
+-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs glib-2.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs glib-2.0` -> 0
+stdout:
+-lglib-2.0
+-----------
+Run-time dependency glib-2.0 found: YES 2.64.6
+Pkg-config binary for 1 is cached.
+Determining dependency 'gmodule-no-export-2.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gmodule-no-export-2.0` -> 0
+stdout:
+2.64.6
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gmodule-no-export-2.0` -> 0
+stdout:
+-pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gmodule-no-export-2.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgmodule-2.0 -pthread -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gmodule-no-export-2.0` -> 0
+stdout:
+-lgmodule-2.0 -pthread -lglib-2.0
+-----------
+Run-time dependency gmodule-no-export-2.0 found: YES 2.64.6
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqqqf8ibx
+Command line:  cc -m64 -mcx16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqqqf8ibx/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqqqf8ibx/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <glib.h>
+  #include <unistd.h>
+
+  #define QEMU_BUILD_BUG_ON(x) \
+  typedef char qemu_build_bug_on[(x)?-1:1] __attribute__((unused));
+
+  int main(void) {
+     QEMU_BUILD_BUG_ON(sizeof(size_t) != GLIB_SIZEOF_SIZE_T);
+     return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo_x8xtkc
+Command line:  cc -m64 -mcx16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo_x8xtkc/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo_x8xtkc/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wunused-function -Werror 
+
+Code:
+ 
+  #include <glib.h>
+  typedef struct Foo {
+    int i;
+  } Foo;
+  static void foo_free(Foo *f)
+  {
+    g_free(f);
+  }
+  G_DEFINE_AUTOPTR_CLEANUP_FUNC(Foo, foo_free)
+  int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'gio-2.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gio-2.0` -> 0
+stdout:
+2.64.6
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gio-2.0` -> 0
+stdout:
+-pthread -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gio-2.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gio-2.0` -> 0
+stdout:
+-lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency gio-2.0 found: YES 2.64.6
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzcg_j_g
+Command line:  cc -m64 -mcx16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/libmount -I/usr/include/blkid /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzcg_j_g/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzcg_j_g/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group /usr/lib/x86_64-linux-gnu/libgio-2.0.so /usr/lib/x86_64-linux-gnu/libgobject-2.0.so /usr/lib/x86_64-linux-gnu/libglib-2.0.so /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so -Wl,--end-group 
+
+Code:
+ 
+    #include <gio/gio.h>
+    int main(void)
+    {
+      g_dbus_proxy_new_sync(0, 0, 0, 0, 0, 0, 0, 0);
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --variable=gdbus_codegen gio-2.0` -> 0
+stdout:
+/usr/bin/gdbus-codegen
+-----------
+Got pkgconfig variable gdbus_codegen : /usr/bin/gdbus-codegen
+Program /usr/bin/gdbus-codegen found: YES (/usr/bin/gdbus-codegen)
+Pkg-config binary for 1 is cached.
+Determining dependency 'gio-unix-2.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gio-unix-2.0` -> 0
+stdout:
+2.64.6
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gio-unix-2.0` -> 0
+stdout:
+-pthread -I/usr/include/gio-unix-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gio-unix-2.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gio-unix-2.0` -> 0
+stdout:
+-lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency gio-unix-2.0 found: YES 2.64.6
+Program scripts/xml-preprocess.py found: YES (/home/sangyun/ConfFDP/femu-scripts/pyvenv/bin/python3 /home/sangyun/ConfFDP/scripts/xml-preprocess.py)
+Pkg-config binary for 1 is cached.
+Determining dependency 'pixman-1' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion pixman-1` -> 0
+stdout:
+0.38.4
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags pixman-1` -> 0
+stdout:
+-I/usr/include/pixman-1
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs pixman-1` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lpixman-1
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs pixman-1` -> 0
+stdout:
+-lpixman-1
+-----------
+Run-time dependency pixman-1 found: YES 0.38.4
+Pkg-config binary for 1 is cached.
+Determining dependency 'zlib' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion zlib` -> 0
+stdout:
+1.2.11
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags zlib` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs zlib` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lz
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs zlib` -> 0
+stdout:
+-lz
+-----------
+Run-time dependency zlib found: YES 1.2.11
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp__nu8wb6
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp__nu8wb6/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("libaio.h")
+          #error "Header 'libaio.h' could not be found"
+         #endif
+        #else
+         #include <libaio.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "libaio.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpus6dqe8y
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpus6dqe8y/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpus6dqe8y/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -laio -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library aio found: YES
+Pkg-config binary for 1 is cached.
+Determining dependency 'liburing' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion liburing` -> 0
+stdout:
+2.2
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags liburing` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs liburing` -> 0
+stdout:
+-L/usr/lib -luring
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs liburing` -> 0
+stdout:
+-luring
+-----------
+Run-time dependency liburing found: YES 2.2
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4g9wc9y4
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4g9wc9y4/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4g9wc9y4/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <liburing.h>
+  #include <linux/errqueue.h>
+
+  int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'libnfs' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libnfs` -> 0
+stdout:
+4.0.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libnfs` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libnfs` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lnfs
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libnfs` -> 0
+stdout:
+-lnfs
+-----------
+Run-time dependency libnfs found: YES 4.0.0
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_rs6f2td
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_rs6f2td/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_rs6f2td/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <stddef.h>
+  #include <sys/types.h>
+  #ifdef CONFIG_LIBATTR
+  #include <attr/xattr.h>
+  #else
+  #include <sys/xattr.h>
+  #endif
+  int main(void) { getxattr(NULL, NULL, NULL, 0); setxattr(NULL, NULL, NULL, 0, 0); return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9icv81lj
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9icv81lj/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9icv81lj/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework Cocoa 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: Cocoa: No such file or directory
+cc: error: unrecognized command line option '-framework'
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp75vi2xh6
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp75vi2xh6/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp75vi2xh6/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework CoreVideo 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: CoreVideo: No such file or directory
+cc: error: unrecognized command line option '-framework'
+
+Run-time dependency appleframeworks found: NO (tried framework)
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9184o3t6
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9184o3t6/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp9184o3t6/output.exe -D_FILE_OFFSET_BITS=64 -O0 -framework vmnet 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ cc: error: vmnet: No such file or directory
+cc: error: unrecognized command line option '-framework'
+
+Run-time dependency appleframeworks found: NO (tried framework)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libseccomp' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libseccomp` -> 0
+stdout:
+2.5.1
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libseccomp` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libseccomp` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lseccomp
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libseccomp` -> 0
+stdout:
+-lseccomp
+-----------
+Run-time dependency libseccomp found: YES 2.5.1
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuke9s9jw
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuke9s9jw/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuke9s9jw/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <seccomp.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef SCMP_FLTATR_API_SYSRAWRC
+                SCMP_FLTATR_API_SYSRAWRC;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "seccomp.h" has symbol "SCMP_FLTATR_API_SYSRAWRC" with dependency libseccomp: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpl7wjz7td
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpl7wjz7td/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("cap-ng.h")
+          #error "Header 'cap-ng.h' could not be found"
+         #endif
+        #else
+         #include <cap-ng.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "cap-ng.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmprklc1itr
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmprklc1itr/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmprklc1itr/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcap-ng -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library cap-ng found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo_x4k923
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo_x4k923/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo_x4k923/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lcap-ng -Wl,--end-group 
+
+Code:
+ 
+   #include <cap-ng.h>
+   int main(void)
+   {
+     capng_capability_to_name(CAPNG_EFFECTIVE);
+     return 0;
+   }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'xkbcommon' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion xkbcommon` -> 0
+stdout:
+0.10.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags xkbcommon` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xkbcommon` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lxkbcommon
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs xkbcommon` -> 0
+stdout:
+-lxkbcommon
+-----------
+Run-time dependency xkbcommon found: YES 0.10.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'slirp' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion slirp` -> 0
+stdout:
+4.1.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags slirp` -> 0
+stdout:
+-I/usr/include/slirp -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs slirp` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lslirp -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs slirp` -> 0
+stdout:
+-lslirp -lglib-2.0
+-----------
+Run-time dependency slirp found: YES 4.1.0
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvg_fru41
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvg_fru41/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("libvdeplug.h")
+          #error "Header 'libvdeplug.h' could not be found"
+         #endif
+        #else
+         #include <libvdeplug.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "libvdeplug.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg5w16mfq
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg5w16mfq/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg5w16mfq/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lvdeplug -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library vdeplug found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfuivnvb
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfuivnvb/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfuivnvb/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lvdeplug -Wl,--end-group 
+
+Code:
+ 
+   #include <libvdeplug.h>
+   int main(void)
+   {
+     struct vde_open_args a = {0, 0, 0};
+     char s[] = "";
+     vde_open(s, s, &a);
+     return 0;
+   }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'libpulse' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libpulse` -> 0
+stdout:
+13.99.1
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libpulse` -> 0
+stdout:
+-D_REENTRANT
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libpulse` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lpulse
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libpulse` -> 0
+stdout:
+-lpulse
+-----------
+Run-time dependency libpulse found: YES 13.99.1
+Pkg-config binary for 1 is cached.
+Determining dependency 'alsa' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion alsa` -> 0
+stdout:
+1.2.2
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags alsa` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs alsa` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lasound
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs alsa` -> 0
+stdout:
+-lasound
+-----------
+Run-time dependency alsa found: YES 1.2.2
+Pkg-config binary for 1 is cached.
+Determining dependency 'jack' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion jack` -> 1
+stderr:
+Package jack was not found in the pkg-config search path.
+Perhaps you should add the directory containing `jack.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'jack' found
+-----------
+Run-time dependency jack found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libpipewire-0.3' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libpipewire-0.3` -> 1
+stderr:
+Package libpipewire-0.3 was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libpipewire-0.3.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libpipewire-0.3' found
+-----------
+Run-time dependency libpipewire-0.3 found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'sndio' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion sndio` -> 1
+stderr:
+Package sndio was not found in the pkg-config search path.
+Perhaps you should add the directory containing `sndio.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'sndio' found
+-----------
+Run-time dependency sndio found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'spice-protocol' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion spice-protocol` -> 0
+stdout:
+0.14.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags spice-protocol` -> 0
+stdout:
+-I/usr/include/spice-1
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs spice-protocol` -> 0
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs spice-protocol` -> 0
+Run-time dependency spice-protocol found: YES 0.14.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'spice-server' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion spice-server` -> 1
+stderr:
+Package spice-server was not found in the pkg-config search path.
+Perhaps you should add the directory containing `spice-server.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'spice-server' found
+-----------
+Run-time dependency spice-server found: NO (tried pkgconfig)
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc8ovlezt
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc8ovlezt/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc8ovlezt/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrt -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rt found: YES
+Pkg-config binary for 1 is cached.
+Determining dependency 'libiscsi' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libiscsi` -> 0
+stdout:
+1.18.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libiscsi` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libiscsi` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -liscsi
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libiscsi` -> 0
+stdout:
+-liscsi
+-----------
+Run-time dependency libiscsi found: YES 1.18.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'libzstd' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libzstd` -> 0
+stdout:
+1.4.4
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libzstd` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libzstd` -> 0
+stdout:
+-L/usr/lib -lzstd
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libzstd` -> 0
+stdout:
+-lzstd
+-----------
+Run-time dependency libzstd found: YES 1.4.4
+Pkg-config binary for 1 is cached.
+Determining dependency 'virglrenderer' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion virglrenderer` -> 1
+stderr:
+Package virglrenderer was not found in the pkg-config search path.
+Perhaps you should add the directory containing `virglrenderer.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'virglrenderer' found
+-----------
+Run-time dependency virglrenderer found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'rutabaga_gfx_ffi' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion rutabaga_gfx_ffi` -> 1
+stderr:
+Package rutabaga_gfx_ffi was not found in the pkg-config search path.
+Perhaps you should add the directory containing `rutabaga_gfx_ffi.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'rutabaga_gfx_ffi' found
+-----------
+Run-time dependency rutabaga_gfx_ffi found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'blkio' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion blkio` -> 1
+stderr:
+Package blkio was not found in the pkg-config search path.
+Perhaps you should add the directory containing `blkio.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'blkio' found
+-----------
+Run-time dependency blkio found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libcurl' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libcurl` -> 0
+stdout:
+7.68.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libcurl` -> 0
+stdout:
+-I/usr/include/x86_64-linux-gnu
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libcurl` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lcurl
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libcurl` -> 0
+stdout:
+-lcurl
+-----------
+Run-time dependency libcurl found: YES 7.68.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'libudev' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libudev` -> 0
+stdout:
+245
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libudev` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libudev` -> 0
+stdout:
+-L/lib/x86_64-linux-gnu -ludev
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libudev` -> 0
+stdout:
+-ludev
+-----------
+Run-time dependency libudev found: YES 245
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqnfzv3mg
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqnfzv3mg/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqnfzv3mg/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lmpathpersist -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: cannot find -lmpathpersist
+collect2: error: ld returned 1 exit status
+
+Library mpathpersist found: NO
+Pkg-config binary for 1 is cached.
+Determining dependency 'ncursesw' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion ncursesw` -> 0
+stdout:
+6.2.20200212
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags ncursesw` -> 0
+stdout:
+-D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs ncursesw` -> 0
+stdout:
+-Wl,-Bsymbolic-functions -lncursesw -ltinfo
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs ncursesw` -> 0
+stdout:
+-Wl,-Bsymbolic-functions -lncursesw -ltinfo
+-----------
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpcnlm1rkc
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpcnlm1rkc/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpcnlm1rkc/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lncursesw -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvtnmvugf
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvtnmvugf/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvtnmvugf/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -ltinfo -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Run-time dependency ncursesw found: YES 6.2.20200212
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmperrg7prm
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmperrg7prm/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmperrg7prm/output.exe -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -DNCURSES_WIDECHAR=1 -Wl,-Bsymbolic-functions -Wl,--start-group -lncursesw -ltinfo -Wl,--end-group 
+
+Code:
+ 
+    #if defined(__APPLE__) || defined(__OpenBSD__)
+    #define _XOPEN_SOURCE_EXTENDED 1
+    #endif
+    #include <locale.h>
+    #include <curses.h>
+    #include <wchar.h>
+    int main(void) {
+      wchar_t wch = L'w';
+      setlocale(LC_ALL, "");
+      resize_term(0, 0);
+      addwstr(L"wide chars\n");
+      addnwstr(&wch, 1);
+      add_wch(WACS_DEGREE);
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmptct0uyo5
+Command line:  cc -m64 -mcx16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include /home/sangyun/ConfFDP/femu-scripts/meson-private/tmptct0uyo5/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmptct0uyo5/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -liconv /usr/lib/x86_64-linux-gnu/libglib-2.0.so /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so -Wl,--end-group 
+
+Code:
+ 
+        #include <iconv.h>
+        int main(void) {
+          iconv_t conv = iconv_open("WCHAR_T", "UCS-2");
+          return conv != (iconv_t) -1;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: cannot find -liconv
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_koi0ig_
+Command line:  cc -m64 -mcx16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_koi0ig_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_koi0ig_/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group /usr/lib/x86_64-linux-gnu/libglib-2.0.so /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so -Wl,--end-group 
+
+Code:
+ 
+        #include <iconv.h>
+        int main(void) {
+          iconv_t conv = iconv_open("WCHAR_T", "UCS-2");
+          return conv != (iconv_t) -1;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg57c1rbq
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg57c1rbq/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("brlapi.h")
+          #error "Header 'brlapi.h' could not be found"
+         #endif
+        #else
+         #include <brlapi.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "brlapi.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp6wa4jv8n
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp6wa4jv8n/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp6wa4jv8n/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lbrlapi -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library brlapi found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5zdbvy8s
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5zdbvy8s/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5zdbvy8s/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lbrlapi -Wl,--end-group 
+
+Code:
+ 
+     #include <brlapi.h>
+     #include <stddef.h>
+     int main(void) { return brlapi__openConnection (NULL, NULL, NULL); }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'sdl2' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion sdl2` -> 0
+stdout:
+2.0.10
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags sdl2` -> 0
+stdout:
+-D_REENTRANT -I/usr/include/SDL2
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs sdl2` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lSDL2
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs sdl2` -> 0
+stdout:
+-lSDL2
+-----------
+Run-time dependency sdl2 found: YES 2.0.10
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmph92ozoy5
+Command line:  cc -m64 -mcx16 -I/usr/include/SDL2 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmph92ozoy5/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmph92ozoy5/output.obj -c -D_REENTRANT -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Werror=undef 
+
+Code:
+ 
+                     #include <SDL.h>
+                     #include <SDL_syswm.h>
+                     int main(int argc, char *argv[]) { return 0; }
+                     
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'SDL2_image' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion SDL2_image` -> 0
+stdout:
+2.0.5
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags SDL2_image` -> 0
+stdout:
+-D_REENTRANT -I/usr/include/SDL2
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs SDL2_image` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lSDL2_image -lSDL2
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs SDL2_image` -> 0
+stdout:
+-lSDL2_image -lSDL2
+-----------
+Run-time dependency sdl2_image found: YES 2.0.5
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnygxfo5o
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnygxfo5o/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnygxfo5o/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrados -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rados found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8x2eqy2b
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8x2eqy2b/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("rbd/librbd.h")
+          #error "Header 'rbd/librbd.h' could not be found"
+         #endif
+        #else
+         #include <rbd/librbd.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "rbd/librbd.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzx2egs7
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzx2egs7/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzx2egs7/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrbd -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rbd found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkwexoke0
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkwexoke0/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkwexoke0/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lrbd -lrados -Wl,--end-group 
+
+Code:
+ 
+      #include <stdio.h>
+      #include <rbd/librbd.h>
+      int main(void) {
+        rados_t cluster;
+        rados_create(&cluster, NULL);
+        #if LIBRBD_VERSION_CODE < LIBRBD_VERSION(1, 12, 0)
+        #error
+        #endif
+        return 0;
+      }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'glusterfs-api' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion glusterfs-api` -> 1
+stderr:
+Package glusterfs-api was not found in the pkg-config search path.
+Perhaps you should add the directory containing `glusterfs-api.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'glusterfs-api' found
+-----------
+Run-time dependency glusterfs-api found: NO (tried pkgconfig)
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3tkzwgdh
+Command line:  cc -m64 -mcx16 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3tkzwgdh/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3tkzwgdh/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group /usr/lib/x86_64-linux-gnu/libglib-2.0.so /usr/lib/x86_64-linux-gnu/libgmodule-2.0.so -Wl,--end-group 
+
+Code:
+ 
+    #include <string.h>
+    #include <gmodule.h>
+    int main(void) {
+        GTree *tree;
+
+        tree = g_tree_new((GCompareFunc)strcmp);
+        (void)g_tree_node_first(tree);
+        g_tree_destroy(tree);
+        return 0;
+    }
+  
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3tkzwgdh/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3tkzwgdh/testfile.c:8:15: warning: implicit declaration of function 'g_tree_node_first'; did you mean 'g_tree_nnodes'? [-Wimplicit-function-declaration]
+    8 |         (void)g_tree_node_first(tree);
+      |               ^~~~~~~~~~~~~~~~~
+      |               g_tree_nnodes
+/usr/bin/ld: /tmp/cctbNokc.o: in function `main':
+testfile.c:(.text+0x2c): undefined reference to `g_tree_node_first'
+collect2: error: ld returned 1 exit status
+
+../meson.build:1511: WARNING: could not find glib support for hv-balloon, disabling
+Pkg-config binary for 1 is cached.
+Determining dependency 'libssh' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libssh` -> 0
+stdout:
+0.9.3
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libssh` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libssh` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lssh
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libssh` -> 0
+stdout:
+-lssh
+-----------
+Run-time dependency libssh found: YES 0.9.3
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2jprp3l8
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2jprp3l8/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("bzlib.h")
+          #error "Header 'bzlib.h' could not be found"
+         #endif
+        #else
+         #include <bzlib.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "bzlib.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpz6wqza0f
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpz6wqza0f/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpz6wqza0f/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lbz2 -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library bz2 found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3179cm8m
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3179cm8m/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp3179cm8m/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lbz2 -Wl,--end-group 
+
+Code:
+ 
+     #include <bzlib.h>
+     int main(void) { BZ2_bzlibVersion(); return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnc30dgc1
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnc30dgc1/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("lzfse.h")
+          #error "Header 'lzfse.h' could not be found"
+         #endif
+        #else
+         #include <lzfse.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnc30dgc1/testfile.c:4:12: error: #error "Header 'lzfse.h' could not be found"
+    4 |           #error "Header 'lzfse.h' could not be found"
+      |            ^~~~~
+
+Has header "lzfse.h" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqdwfy3jn
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqdwfy3jn/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/soundcard.h")
+          #error "Header 'sys/soundcard.h' could not be found"
+         #endif
+        #else
+         #include <sys/soundcard.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "sys/soundcard.h" : YES 
+Pkg-config binary for 1 is cached.
+Determining dependency 'epoxy' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion epoxy` -> 0
+stdout:
+1.5.4
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags epoxy` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs epoxy` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lepoxy
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs epoxy` -> 0
+stdout:
+-lepoxy
+-----------
+Run-time dependency epoxy found: YES 1.5.4
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpy8lsm8op
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpy8lsm8op/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("epoxy/egl.h")
+          #error "Header 'epoxy/egl.h' could not be found"
+         #endif
+        #else
+         #include <epoxy/egl.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "epoxy/egl.h" with dependency epoxy: YES 
+Pkg-config binary for 1 is cached.
+Determining dependency 'gbm' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gbm` -> 0
+stdout:
+21.2.6
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gbm` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gbm` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgbm
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gbm` -> 0
+stdout:
+-lgbm
+-----------
+Run-time dependency gbm found: YES 21.2.6
+Pkg-config binary for 1 is cached.
+Determining dependency 'gnutls' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gnutls` -> 0
+stdout:
+3.6.13
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gnutls` -> 0
+stdout:
+-I/usr/include/p11-kit-1
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gnutls` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgnutls
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gnutls` -> 0
+stdout:
+-lgnutls
+-----------
+Dependency gnutls found: NO found 3.6.13 but need: '>=3.6.14'
+Run-time dependency gnutls found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'gnutls' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+env[PKG_CONFIG_PATH]: 
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+env[PKG_CONFIG_PATH]: 
+Run-time dependency gnutls found: YES 3.6.13
+libgcrypt-config binary missing from cross or native file, or env var undefined.
+Trying a default libgcrypt-config fallback at libgcrypt-config
+libgcrypt-config found: YES (/usr/bin/libgcrypt-config) 1.8.5
+Run-time dependency libgcrypt found: YES 1.8.5
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplflqlq9y
+Command line:  cc -m64 -mcx16 -L/usr/lib/x86_64-linux-gnu /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplflqlq9y/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplflqlq9y/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lgcrypt -Wl,--end-group 
+
+Code:
+ 
+      #include <gcrypt.h>
+      int main(void) {
+        gcry_cipher_hd_t handler;
+        gcry_cipher_open(&handler, GCRY_CIPHER_SM4, GCRY_CIPHER_MODE_ECB, 0);
+        return 0;
+      }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplflqlq9y/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmplflqlq9y/testfile.c:5:36: error: 'GCRY_CIPHER_SM4' undeclared (first use in this function); did you mean 'GCRY_CIPHER_SEED'?
+    5 |         gcry_cipher_open(&handler, GCRY_CIPHER_SM4, GCRY_CIPHER_MODE_ECB, 0);
+      |                                    ^~~~~~~~~~~~~~~
+      |                                    GCRY_CIPHER_SEED
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmplflqlq9y/testfile.c:5:36: note: each undeclared identifier is reported only once for each function it appears in
+
+Pkg-config binary for 1 is cached.
+Determining dependency 'capstone' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion capstone` -> 0
+stdout:
+3.0.5
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags capstone` -> 0
+stdout:
+-I/usr/include/capstone
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs capstone` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lcapstone
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs capstone` -> 0
+stdout:
+-lcapstone
+-----------
+Run-time dependency capstone found: YES 3.0.5
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp80cg2of5
+Command line:  cc -m64 -mcx16 -I/usr/include/capstone /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp80cg2of5/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp80cg2of5/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <capstone.h>
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Pkg-config binary for 1 is cached.
+Determining dependency 'gmp' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gmp` -> 0
+stdout:
+6.2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gmp` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gmp` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgmp
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gmp` -> 0
+stdout:
+-lgmp
+-----------
+Run-time dependency gmp found: YES 6.2.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'gtk+-3.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gtk+-3.0` -> 0
+stdout:
+3.24.20
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gtk+-3.0` -> 0
+stdout:
+-pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gtk+-3.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gtk+-3.0` -> 0
+stdout:
+-lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency gtk+-3.0 found: YES 3.24.20
+Pkg-config binary for 1 is cached.
+Determining dependency 'gtk+-x11-3.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gtk+-x11-3.0` -> 0
+stdout:
+3.24.20
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags gtk+-x11-3.0` -> 0
+stdout:
+-pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gtk+-x11-3.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs gtk+-x11-3.0` -> 0
+stdout:
+-lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency gtk+-x11-3.0 found: YES 3.24.20
+Pkg-config binary for 1 is cached.
+Determining dependency 'vte-2.91' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion vte-2.91` -> 0
+stdout:
+0.60.3
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags vte-2.91` -> 0
+stdout:
+-pthread -I/usr/include/vte-2.91 -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs vte-2.91` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lvte-2.91 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs vte-2.91` -> 0
+stdout:
+-lvte-2.91 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency vte-2.91 found: YES 0.60.3
+Pkg-config binary for 1 is cached.
+Determining dependency 'x11' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion x11` -> 0
+stdout:
+1.6.9
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags x11` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs x11` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lX11
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs x11` -> 0
+stdout:
+-lX11
+-----------
+Run-time dependency x11 found: YES 1.6.9
+Pkg-config binary for 1 is cached.
+Determining dependency 'libpng' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libpng` -> 0
+stdout:
+1.6.37
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libpng` -> 0
+stdout:
+-I/usr/include/libpng16
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libpng` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lpng16 -lz
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libpng` -> 0
+stdout:
+-lpng16 -lz
+-----------
+Run-time dependency libpng found: YES 1.6.37
+Pkg-config binary for 1 is cached.
+Determining dependency 'libjpeg' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libjpeg` -> 0
+stdout:
+2.0.3
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libjpeg` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libjpeg` -> 0
+stdout:
+-L/build/libjpeg-turbo-Iy19nI/libjpeg-turbo-2.0.3/obj-x86_64-linux-gnu/lib/x86_64-linux-gnu -ljpeg
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libjpeg` -> 0
+stdout:
+-L/build/libjpeg-turbo-Iy19nI/libjpeg-turbo-2.0.3/obj-x86_64-linux-gnu/lib/x86_64-linux-gnu -ljpeg
+-----------
+Run-time dependency libjpeg found: YES 2.0.3
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw7mpmcwt
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpw7mpmcwt/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sasl/sasl.h")
+          #error "Header 'sasl/sasl.h' could not be found"
+         #endif
+        #else
+         #include <sasl/sasl.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "sasl/sasl.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpra2pc52_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpra2pc52_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpra2pc52_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lsasl2 -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library sasl2 found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpze0701ry
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpze0701ry/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("security/pam_appl.h")
+          #error "Header 'security/pam_appl.h' could not be found"
+         #endif
+        #else
+         #include <security/pam_appl.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpze0701ry/testfile.c:4:12: error: #error "Header 'security/pam_appl.h' could not be found"
+    4 |           #error "Header 'security/pam_appl.h' could not be found"
+      |            ^~~~~
+
+Has header "security/pam_appl.h" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc5fj43tc
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc5fj43tc/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("snappy-c.h")
+          #error "Header 'snappy-c.h' could not be found"
+         #endif
+        #else
+         #include <snappy-c.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "snappy-c.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8p2cbg7_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8p2cbg7_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8p2cbg7_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lsnappy -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library snappy found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgetd16s_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgetd16s_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgetd16s_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lsnappy -Wl,--end-group 
+
+Code:
+ 
+   #include <snappy-c.h>
+   int main(void) { snappy_max_compressed_length(4096); return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi76n2qbq
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi76n2qbq/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("lzo/lzo1x.h")
+          #error "Header 'lzo/lzo1x.h' could not be found"
+         #endif
+        #else
+         #include <lzo/lzo1x.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "lzo/lzo1x.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpep0jwz8t
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpep0jwz8t/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpep0jwz8t/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -llzo2 -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library lzo2 found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpug1vloph
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpug1vloph/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpug1vloph/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -llzo2 -Wl,--end-group 
+
+Code:
+ 
+   #include <lzo/lzo1x.h>
+   int main(void) { lzo_version(); return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbnmizfbr
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbnmizfbr/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("numa.h")
+          #error "Header 'numa.h' could not be found"
+         #endif
+        #else
+         #include <numa.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "numa.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpudq8z_dl
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpudq8z_dl/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpudq8z_dl/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lnuma -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library numa found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0hvutfit
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0hvutfit/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0hvutfit/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lnuma -Wl,--end-group 
+
+Code:
+ 
+   #include <numa.h>
+   int main(void) { return numa_available(); }
+   
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp7wdkvpyi
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp7wdkvpyi/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp7wdkvpyi/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -libumad -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: cannot find -libumad
+collect2: error: ld returned 1 exit status
+
+Library ibumad found: NO
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5xnekvdd
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5xnekvdd/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("rdma/rdma_cma.h")
+          #error "Header 'rdma/rdma_cma.h' could not be found"
+         #endif
+        #else
+         #include <rdma/rdma_cma.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "rdma/rdma_cma.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwqhnml1z
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwqhnml1z/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwqhnml1z/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrdmacm -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rdmacm found: YES
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuwzwgzij
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuwzwgzij/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuwzwgzij/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -libverbs -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library ibverbs found: YES
+Pkg-config binary for 1 is cached.
+Determining dependency 'libcacard' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libcacard` -> 1
+stderr:
+Package libcacard was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libcacard.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libcacard' found
+-----------
+Run-time dependency libcacard found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'u2f-emu' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion u2f-emu` -> 1
+stderr:
+Package u2f-emu was not found in the pkg-config search path.
+Perhaps you should add the directory containing `u2f-emu.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'u2f-emu' found
+-----------
+Run-time dependency u2f-emu found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'canokey-qemu' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion canokey-qemu` -> 1
+stderr:
+Package canokey-qemu was not found in the pkg-config search path.
+Perhaps you should add the directory containing `canokey-qemu.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'canokey-qemu' found
+-----------
+Run-time dependency canokey-qemu found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libusbredirparser-0.5' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libusbredirparser-0.5` -> 1
+stderr:
+Package libusbredirparser-0.5 was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libusbredirparser-0.5.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libusbredirparser-0.5' found
+-----------
+Run-time dependency libusbredirparser-0.5 found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libusb-1.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libusb-1.0` -> 0
+stdout:
+1.0.23
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libusb-1.0` -> 0
+stdout:
+-I/usr/include/libusb-1.0
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libusb-1.0` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lusb-1.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libusb-1.0` -> 0
+stdout:
+-lusb-1.0
+-----------
+Run-time dependency libusb-1.0 found: YES 1.0.23
+Pkg-config binary for 1 is cached.
+Determining dependency 'libpmem' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libpmem` -> 0
+stdout:
+1.8
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libpmem` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libpmem` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lpmem
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libpmem` -> 0
+stdout:
+-lpmem
+-----------
+Run-time dependency libpmem found: YES 1.8
+Pkg-config binary for 1 is cached.
+Determining dependency 'libdaxctl' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libdaxctl` -> 0
+stdout:
+67+
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libdaxctl` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libdaxctl` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -ldaxctl
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libdaxctl` -> 0
+stdout:
+-ldaxctl
+-----------
+Run-time dependency libdaxctl found: YES 67+
+Pkg-config binary for 1 is cached.
+Determining dependency 'libtasn1' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libtasn1` -> 0
+stdout:
+4.16.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libtasn1` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libtasn1` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -ltasn1
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libtasn1` -> 0
+stdout:
+-ltasn1
+-----------
+Run-time dependency libtasn1 found: YES 4.16.0
+Pkg-config binary for 1 is cached.
+Determining dependency 'libkeyutils' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libkeyutils` -> 0
+stdout:
+1.6
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libkeyutils` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libkeyutils` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -lkeyutils
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libkeyutils` -> 0
+stdout:
+-lkeyutils
+-----------
+Run-time dependency libkeyutils found: YES 1.6
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyvitg5m_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyvitg5m_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyvitg5m_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define gettid meson_disable_define_of_gettid
+        
+        #include <limits.h>
+        #undef gettid
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char gettid (void);
+        
+        #if defined __stub_gettid || defined __stub___gettid
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return gettid ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "gettid" : YES 
+Pkg-config binary for 1 is cached.
+Determining dependency 'libselinux' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libselinux` -> 0
+stdout:
+3.0
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libselinux` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libselinux` -> 0
+stdout:
+-L/usr/lib -lselinux
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libselinux` -> 0
+stdout:
+-lselinux
+-----------
+Run-time dependency libselinux found: YES 3.0
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg1ue84yl
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg1ue84yl/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg1ue84yl/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <malloc.h>
+#include <limits.h>
+
+        #if defined __stub_malloc_trim || defined __stub___malloc_trim
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &malloc_trim;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "malloc_trim" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo8945zg6
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo8945zg6/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpo8945zg6/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+        #include <sys/stat.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef STATX_BASIC_STATS
+                STATX_BASIC_STATS;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/stat.h" has symbol "STATX_BASIC_STATS" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp886cfepg
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp886cfepg/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp886cfepg/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+        #include <sys/stat.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef STATX_MNT_ID
+                STATX_MNT_ID;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp886cfepg/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp886cfepg/testfile.c:10:17: error: 'STATX_MNT_ID' undeclared (first use in this function); did you mean 'STATX_MTIME'?
+   10 |                 STATX_MNT_ID;
+      |                 ^~~~~~~~~~~~
+      |                 STATX_MTIME
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp886cfepg/testfile.c:10:17: note: each undeclared identifier is reported only once for each function it appears in
+
+Header "sys/stat.h" has symbol "STATX_MNT_ID" : NO 
+Pkg-config binary for 1 is cached.
+Determining dependency 'fuse3' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion fuse3` -> 0
+stdout:
+3.16.2
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags fuse3` -> 0
+stdout:
+-I/usr/local/include/fuse3
+-----------
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs fuse3` -> 0
+stdout:
+-L/usr/local/lib/x86_64-linux-gnu -lfuse3 -lpthread
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs fuse3` -> 0
+stdout:
+-L/usr/local/lib/x86_64-linux-gnu -lfuse3 -lpthread
+-----------
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8zpepynx
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8zpepynx/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp8zpepynx/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lpthread -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Run-time dependency fuse3 found: YES 3.16.2
+Pkg-config binary for 1 is cached.
+Determining dependency 'libbpf' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libbpf` -> 1
+stderr:
+Package libbpf was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libbpf.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libbpf' found
+-----------
+Run-time dependency libbpf found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libxdp' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libxdp` -> 1
+stderr:
+Package libxdp was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libxdp.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'libxdp' found
+-----------
+Run-time dependency libxdp found: NO (tried pkgconfig)
+Pkg-config binary for 1 is cached.
+Determining dependency 'libdw' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libdw` -> 0
+stdout:
+0.176
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libdw` -> 0
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libdw` -> 0
+stdout:
+-L/usr/lib/x86_64-linux-gnu -ldw -lelf
+-----------
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libdw` -> 0
+stdout:
+-ldw -lelf
+-----------
+Run-time dependency libdw found: YES 0.176
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc1sawcap
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc1sawcap/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpc1sawcap/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lnuma -Wl,--end-group 
+
+Code:
+ 
+        #define numa_has_preferred_many meson_disable_define_of_numa_has_preferred_many
+        
+        #include <limits.h>
+        #undef numa_has_preferred_many
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char numa_has_preferred_many (void);
+        
+        #if defined __stub_numa_has_preferred_many || defined __stub___numa_has_preferred_many
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return numa_has_preferred_many ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: /tmp/ccgofzSQ.o: in function `main':
+testfile.c:(.text+0x9): undefined reference to `numa_has_preferred_many'
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjehr0_98
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjehr0_98/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjehr0_98/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lnuma -Wl,--end-group 
+
+Code:
+ 
+        int main(void) {
+
+        /* With some toolchains (MSYS2/mingw for example) the compiler
+         * provides various builtins which are not really implemented and
+         * fall back to the stdlib where they aren't provided and fail at
+         * build/link time. In case the user provides a header, including
+         * the header didn't lead to the function being defined, and the
+         * function we are checking isn't a builtin itself we assume the
+         * builtin is not functional and we just error out. */
+        #if !1 && !defined(numa_has_preferred_many) && !0
+            #error "No definition for __builtin_numa_has_preferred_many found in the prefix"
+        #endif
+
+        #ifdef __has_builtin
+            #if !__has_builtin(__builtin_numa_has_preferred_many)
+                #error "__builtin_numa_has_preferred_many not found"
+            #endif
+        #elif ! defined(numa_has_preferred_many)
+            __builtin_numa_has_preferred_many;
+        #endif
+        return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjehr0_98/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjehr0_98/testfile.c:20:13: error: '__builtin_numa_has_preferred_many' undeclared (first use in this function)
+   20 |             __builtin_numa_has_preferred_many;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjehr0_98/testfile.c:20:13: note: each undeclared identifier is reported only once for each function it appears in
+
+Checking for function "numa_has_preferred_many" with dependency -lnuma: NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyc72zw3v
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyc72zw3v/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/epoll.h")
+          #error "Header 'sys/epoll.h' could not be found"
+         #endif
+        #else
+         #include <sys/epoll.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "sys/epoll.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgfcucvn7
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgfcucvn7/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("linux/magic.h")
+          #error "Header 'linux/magic.h' could not be found"
+         #endif
+        #else
+         #include <linux/magic.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "linux/magic.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkdswjypd
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkdswjypd/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("valgrind/valgrind.h")
+          #error "Header 'valgrind/valgrind.h' could not be found"
+         #endif
+        #else
+         #include <valgrind/valgrind.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "valgrind/valgrind.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppyazu6zz
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppyazu6zz/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("linux/btrfs.h")
+          #error "Header 'linux/btrfs.h' could not be found"
+         #endif
+        #else
+         #include <linux/btrfs.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "linux/btrfs.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpztdbbyik
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpztdbbyik/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("libdrm/drm.h")
+          #error "Header 'libdrm/drm.h' could not be found"
+         #endif
+        #else
+         #include <libdrm/drm.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "libdrm/drm.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpx47snht5
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpx47snht5/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("pty.h")
+          #error "Header 'pty.h' could not be found"
+         #endif
+        #else
+         #include <pty.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "pty.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmps7nxlkbr
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmps7nxlkbr/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/disk.h")
+          #error "Header 'sys/disk.h' could not be found"
+         #endif
+        #else
+         #include <sys/disk.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmps7nxlkbr/testfile.c:4:12: error: #error "Header 'sys/disk.h' could not be found"
+    4 |           #error "Header 'sys/disk.h' could not be found"
+      |            ^~~~~
+
+Has header "sys/disk.h" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp44wu0umf
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp44wu0umf/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/ioccom.h")
+          #error "Header 'sys/ioccom.h' could not be found"
+         #endif
+        #else
+         #include <sys/ioccom.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp44wu0umf/testfile.c:4:12: error: #error "Header 'sys/ioccom.h' could not be found"
+    4 |           #error "Header 'sys/ioccom.h' could not be found"
+      |            ^~~~~
+
+Has header "sys/ioccom.h" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4acq14rc
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4acq14rc/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/kcov.h")
+          #error "Header 'sys/kcov.h' could not be found"
+         #endif
+        #else
+         #include <sys/kcov.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4acq14rc/testfile.c:4:12: error: #error "Header 'sys/kcov.h' could not be found"
+    4 |           #error "Header 'sys/kcov.h' could not be found"
+      |            ^~~~~
+
+Has header "sys/kcov.h" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpf5bcbacj
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpf5bcbacj/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpf5bcbacj/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define close_range meson_disable_define_of_close_range
+        
+        #include <limits.h>
+        #undef close_range
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char close_range (void);
+        
+        #if defined __stub_close_range || defined __stub___close_range
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return close_range ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: /tmp/ccX5ppyI.o: in function `main':
+testfile.c:(.text+0x9): undefined reference to `close_range'
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtlsn_ic
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtlsn_ic/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtlsn_ic/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        int main(void) {
+
+        /* With some toolchains (MSYS2/mingw for example) the compiler
+         * provides various builtins which are not really implemented and
+         * fall back to the stdlib where they aren't provided and fail at
+         * build/link time. In case the user provides a header, including
+         * the header didn't lead to the function being defined, and the
+         * function we are checking isn't a builtin itself we assume the
+         * builtin is not functional and we just error out. */
+        #if !1 && !defined(close_range) && !0
+            #error "No definition for __builtin_close_range found in the prefix"
+        #endif
+
+        #ifdef __has_builtin
+            #if !__has_builtin(__builtin_close_range)
+                #error "__builtin_close_range not found"
+            #endif
+        #elif ! defined(close_range)
+            __builtin_close_range;
+        #endif
+        return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtlsn_ic/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtlsn_ic/testfile.c:20:13: error: '__builtin_close_range' undeclared (first use in this function); did you mean '__builtin_clog'?
+   20 |             __builtin_close_range;
+      |             ^~~~~~~~~~~~~~~~~~~~~
+      |             __builtin_clog
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpwtlsn_ic/testfile.c:20:13: note: each undeclared identifier is reported only once for each function it appears in
+
+Checking for function "close_range" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpemo3lq3c
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpemo3lq3c/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpemo3lq3c/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define accept4 meson_disable_define_of_accept4
+        
+        #include <limits.h>
+        #undef accept4
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char accept4 (void);
+        
+        #if defined __stub_accept4 || defined __stub___accept4
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return accept4 ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "accept4" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppbkloaih
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppbkloaih/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppbkloaih/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define clock_adjtime meson_disable_define_of_clock_adjtime
+        
+        #include <limits.h>
+        #undef clock_adjtime
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char clock_adjtime (void);
+        
+        #if defined __stub_clock_adjtime || defined __stub___clock_adjtime
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return clock_adjtime ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "clock_adjtime" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpcjrae603
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpcjrae603/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpcjrae603/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define dup3 meson_disable_define_of_dup3
+        
+        #include <limits.h>
+        #undef dup3
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char dup3 (void);
+        
+        #if defined __stub_dup3 || defined __stub___dup3
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return dup3 ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "dup3" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpmc4uzhss
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpmc4uzhss/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpmc4uzhss/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define fallocate meson_disable_define_of_fallocate
+        
+        #include <limits.h>
+        #undef fallocate
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char fallocate (void);
+        
+        #if defined __stub_fallocate || defined __stub___fallocate
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return fallocate ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "fallocate" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqbxmqseu
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqbxmqseu/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqbxmqseu/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define posix_fallocate meson_disable_define_of_posix_fallocate
+        
+        #include <limits.h>
+        #undef posix_fallocate
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char posix_fallocate (void);
+        
+        #if defined __stub_posix_fallocate || defined __stub___posix_fallocate
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return posix_fallocate ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "posix_fallocate" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmphva5vz3t
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmphva5vz3t/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmphva5vz3t/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define getcpu meson_disable_define_of_getcpu
+        
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+        #include <limits.h>
+        #undef getcpu
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char getcpu (void);
+        
+        #if defined __stub_getcpu || defined __stub___getcpu
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return getcpu ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "getcpu" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2ywsnj4h
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2ywsnj4h/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2ywsnj4h/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <sched.h>
+#include <limits.h>
+
+        #if defined __stub_sched_getcpu || defined __stub___sched_getcpu
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &sched_getcpu;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2ywsnj4h/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2ywsnj4h/testfile.c:9:32: error: 'sched_getcpu' undeclared (first use in this function); did you mean 'sched_getparam'?
+    9 |             void *a = (void*) &sched_getcpu;
+      |                                ^~~~~~~~~~~~
+      |                                sched_getparam
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2ywsnj4h/testfile.c:9:32: note: each undeclared identifier is reported only once for each function it appears in
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <sched.h>
+        int main(void) {
+
+        /* With some toolchains (MSYS2/mingw for example) the compiler
+         * provides various builtins which are not really implemented and
+         * fall back to the stdlib where they aren't provided and fail at
+         * build/link time. In case the user provides a header, including
+         * the header didn't lead to the function being defined, and the
+         * function we are checking isn't a builtin itself we assume the
+         * builtin is not functional and we just error out. */
+        #if !0 && !defined(sched_getcpu) && !0
+            #error "No definition for __builtin_sched_getcpu found in the prefix"
+        #endif
+
+        #ifdef __has_builtin
+            #if !__has_builtin(__builtin_sched_getcpu)
+                #error "__builtin_sched_getcpu not found"
+            #endif
+        #elif ! defined(sched_getcpu)
+            __builtin_sched_getcpu;
+        #endif
+        return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519/testfile.c:12:14: error: #error "No definition for __builtin_sched_getcpu found in the prefix"
+   12 |             #error "No definition for __builtin_sched_getcpu found in the prefix"
+      |              ^~~~~
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519/testfile.c:20:13: error: '__builtin_sched_getcpu' undeclared (first use in this function); did you mean '__builtin_fegetenv'?
+   20 |             __builtin_sched_getcpu;
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+      |             __builtin_fegetenv
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkd70y519/testfile.c:20:13: note: each undeclared identifier is reported only once for each function it appears in
+
+Checking for function "sched_getcpu" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_uzktesy
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_uzktesy/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_uzktesy/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <stdlib.h>
+#include <limits.h>
+
+        #if defined __stub_posix_memalign || defined __stub___posix_memalign
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &posix_memalign;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "posix_memalign" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp67y1yjyl
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp67y1yjyl/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp67y1yjyl/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define _aligned_malloc meson_disable_define_of__aligned_malloc
+        
+        #include <limits.h>
+        #undef _aligned_malloc
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char _aligned_malloc (void);
+        
+        #if defined __stub__aligned_malloc || defined __stub____aligned_malloc
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return _aligned_malloc ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: /tmp/ccfLbpmf.o: in function `main':
+testfile.c:(.text+0x9): undefined reference to `_aligned_malloc'
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp89d236u_
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp89d236u_/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp89d236u_/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        int main(void) {
+
+        /* With some toolchains (MSYS2/mingw for example) the compiler
+         * provides various builtins which are not really implemented and
+         * fall back to the stdlib where they aren't provided and fail at
+         * build/link time. In case the user provides a header, including
+         * the header didn't lead to the function being defined, and the
+         * function we are checking isn't a builtin itself we assume the
+         * builtin is not functional and we just error out. */
+        #if !1 && !defined(_aligned_malloc) && !0
+            #error "No definition for __builtin__aligned_malloc found in the prefix"
+        #endif
+
+        #ifdef __has_builtin
+            #if !__has_builtin(__builtin__aligned_malloc)
+                #error "__builtin__aligned_malloc not found"
+            #endif
+        #elif ! defined(_aligned_malloc)
+            __builtin__aligned_malloc;
+        #endif
+        return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp89d236u_/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp89d236u_/testfile.c:20:13: error: '__builtin__aligned_malloc' undeclared (first use in this function); did you mean '__builtin_aligned_alloc'?
+   20 |             __builtin__aligned_malloc;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+      |             __builtin_aligned_alloc
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp89d236u_/testfile.c:20:13: note: each undeclared identifier is reported only once for each function it appears in
+
+Checking for function "_aligned_malloc" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjh3mh5be
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjh3mh5be/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjh3mh5be/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define valloc meson_disable_define_of_valloc
+        
+        #include <limits.h>
+        #undef valloc
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char valloc (void);
+        
+        #if defined __stub_valloc || defined __stub___valloc
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return valloc ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "valloc" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_3dmrcit
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_3dmrcit/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_3dmrcit/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define memalign meson_disable_define_of_memalign
+        
+        #include <limits.h>
+        #undef memalign
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char memalign (void);
+        
+        #if defined __stub_memalign || defined __stub___memalign
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return memalign ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "memalign" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmphsdoifoe
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmphsdoifoe/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmphsdoifoe/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define ppoll meson_disable_define_of_ppoll
+        
+        #include <limits.h>
+        #undef ppoll
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char ppoll (void);
+        
+        #if defined __stub_ppoll || defined __stub___ppoll
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return ppoll ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "ppoll" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplb99snvh
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplb99snvh/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmplb99snvh/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <sys/uio.h>
+#include <limits.h>
+
+        #if defined __stub_preadv || defined __stub___preadv
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &preadv;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "preadv" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgbcmemko
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgbcmemko/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgbcmemko/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define pthread_fchdir_np meson_disable_define_of_pthread_fchdir_np
+        
+        #include <limits.h>
+        #undef pthread_fchdir_np
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char pthread_fchdir_np (void);
+        
+        #if defined __stub_pthread_fchdir_np || defined __stub___pthread_fchdir_np
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return pthread_fchdir_np ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: /tmp/ccliaETd.o: in function `main':
+testfile.c:(.text+0x9): undefined reference to `pthread_fchdir_np'
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_xw0227
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_xw0227/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_xw0227/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        int main(void) {
+
+        /* With some toolchains (MSYS2/mingw for example) the compiler
+         * provides various builtins which are not really implemented and
+         * fall back to the stdlib where they aren't provided and fail at
+         * build/link time. In case the user provides a header, including
+         * the header didn't lead to the function being defined, and the
+         * function we are checking isn't a builtin itself we assume the
+         * builtin is not functional and we just error out. */
+        #if !1 && !defined(pthread_fchdir_np) && !0
+            #error "No definition for __builtin_pthread_fchdir_np found in the prefix"
+        #endif
+
+        #ifdef __has_builtin
+            #if !__has_builtin(__builtin_pthread_fchdir_np)
+                #error "__builtin_pthread_fchdir_np not found"
+            #endif
+        #elif ! defined(pthread_fchdir_np)
+            __builtin_pthread_fchdir_np;
+        #endif
+        return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_xw0227/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_xw0227/testfile.c:20:13: error: '__builtin_pthread_fchdir_np' undeclared (first use in this function); did you mean '__builtin_thread_pointer'?
+   20 |             __builtin_pthread_fchdir_np;
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |             __builtin_thread_pointer
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_xw0227/testfile.c:20:13: note: each undeclared identifier is reported only once for each function it appears in
+
+Checking for function "pthread_fchdir_np" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbizim_rs
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbizim_rs/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbizim_rs/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define sendfile meson_disable_define_of_sendfile
+        
+        #include <limits.h>
+        #undef sendfile
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char sendfile (void);
+        
+        #if defined __stub_sendfile || defined __stub___sendfile
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return sendfile ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "sendfile" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuok94_cp
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuok94_cp/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpuok94_cp/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define setns meson_disable_define_of_setns
+        
+        #include <limits.h>
+        #undef setns
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char setns (void);
+        
+        #if defined __stub_setns || defined __stub___setns
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return setns ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "setns" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5czpt5b2
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5czpt5b2/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5czpt5b2/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define unshare meson_disable_define_of_unshare
+        
+        #include <limits.h>
+        #undef unshare
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char unshare (void);
+        
+        #if defined __stub_unshare || defined __stub___unshare
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return unshare ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "unshare" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp60_ygour
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp60_ygour/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp60_ygour/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define syncfs meson_disable_define_of_syncfs
+        
+        #include <limits.h>
+        #undef syncfs
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char syncfs (void);
+        
+        #if defined __stub_syncfs || defined __stub___syncfs
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return syncfs ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "syncfs" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpedykg3o8
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpedykg3o8/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpedykg3o8/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define sync_file_range meson_disable_define_of_sync_file_range
+        
+        #include <limits.h>
+        #undef sync_file_range
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char sync_file_range (void);
+        
+        #if defined __stub_sync_file_range || defined __stub___sync_file_range
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return sync_file_range ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "sync_file_range" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjbwyq1kd
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjbwyq1kd/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjbwyq1kd/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define timerfd_create meson_disable_define_of_timerfd_create
+        
+        #include <limits.h>
+        #undef timerfd_create
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char timerfd_create (void);
+        
+        #if defined __stub_timerfd_create || defined __stub___timerfd_create
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return timerfd_create ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "timerfd_create" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpeafbkp_j
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpeafbkp_j/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpeafbkp_j/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define copy_file_range meson_disable_define_of_copy_file_range
+        
+        #include <limits.h>
+        #undef copy_file_range
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char copy_file_range (void);
+        
+        #if defined __stub_copy_file_range || defined __stub___copy_file_range
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return copy_file_range ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "copy_file_range" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt9mynsr7
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt9mynsr7/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt9mynsr7/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define getifaddrs meson_disable_define_of_getifaddrs
+        
+        #include <limits.h>
+        #undef getifaddrs
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char getifaddrs (void);
+        
+        #if defined __stub_getifaddrs || defined __stub___getifaddrs
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return getifaddrs ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "getifaddrs" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp636hjk_4
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp636hjk_4/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp636hjk_4/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lutil -Wl,--end-group 
+
+Code:
+ 
+        #define openpty meson_disable_define_of_openpty
+        
+        #include <limits.h>
+        #undef openpty
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char openpty (void);
+        
+        #if defined __stub_openpty || defined __stub___openpty
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return openpty ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "openpty" with dependency -lutil: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpp7li6esr
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpp7li6esr/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpp7li6esr/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define strchrnul meson_disable_define_of_strchrnul
+        
+        #include <limits.h>
+        #undef strchrnul
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char strchrnul (void);
+        
+        #if defined __stub_strchrnul || defined __stub___strchrnul
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return strchrnul ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "strchrnul" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsff_yplj
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsff_yplj/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsff_yplj/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <stdlib.h>
+#include <limits.h>
+
+        #if defined __stub_system || defined __stub___system
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &system;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "system" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyxujki3d
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyxujki3d/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyxujki3d/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Wl,--start-group -lrbd -lrados -Wl,--end-group 
+
+Code:
+ #include <rbd/librbd.h>
+#include <limits.h>
+
+        #if defined __stub_rbd_namespace_exists || defined __stub___rbd_namespace_exists
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &rbd_namespace_exists;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "rbd_namespace_exists" with dependencies -lrbd, -lrados: YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5htf5o0d
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5htf5o0d/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp5htf5o0d/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <sys/inotify.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef inotify_init
+                inotify_init;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/inotify.h" has symbol "inotify_init" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpb06jypg4
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpb06jypg4/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpb06jypg4/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <sys/inotify.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef inotify_init1
+                inotify_init1;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/inotify.h" has symbol "inotify_init1" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg9v8i47w
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg9v8i47w/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg9v8i47w/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <linux/blkzoned.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef BLKOPENZONE
+                BLKOPENZONE;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg9v8i47w/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg9v8i47w/testfile.c:6:17: error: 'BLKOPENZONE' undeclared (first use in this function); did you mean 'BLKRESETZONE'?
+    6 |                 BLKOPENZONE;
+      |                 ^~~~~~~~~~~
+      |                 BLKRESETZONE
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpg9v8i47w/testfile.c:6:17: note: each undeclared identifier is reported only once for each function it appears in
+
+Header "linux/blkzoned.h" has symbol "BLKOPENZONE" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgpzv5qnb
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgpzv5qnb/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpgpzv5qnb/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <sys/epoll.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef epoll_create1
+                epoll_create1;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/epoll.h" has symbol "epoll_create1" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp88g3q2hq
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp88g3q2hq/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp88g3q2hq/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <linux/falloc.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FALLOC_FL_PUNCH_HOLE
+                FALLOC_FL_PUNCH_HOLE;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "linux/falloc.h" has symbol "FALLOC_FL_PUNCH_HOLE" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt283owng
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt283owng/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt283owng/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <linux/falloc.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FALLOC_FL_KEEP_SIZE
+                FALLOC_FL_KEEP_SIZE;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "linux/falloc.h" has symbol "FALLOC_FL_KEEP_SIZE" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnhi4d0fk
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnhi4d0fk/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpnhi4d0fk/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <linux/falloc.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FALLOC_FL_ZERO_RANGE
+                FALLOC_FL_ZERO_RANGE;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "linux/falloc.h" has symbol "FALLOC_FL_ZERO_RANGE" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpv6xcm7bc
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpv6xcm7bc/testfile.c -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("linux/fiemap.h")
+          #error "Header 'linux/fiemap.h' could not be found"
+         #endif
+        #else
+         #include <linux/fiemap.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "linux/fiemap.h" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvoaalobi
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvoaalobi/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpvoaalobi/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <linux/fs.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FS_IOC_FIEMAP
+                FS_IOC_FIEMAP;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "linux/fs.h" has symbol "FS_IOC_FIEMAP" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppg7g2the
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppg7g2the/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppg7g2the/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #define getrandom meson_disable_define_of_getrandom
+        
+        #include <limits.h>
+        #undef getrandom
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char getrandom (void);
+        
+        #if defined __stub_getrandom || defined __stub___getrandom
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return getrandom ();
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "getrandom" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmps1mahls8
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmps1mahls8/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmps1mahls8/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <sys/random.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef GRND_NONBLOCK
+                GRND_NONBLOCK;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/random.h" has symbol "GRND_NONBLOCK" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpx3146hmb
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpx3146hmb/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpx3146hmb/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <sys/prctl.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef PR_SET_TIMERSLACK
+                PR_SET_TIMERSLACK;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/prctl.h" has symbol "PR_SET_TIMERSLACK" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzeihk023
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzeihk023/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzeihk023/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <linux/rtnetlink.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef IFLA_PROTO_DOWN
+                IFLA_PROTO_DOWN;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "linux/rtnetlink.h" has symbol "IFLA_PROTO_DOWN" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdda3v57q
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdda3v57q/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdda3v57q/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <sys/sysmacros.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef makedev
+                makedev;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "sys/sysmacros.h" has symbol "makedev" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpan45vic0
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpan45vic0/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpan45vic0/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <getopt.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef optreset
+                optreset;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpan45vic0/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpan45vic0/testfile.c:6:17: error: 'optreset' undeclared (first use in this function)
+    6 |                 optreset;
+      |                 ^~~~~~~~
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpan45vic0/testfile.c:6:17: note: each undeclared identifier is reported only once for each function it appears in
+
+Header "getopt.h" has symbol "optreset" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaq9y75la
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaq9y75la/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaq9y75la/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        #include <netinet/in.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef IPPROTO_MPTCP
+                IPPROTO_MPTCP;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaq9y75la/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaq9y75la/testfile.c:6:17: error: 'IPPROTO_MPTCP' undeclared (first use in this function); did you mean 'IPPROTO_MTP'?
+    6 |                 IPPROTO_MPTCP;
+      |                 ^~~~~~~~~~~~~
+      |                 IPPROTO_MTP
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpaq9y75la/testfile.c:6:17: note: each undeclared identifier is reported only once for each function it appears in
+
+Header "netinet/in.h" has symbol "IPPROTO_MPTCP" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdorlaq6o
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdorlaq6o/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdorlaq6o/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <signal.h>
+        void bar(void) {
+            struct sigevent foo;
+            foo.sigev_notify_thread_id;
+
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdorlaq6o/testfile.c: In function 'bar':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdorlaq6o/testfile.c:4:16: error: 'struct sigevent' has no member named 'sigev_notify_thread_id'
+    4 |             foo.sigev_notify_thread_id;
+      |                ^
+
+Checking whether type "struct sigevent" has member "sigev_notify_thread_id" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdses4jou
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdses4jou/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdses4jou/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <sys/stat.h>
+        void bar(void) {
+            struct stat foo;
+            foo.st_atim;
+
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking whether type "struct stat" has member "st_atim" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbf8j5xx0
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbf8j5xx0/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbf8j5xx0/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <linux/blkzoned.h>
+        void bar(void) {
+            struct blk_zone foo;
+            foo.capacity;
+
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbf8j5xx0/testfile.c: In function 'bar':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbf8j5xx0/testfile.c:4:16: error: 'struct blk_zone' has no member named 'capacity'
+    4 |             foo.capacity;
+      |                ^
+
+Checking whether type "struct blk_zone" has member "capacity" : NO 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi4v52nxk
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi4v52nxk/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpi4v52nxk/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <sys/uio.h>
+        void bar(void) {
+            sizeof(struct iovec);
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for type "struct iovec" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0nhtikzw
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0nhtikzw/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0nhtikzw/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <utmpx.h>
+        void bar(void) {
+            sizeof(struct utmpx);
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for type "struct utmpx" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpklo91lv5
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpklo91lv5/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpklo91lv5/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <sys/eventfd.h>
+  int main(void) { return eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC); }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkb4yuv3v
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkb4yuv3v/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpkb4yuv3v/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <unistd.h>
+  int main(void) {
+  #if defined(_POSIX_SYNCHRONIZED_IO) && _POSIX_SYNCHRONIZED_IO > 0
+  return fdatasync(0);
+  #else
+  #error Not supported
+  #endif
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1d81l124
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1d81l124/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1d81l124/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/types.h>
+  #include <sys/mman.h>
+  #include <stddef.h>
+  int main(void) { return madvise(NULL, 0, MADV_DONTNEED); }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjjbauvms
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjjbauvms/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjjbauvms/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+    #include <sys/types.h>
+    #include <sys/mman.h>
+    #include <stddef.h>
+    extern int madvise(int);
+    int main(void) { return madvise(0); }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjjbauvms/testfile.c:9:16: error: conflicting types for 'madvise'
+    9 |     extern int madvise(int);
+      |                ^~~~~~~
+In file included from /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpjjbauvms/testfile.c:7:
+/usr/include/x86_64-linux-gnu/sys/mman.h:94:12: note: previous declaration of 'madvise' was here
+   94 | extern int madvise (void *__addr, size_t __len, int __advice) __THROW;
+      |            ^~~~~~~
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmputqba0tl
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmputqba0tl/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmputqba0tl/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/mman.h>
+  int main(void) { return memfd_create("foo", MFD_ALLOW_SEALING); }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpch35_mud
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpch35_mud/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpch35_mud/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <fcntl.h>
+  #if !defined(AT_EMPTY_PATH)
+  # error missing definition
+  #else
+  int main(void) { struct file_handle fh; return open_by_handle_at(0, &fh, 0); }
+  #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqt5xdtyg
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqt5xdtyg/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqt5xdtyg/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/mman.h>
+  #include <stddef.h>
+  int main(void) { return posix_madvise(NULL, 0, POSIX_MADV_DONTNEED); }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpa40z8e7l
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpa40z8e7l/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpa40z8e7l/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+
+  static void *f(void *p) { return NULL; }
+  int main(void)
+  {
+    pthread_t thread;
+    pthread_create(&thread, 0, f, 0);
+    pthread_setname_np(thread, "QEMU");
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+
+  static void *f(void *p) { pthread_setname_np("QEMU"); return NULL; }
+  int main(void)
+  {
+    pthread_t thread;
+    pthread_create(&thread, 0, f, 0);
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/testfile.c: In function 'f':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/testfile.c:8:48: warning: passing argument 1 of 'pthread_setname_np' makes integer from pointer without a cast [-Wint-conversion]
+    8 |   static void *f(void *p) { pthread_setname_np("QEMU"); return NULL; }
+      |                                                ^~~~~~
+      |                                                |
+      |                                                char *
+In file included from /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/testfile.c:6:
+/usr/include/pthread.h:427:42: note: expected 'pthread_t' {aka 'long unsigned int'} but argument is of type 'char *'
+  427 | extern int pthread_setname_np (pthread_t __target_thread, const char *__name)
+      |                                ~~~~~~~~~~^~~~~~~~~~~~~~~
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/testfile.c:8:29: error: too few arguments to function 'pthread_setname_np'
+    8 |   static void *f(void *p) { pthread_setname_np("QEMU"); return NULL; }
+      |                             ^~~~~~~~~~~~~~~~~~
+In file included from /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1o62nkq5/testfile.c:6:
+/usr/include/pthread.h:427:12: note: declared here
+  427 | extern int pthread_setname_np (pthread_t __target_thread, const char *__name)
+      |            ^~~~~~~~~~~~~~~~~~
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_3m58xe
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_3m58xe/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_3m58xe/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+  #include <pthread_np.h>
+
+  static void *f(void *p) { return NULL; }
+  int main(void)
+  {
+    pthread_t thread;
+    pthread_create(&thread, 0, f, 0);
+    pthread_set_name_np(thread, "QEMU");
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpu_3m58xe/testfile.c:7:12: fatal error: pthread_np.h: No such file or directory
+    7 |   #include <pthread_np.h>
+      |            ^~~~~~~~~~~~~~
+compilation terminated.
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+  #include <time.h>
+
+  int main(void)
+  {
+    pthread_condattr_t attr
+    pthread_condattr_init(&attr);
+    pthread_condattr_setclock(&attr, CLOCK_MONOTONIC);
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp/testfile.c:12:5: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'pthread_condattr_init'
+   12 |     pthread_condattr_init(&attr);
+      |     ^~~~~~~~~~~~~~~~~~~~~
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp/testfile.c:12:28: error: 'attr' undeclared (first use in this function)
+   12 |     pthread_condattr_init(&attr);
+      |                            ^~~~
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdxp_1zzp/testfile.c:12:28: note: each undeclared identifier is reported only once for each function it appears in
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpesufon6c
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpesufon6c/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpesufon6c/output.exe -pthread -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+
+  static void *f(void *p) { return NULL; }
+  int main(void)
+  {
+    int setsize = CPU_ALLOC_SIZE(64);
+    pthread_t thread;
+    cpu_set_t *cpuset;
+    pthread_create(&thread, 0, f, 0);
+    cpuset = CPU_ALLOC(64);
+    CPU_ZERO_S(setsize, cpuset);
+    pthread_setaffinity_np(thread, setsize, cpuset);
+    pthread_getaffinity_np(thread, setsize, cpuset);
+    CPU_FREE(cpuset);
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4_r0zw4k
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4_r0zw4k/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4_r0zw4k/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/signalfd.h>
+  #include <stddef.h>
+  int main(void) { return signalfd(-1, NULL, SFD_CLOEXEC); }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4_r0zw4k/testfile.c: In function 'main':
+/home/sangyun/ConfFDP/femu-scripts/meson-private/tmp4_r0zw4k/testfile.c:8:27: warning: null argument where non-null required (argument 2) [-Wnonnull]
+    8 |   int main(void) { return signalfd(-1, NULL, SFD_CLOEXEC); }
+      |                           ^~~~~~~~
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_ntlhq0t
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_ntlhq0t/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp_ntlhq0t/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <unistd.h>
+  #include <fcntl.h>
+  #include <limits.h>
+
+  int main(void)
+  {
+    int len, fd = 0;
+    len = tee(STDIN_FILENO, STDOUT_FILENO, INT_MAX, SPLICE_F_NONBLOCK);
+    splice(STDIN_FILENO, NULL, fd, NULL, len, SPLICE_F_MOVE);
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1st6z4lu
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1st6z4lu/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1st6z4lu/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/mman.h>
+  int main(void) {
+    return mlockall(MCL_FUTURE);
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpy08344fb
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpy08344fb/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpy08344fb/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+      #include <sys/socket.h>
+      #include <linux/ip.h>
+        void bar(void) {
+            sizeof(struct mmsghdr);
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for type "struct mmsghdr" : YES 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfjdg6h4
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfjdg6h4/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfjdg6h4/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    #include <inttypes.h>
+    #include <net/if.h>
+    #include <net/netmap.h>
+    #include <net/netmap_user.h>
+    #if (NETMAP_API < 11) || (NETMAP_API > 15)
+    #error
+    #endif
+    int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpqfjdg6h4/testfile.c:4:14: fatal error: net/netmap.h: No such file or directory
+    4 |     #include <net/netmap.h>
+      |              ^~~~~~~~~~~~~~
+compilation terminated.
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt6gesmch
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt6gesmch/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpt6gesmch/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <linux/fs.h>
+  struct fsxattr foo;
+  int main(void) {
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyjkqottn
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyjkqottn/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpyjkqottn/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 -Werror 
+
+Code:
+ 
+    #include <stdint.h>
+    #include <stdio.h>
+    int main(void) {
+        return printf("%zu", SIZE_MAX);
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0t4nqerz
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0t4nqerz/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp0t4nqerz/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <stdint.h>
+  int main(void)
+  {
+    uint64_t x = 0, y = 0;
+    y = __atomic_load_n(&x, __ATOMIC_RELAXED);
+    __atomic_store_n(&x, y, __ATOMIC_RELAXED);
+    __atomic_compare_exchange_n(&x, &y, x, 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED);
+    __atomic_exchange_n(&x, y, __ATOMIC_RELAXED);
+    __atomic_fetch_add(&x, y, __ATOMIC_RELAXED);
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp482ig_vs
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp482ig_vs/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp482ig_vs/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  __int128_t a;
+  __uint128_t b;
+  int main(void) { b = a; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzy1o621
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzy1o621/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpfzy1o621/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  __int128_t a;
+  __uint128_t b;
+  int main (void) {
+    a = a + b;
+    b = a * b;
+    a = a * a;
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpq010is8o
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpq010is8o/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpq010is8o/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    int main(int ac, char **av) {
+      __uint128_t *p = __builtin_assume_aligned(av[ac - 1], 16);
+      p[1] = __atomic_load_n(&p[0], __ATOMIC_RELAXED);
+      __atomic_store_n(&p[2], p[3], __ATOMIC_RELAXED);
+      __atomic_compare_exchange_n(&p[4], &p[5], p[6], 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED);
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: /tmp/ccH0jrTk.o: in function `main':
+testfile.c:(.text+0x44): undefined reference to `__atomic_load_16'
+/usr/bin/ld: testfile.c:(.text+0x7b): undefined reference to `__atomic_store_16'
+/usr/bin/ld: testfile.c:(.text+0xb1): undefined reference to `__atomic_compare_exchange_16'
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsohr5qky
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsohr5qky/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpsohr5qky/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ __attribute__((optimize("O1")))
+    int main(int ac, char **av) {
+      __uint128_t *p = __builtin_assume_aligned(av[ac - 1], 16);
+      p[1] = __atomic_load_n(&p[0], __ATOMIC_RELAXED);
+      __atomic_store_n(&p[2], p[3], __ATOMIC_RELAXED);
+      __atomic_compare_exchange_n(&p[4], &p[5], p[6], 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED);
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: /tmp/ccxoc5VF.o: in function `main':
+testfile.c:(.text+0x16): undefined reference to `__atomic_load_16'
+/usr/bin/ld: testfile.c:(.text+0x34): undefined reference to `__atomic_store_16'
+/usr/bin/ld: testfile.c:(.text+0x5b): undefined reference to `__atomic_compare_exchange_16'
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpymoz4ojo
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpymoz4ojo/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpymoz4ojo/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+        int main(void)
+        {
+          __uint128_t x = 0, y = 0;
+          __sync_val_compare_and_swap_16(&x, y, x);
+          return 0;
+        }
+      
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzrdturzm
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzrdturzm/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpzrdturzm/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/auxv.h>
+  int main(void) {
+    return getauxval(AT_HWCAP) == 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpptlj6pyf
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpptlj6pyf/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpptlj6pyf/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    #include <errno.h>
+    #include <asm/unistd.h>
+    #include <linux/keyctl.h>
+    #include <sys/syscall.h>
+    #include <unistd.h>
+    int main(void) {
+        return syscall(__NR_keyctl, KEYCTL_READ, 0, NULL, NULL, 0);
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdlfds991
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdlfds991/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpdlfds991/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #include <cpuid.h>
+  int main(void) {
+    unsigned a, b, c, d;
+    unsigned max = __get_cpuid_max(0, 0);
+
+    if (max >= 1) {
+        __cpuid(1, a, b, c, d);
+    }
+
+    if (max >= 7) {
+        __cpuid_count(7, 0, a, b, c, d);
+    }
+
+    return 0;
+  }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmprzfio36n
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmprzfio36n/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmprzfio36n/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    #include <cpuid.h>
+    #include <immintrin.h>
+    static int __attribute__((target("avx2"))) bar(void *a) {
+      __m256i x = *(__m256i *)a;
+      return _mm256_testz_si256(x, x);
+    }
+    int main(int argc, char *argv[]) { return bar(argv[argc - 1]); }
+  
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpe9ee3qcj
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpe9ee3qcj/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpe9ee3qcj/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    #include <cpuid.h>
+    #include <immintrin.h>
+    static int __attribute__((target("avx512f"))) bar(void *a) {
+      __m512i x = *(__m512i *)a;
+      return _mm512_test_epi64_mask(x, x);
+    }
+    int main(int argc, char *argv[]) { return bar(argv[argc - 1]); }
+  
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppjdhct92
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppjdhct92/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppjdhct92/output.exe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    #include <cpuid.h>
+    #include <immintrin.h>
+    static int __attribute__((target("avx512bw"))) bar(void *a) {
+      __m512i *x = a;
+      __m512i res= _mm512_abs_epi8(*x);
+      return res[1];
+    }
+    int main(int argc, char *argv[]) { return bar(argv[0]); }
+  
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbm4dn19x
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbm4dn19x/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbm4dn19x/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+    #include <arm_neon.h>
+    #ifndef __ARM_FEATURE_AES
+    __attribute__((target("+crypto")))
+    #endif
+    void foo(uint8x16_t *p) { *p = vaesmcq_u8(*p); }
+  
+Compiler stdout:
+ 
+Compiler stderr:
+ /home/sangyun/ConfFDP/femu-scripts/meson-private/tmpbm4dn19x/testfile.c:2:14: fatal error: arm_neon.h: No such file or directory
+    2 |     #include <arm_neon.h>
+      |              ^~~~~~~~~~~~
+compilation terminated.
+
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1hv8j4mx
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1hv8j4mx/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp1hv8j4mx/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+    #include <sys/mman.h>
+    int main(void)
+    {
+      char buf = 0;
+      void *addr = &buf;
+      addr = mremap(addr, 0, 1, MREMAP_MAYMOVE | MREMAP_FIXED);
+
+      return 0;
+    }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2qpze0bu
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2qpze0bu/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmp2qpze0bu/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+    #include <errno.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <linux/if_alg.h>
+    int main(void) {
+      int sock;
+      sock = socket(AF_ALG, SOCK_SEQPACKET, 0);
+      return sock;
+    }
+  
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppzsqqfsz
+Command line:  cc -m64 -mcx16 /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppzsqqfsz/testfile.c -o /home/sangyun/ConfFDP/femu-scripts/meson-private/tmppzsqqfsz/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <sys/socket.h>
+        #include <linux/vm_sockets.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef AF_VSOCK
+                AF_VSOCK;
+            #endif
+            return 0;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Header "linux/vm_sockets.h" has symbol "AF_VSOCK" : YES 
+Program scripts/minikconf.py found: YES (/home/sangyun/ConfFDP/femu-scripts/pyvenv/bin/python3 /home/sangyun/ConfFDP/scripts/minikconf.py)

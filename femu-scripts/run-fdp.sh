@@ -3,7 +3,7 @@
 # Run FEMU as a black-box SSD (FTL managed by the device)
 
 # image directory
-HOME=/home/sungjin
+HOME=/home/sangyun
 IMGDIR=$HOME/images
 # Virtual machine disk image
 OSIMGF=$IMGDIR/fdp.qcow2
@@ -25,6 +25,10 @@ pg_rd_lat=40000 # page read latency
 pg_wr_lat=200000 # page write latency
 blk_er_lat=2000000 # block erase latency
 ch_xfer_lat=25000 # channel transfer time, ignored for now
+# pg_rd_lat=0 # page read latency
+# pg_wr_lat=0 # page write latency
+# blk_er_lat=0 # block erase latency
+# ch_xfer_lat=0 # channel transfer time, ignored for now
 
 # GC Threshold (1-100)
 gc_thres_pcent=75
@@ -37,6 +41,7 @@ NAND_BLOCK_SIZE_MB=16
 # FDP
 # luns_per_rg=32
 rg_number=1 # 1~64
+# rg_number=2 # 1~64
 handle_number=8 # should be power of 2, smaller than luns_per_ch*nchs
 
 # sudo gdb /home/sungjin/ConfFDP/build-femu/qemu-system-x86_64
@@ -66,9 +71,14 @@ handle_number=8 # should be power of 2, smaller than luns_per_ch*nchs
 G12=12288
 G30=30720
 G64=65536
+G100=102400
+G105=107520
+G180=184320
+G200=204800
 
 
-ssd_size=$G64
+# ssd_size=$G100
+ssd_size=$G180
 
 #Compose the entire FEMU BBSSD command line options
 FEMU_OPTIONS="-device femu"
@@ -92,8 +102,8 @@ FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent=${gc_thres_pcent}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",gc_thres_pcent_high=${gc_thres_pcent_high}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",handle_number=${handle_number}"
 FEMU_OPTIONS=${FEMU_OPTIONS}",rg_number=${rg_number}"
-FEMU_OPTIONS=${FEMU_OPTIONS}",multipoller_enabled=1"
-
+FEMU_OPTIONS=${FEMU_OPTIONS}",multipoller_enabled=0"
+# 메모리 기존 55, cpu 12정도.
 
 echo ${FEMU_OPTIONS}
 
@@ -110,13 +120,18 @@ sudo $QEMU \
     -name "FEMU-MSSSD-VM" \
     -enable-kvm \
     -cpu host \
-    -smp 8 \
-    -m 16G \
+    -smp 12 \
+    -m 55G \
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-hd,drive=hd0 \
     -drive file=$OSIMGF,if=none,aio=io_uring,cache=none,format=qcow2,id=hd0 \
     ${FEMU_OPTIONS} \
-    -net user,hostfwd=tcp::8085-:22 \
+    -net user,hostfwd=tcp::8086-:22 \
     -net nic,model=virtio \
     -nographic \
     -qmp unix:./qmp-sock,server,nowait 2>&1 | tee log
+# sudo $QEMU \
+#   -m 2G \
+#   -enable-kvm \
+#   -drive file=$OSIMGF \
+#   -nographic
